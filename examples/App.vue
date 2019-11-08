@@ -7,6 +7,8 @@
       enableLiveAutocompletion
       :fontSize="17"
       :value="source"
+      :annotations="annotations"
+      :markers="markers"
       @change="handleEditorChange"
     />
   </div>
@@ -24,7 +26,21 @@ export default {
 
   data() {
     return {
-      source: 'print(2)',
+      source: 'print(233333333030303030033);\nprint(233333333030303030033);',
+      annotations: [{
+        row: 0,
+        column: 2,
+        type: 'error',
+        text: 'Some error.',
+      }],
+      markers: [{
+        startRow: 0,
+        startCol: 5,
+        endRow: 0,
+        endCol: 9,
+        className: 'error-marker',
+        type: 'background',
+      }],
     };
   },
 
@@ -50,5 +66,12 @@ body {
 .editor {
   width: 100%;
   height: 100%;
+}
+</style>
+
+<style>
+.error-marker {
+  position: absolute;
+  background-color: red;
 }
 </style>

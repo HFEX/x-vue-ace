@@ -286,6 +286,14 @@ export default {
       this.editor.renderer.setShowGutter(newVal);
     });
 
+    this.$watch('annotations', (annotations) => {
+      this.editor.getSession().setAnnotations(annotations || []);
+    });
+
+    this.$watch('markers', (markers) => {
+      this.handleMarkers(markers);
+    });
+
     this.$watch('height', () => this.editor.resize());
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
