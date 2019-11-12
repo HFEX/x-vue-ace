@@ -110,12 +110,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"816c3d02-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=0de1a3a2&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6d56601b-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=3e2a88a5&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"refEditor",staticClass:"element-editor"})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=0de1a3a2&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=3e2a88a5&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -478,6 +478,14 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
 
     this.$watch('showGutter', (newVal) => {
       this.editor.renderer.setShowGutter(newVal);
+    });
+
+    this.$watch('annotations', (annotations) => {
+      this.editor.getSession().setAnnotations(annotations || []);
+    });
+
+    this.$watch('markers', (markers) => {
+      this.handleMarkers(markers);
     });
 
     this.$watch('height', () => this.editor.resize());
