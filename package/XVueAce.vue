@@ -315,7 +315,7 @@ export default {
         this.insert(text, focus);
         this.select(
           start.row + (posArr[0] - 1 || 0),
-          start.column + (posArr[1] || 0),
+          posArr[0] > 1 ? (posArr[1] || 0) : start.column + (posArr[1] || 0),
           posArr[2],
           focus,
         );
