@@ -110,12 +110,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6d56601b-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=3e2a88a5&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2c724d63-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=275ef9b0&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"refEditor",staticClass:"element-editor"})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=3e2a88a5&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=275ef9b0&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -494,6 +494,42 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
   },
 
   methods: {
+    insert(text, focus = true) {
+      this.editor.insert(text);
+      if (focus) this.editor.focus();
+    },
+
+    insertAndSelect(text, pos = '', focus = true) {
+      if (pos) {
+        const posArr = pos
+          .split(/,|，/)
+          .map(v => parseInt(v, 10));
+
+        const { start } = this.editor.getSelection().getRange();
+        this.insert(text, focus);
+        this.select(
+          start.row + (posArr[0] - 1 || 0),
+          start.column + (posArr[1] || 0),
+          posArr[2],
+          focus,
+        );
+        return;
+      }
+
+      this.insert(text, focus);
+    },
+
+    select(
+      row,
+      col,
+      length,
+      focus = true,
+    ) {
+      this.editor.navigateTo(row, col);
+      if (length) this.editor.getSelection().selectTo(row, col + length);
+      if (focus) this.editor.focus();
+    },
+
     handleChange(event) {
       if (!this.silent) {
         const value = this.editor.getValue();
