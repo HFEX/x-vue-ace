@@ -300,6 +300,42 @@ export default {
   },
 
   methods: {
+    insert(text, focus = true) {
+      this.editor.insert(text);
+      if (focus) this.editor.focus();
+    },
+
+    insertAndSelect(text, pos = '', focus = true) {
+      if (pos) {
+        const posArr = pos
+          .split(/,|，/)
+          .map(v => parseInt(v, 10));
+
+        const { start } = this.editor.getSelection().getRange();
+        this.insert(text, focus);
+        this.select(
+          start.row + (posArr[0] - 1 || 0),
+          start.column + (posArr[1] || 0),
+          posArr[2],
+          focus,
+        );
+        return;
+      }
+
+      this.insert(text, focus);
+    },
+
+    select(
+      row,
+      col,
+      length,
+      focus = true,
+    ) {
+      this.editor.navigateTo(row, col);
+      if (length) this.editor.getSelection().selectTo(row, col + length);
+      if (focus) this.editor.focus();
+    },
+
     handleChange(event) {
       if (!this.silent) {
         const value = this.editor.getValue();
