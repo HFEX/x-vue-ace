@@ -130,9 +130,41 @@ export default {
       type: String,
       default: '',
     },
+    enableMarkup: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data() {
+    return {
+      originCode: '',
+      code: '',
+      headCode: '',
+      tailCode: '',
+      complete: '',
+    };
   },
 
   mounted() {
+    this.originCode = this.value;
+    this.code = this.value;
+
+    if (this.enableMarkup) {
+      const [fragment0, fragment1] = this.originCode.match(/<xiaohou-hide>([^]+?)\<\/xiaohou-hide>/gm) || [];
+      if (fragment0 && fragment1) {
+        this.headCode = fragment0;
+        this.tailCode = fragment1;
+      } else if (fragment0 && this.originCode.indexOf(fragment0) === 0 && !fragment1) {
+        this.headCode = fragment0;
+      } else if (fragment0 && this.originCode.indexOf(fragment0) != 0 && !fragment1) {
+        this.tailCode = fragment0;
+      }
+      
+      this.code = this.code.replace(this.headCode, '');
+      this.code = this.code.replace(this.tailCode, '');
+    };
+
     this.editor = ace.edit(this.$refs.refEditor);
 
     this.$emit('before-load', ace);
@@ -151,7 +183,7 @@ export default {
     this.editor.setFontSize(this.fontSize);
     this.editor
       .getSession()
-      .setValue(this.value, this.cursorStart);
+      .setValue(this.code, this.cursorStart);
     if (this.navigateToFileEnd) {
       this.editor.navigateFileEnd();
     }
@@ -242,7 +274,7 @@ export default {
       });
     }
 
-    this.$watch('value', (newVal) => {
+    this.$watch('code', (newVal) => {
       if (this.editor.getValue() !== newVal) {
         this.silent = true;
         const pos = this.editor.session.selection.toJSON();
@@ -338,7 +370,12 @@ export default {
 
     handleChange(event) {
       if (!this.silent) {
-        const value = this.editor.getValue();
+        let value = this.editor.getValue();
+
+        if (this.enableMarkup) {
+          value = `${this.headCode}${value}${this.tailCode}`;
+        }
+
         this.$emit('change', value, event, this.editor);
       }
     },

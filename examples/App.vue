@@ -7,6 +7,7 @@
       theme="chrome"
       enableLiveAutocompletion
       focus
+      enableMarkup
       :fontSize="17"
       :value="source"
       :annotations="annotations"
@@ -33,7 +34,7 @@ export default {
 
   data() {
     return {
-      source: 'print(1234567890);',
+      source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;\nvar b = 2;\nconst c = [a, b];\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
       annotations: [{
         row: 0,
         column: 2,
@@ -61,6 +62,7 @@ export default {
 
     handleEditorChange(val) {
       this.source = val;
+      console.log(this.source);
     },
   },
 
