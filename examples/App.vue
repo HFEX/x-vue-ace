@@ -34,7 +34,17 @@ export default {
 
   data() {
     return {
-      source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;\nvar b = 2;\nconst c = [a, b];\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
+      source: '<xiaohou-hide>\n\
+print(12345 67890);\n\
+</xiaohou-hide>\n\
+var a = 1;\
+<xiaohou-blank>asdf</xiaohou-blank>\n\
+var b = 2;\n\
+const c = [a, b];\n\
+<xiaohou-blank> </xiaohou-blank>\n\
+<xiaohou-hide>\n\
+jhgh;\n\
+</xiaohou-hide>',
       annotations: [{
         row: 0,
         column: 2,
@@ -62,7 +72,6 @@ export default {
 
     handleEditorChange(val) {
       this.source = val;
-      console.log(this.source);
     },
   },
 

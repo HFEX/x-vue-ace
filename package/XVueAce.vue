@@ -142,7 +142,9 @@ export default {
       code: '',
       headCode: '',
       tailCode: '',
-      complete: '',
+      blanks: [],
+      blankRanges: [],
+      protectedRanges: [],
     };
   },
 
@@ -151,7 +153,8 @@ export default {
     this.code = this.value;
 
     if (this.enableMarkup) {
-      const [fragment0, fragment1] = this.originCode.match(/<xiaohou-hide>([^]+?)\<\/xiaohou-hide>/gm) || [];
+      // code hide
+      const [fragment0, fragment1] = this.originCode.match(/<xiaohou\-hide>([^]+?)\<\/xiaohou\-hide>/igm) || [];
       if (fragment0 && fragment1) {
         this.headCode = fragment0;
         this.tailCode = fragment1;
@@ -163,6 +166,19 @@ export default {
       
       this.code = this.code.replace(this.headCode, '');
       this.code = this.code.replace(this.tailCode, '');
+
+      // code lock or code blank
+      if (this.code.indexOf('<xiaohou-blank>') > -1) {
+        this.blanks = this.originCode.match(/<xiaohou\-blank>([^]*?)\<\/xiaohou\-blank>/igm) || [];
+        
+        this.blanks = this.blanks.map((item) => {
+          this.code = this.code.replace(item, '<xhc_blank/>');
+          return item.replace(/<\/?xiaohou\-blank>/ig, '');
+        });
+        
+      } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
+        console.log(2);
+      }
     };
 
     this.editor = ace.edit(this.$refs.refEditor);
@@ -329,6 +345,16 @@ export default {
     this.$watch('height', () => this.editor.resize());
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
+
+    if (this.blanks.length > 0) {
+      this.editor.setReadOnly(true);
+      for (let i = 0, len = this.blanks.length; i < len; i++) {
+        this.blankRanges.push(this.editor.find('<xhc_blank/>'));
+      }
+      this.editor.replaceAll('            ');
+      this.editor.gotoLine(0);
+      console.log(this.blankRanges);
+    }
   },
 
   methods: {
