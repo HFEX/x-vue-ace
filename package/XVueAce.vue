@@ -354,11 +354,68 @@ export default {
       this.editor.gotoLine(0);
     }
     if (this.preserved.length > 0) {
-      // console.log(this.preserved);
+      this.preservedRanges = this.preserved.map((item) => {
+        return this.editor.find(item);
+      });
+      this.preservedRanges.forEach((item, index) => {
+        let range;
+        if (item.start.row === item.end.row) {
+          range = new Range(item.start.row, item.start.column, item.end.row, item.end.column - 29);
+        } else {
+          range = new Range(item.start.row, item.start.column, item.end.row, item.end.column - 15);
+        }
+        let markerId = this.editor.session.addMarker(range, "readonly-highlight")
+        this.editor.session.replace(
+          new Range(
+            item.start.row,
+            item.start.column,
+            item.end.row,
+            item.end.column
+          ),
+          this.preserved[index].replace(/<\/?xiaohou-lock>/ig, '')
+        );
+        this.editor.keyBinding.addKeyboardHandler({
+          handleKeyboard : function(data, hash, keyString, keyCode, event) {
+            if (hash === -1 || (keyCode <= 40 && keyCode >= 37)) return false;
+
+            if (this.intersects(range)) {
+              return {command:"null", passEvent:false};
+            }
+          }.bind(this),
+        });
+
+        this.before(this.editor, 'onPaste', this.preventReadonly);
+        this.before(this.editor, 'onCut', this.preventReadonly);
+
+        range.start = this.editor.session.doc.createAnchor(range.start);
+        range.end = this.editor.session.doc.createAnchor(range.end);
+        range.end.$insertRight = true;
+      });
+      this.editor.gotoLine(0);
     }
   },
 
   methods: {
+    before(obj, method, wrapper) {
+      var orig = obj[method];
+      obj[method] = function () {
+        var args = Array.prototype.slice.call(arguments);
+        return wrapper.call(this, function () {
+          return orig.apply(obj, args);
+        }, args);
+      };
+      return obj[method];
+    },
+
+    intersects(range) {
+      return this.editor.getSelectionRange().intersects(range);
+    },
+
+    preventReadonly(next, args) {
+      if (this.intersects()) return;
+      next();
+    },
+
     insert(text, focus = true) {
       this.editor.insert(text);
       if (focus) this.editor.focus();
@@ -400,6 +457,11 @@ export default {
         let value = this.editor.getValue();
 
         if (this.enableMarkup) {
+          if (this.blankRanges.length > 0) {
+            // 替换代码
+          } else if (this.preservedRanges.length > 0) {
+            // 拼接代码
+          }
           value = `${this.headCode}${value}${this.tailCode}`;
         }
 
@@ -541,5 +603,11 @@ export default {
   &_content.blink {
     background-color: rgba(251,203,87,0.64)
   }
+}
+
+.readonly-highlight {
+  background-color: red;
+  opacity: 0.2;
+  position: absolute;
 }
 </style>
