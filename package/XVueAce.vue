@@ -144,7 +144,8 @@ export default {
       tailCode: '',
       blanks: [],
       blankRanges: [],
-      protectedRanges: [],
+      preserved: [],
+      preservedRanges: [],
     };
   },
 
@@ -154,32 +155,31 @@ export default {
 
     if (this.enableMarkup) {
       // code hide
-      const [fragment0, fragment1] = this.originCode.match(/<xiaohou\-hide>([^]+?)\<\/xiaohou\-hide>/igm) || [];
+      const [fragment0, fragment1] = this.originCode.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
       if (fragment0 && fragment1) {
         this.headCode = fragment0;
         this.tailCode = fragment1;
       } else if (fragment0 && this.originCode.indexOf(fragment0) === 0 && !fragment1) {
         this.headCode = fragment0;
-      } else if (fragment0 && this.originCode.indexOf(fragment0) != 0 && !fragment1) {
+      } else if (fragment0 && this.originCode.indexOf(fragment0) !== 0 && !fragment1) {
         this.tailCode = fragment0;
       }
-      
+
       this.code = this.code.replace(this.headCode, '');
       this.code = this.code.replace(this.tailCode, '');
 
       // code lock or code blank
       if (this.code.indexOf('<xiaohou-blank>') > -1) {
-        this.blanks = this.originCode.match(/<xiaohou\-blank>([^]*?)\<\/xiaohou\-blank>/igm) || [];
-        
+        this.blanks = this.originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+
         this.blanks = this.blanks.map((item) => {
           this.code = this.code.replace(item, '<xhc_blank/>');
-          return item.replace(/<\/?xiaohou\-blank>/ig, '');
+          return item.replace(/<\/?xiaohou-blank>/ig, '');
         });
-        
       } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
-        console.log(2);
+        this.preserved = this.originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
       }
-    };
+    }
 
     this.editor = ace.edit(this.$refs.refEditor);
 
@@ -348,12 +348,13 @@ export default {
 
     if (this.blanks.length > 0) {
       this.editor.setReadOnly(true);
-      for (let i = 0, len = this.blanks.length; i < len; i++) {
+      for (let i = 0, len = this.blanks.length; i < len; i += 1) {
         this.blankRanges.push(this.editor.find('<xhc_blank/>'));
       }
-      this.editor.replaceAll('            ');
       this.editor.gotoLine(0);
-      console.log(this.blankRanges);
+    }
+    if (this.preserved.length > 0) {
+      // console.log(this.preserved);
     }
   },
 
