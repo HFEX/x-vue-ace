@@ -34,7 +34,7 @@ export default {
 
   data() {
     return {
-      source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;<xiaohou-lock>asdf</xiaohou-lock>\nvar b = 2;\nconst c = [a, b];\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
+      source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;<xiaohou-lock>asdf</xiaohou-lock>\nvar b = 2;\nconst c = [a, b];<xiaohou-lock>asdf</xiaohou-lock>\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
       annotations: [{
         row: 0,
         column: 2,
