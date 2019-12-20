@@ -356,9 +356,7 @@ export default {
       this.editor.gotoLine(0);
     }
     if (this.preserved.length > 0) {
-      this.preservedRanges = this.preserved.map((item) => {
-        return this.editor.find(item);
-      });
+      this.preservedRanges = this.preserved.map(item => this.editor.find(item));
       this.preservedAnchors = this.preservedRanges.map((item, index) => {
         let range;
         if (item.start.row === item.end.row) {
@@ -366,28 +364,16 @@ export default {
         } else {
           range = new Range(item.start.row, item.start.column, item.end.row, item.end.column - 15);
         }
-        let markerId = this.editor.session.addMarker(range, "readonly-highlight")
+        this.editor.session.addMarker(range, 'readonly-highlight');
         this.editor.session.replace(
           new Range(
             item.start.row,
             item.start.column,
             item.end.row,
-            item.end.column
+            item.end.column,
           ),
-          this.preserved[index].replace(/<\/?xiaohou-lock>/ig, '')
+          this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
         );
-        this.editor.keyBinding.addKeyboardHandler({
-          handleKeyboard : function(data, hash, keyString, keyCode, event) {
-            if (hash === -1 || (keyCode <= 40 && keyCode >= 37)) return false;
-
-            if (this.intersects(range)) {
-              return {command:"null", passEvent:false};
-            }
-          }.bind(this),
-        });
-
-        this.before(this.editor, 'onPaste', this.preventReadonly);
-        this.before(this.editor, 'onCut', this.preventReadonly);
 
         range.start = this.editor.session.doc.createAnchor(range.start);
         range.end = this.editor.session.doc.createAnchor(range.end);
@@ -398,88 +384,69 @@ export default {
       this.isPreservedReady = true;
 
       // 出现部分只读 => 要禁用选取
-      this.editor.getSession().selection.on('changeSelection', (e) => {
-        let selection = this.editor.getSession().selection.getRange();
-        if (this.preservedAnchors.some((anchor) => {
-          if (
-          // 1.仅只读范围起点在选取范围中
-          ((anchor.start.row > selection.start.row &&
-          anchor.start.row < selection.end.row) ||
-          (anchor.start.row === selection.start.row &&
-          anchor.start.column > selection.start.column &&
-          anchor.start.row === selection.end.row &&
-          anchor.start.column < selection.end.column) ||
-          (anchor.start.row === selection.start.row &&
-          anchor.start.column > selection.start.column &&
-          anchor.start.row < selection.end.row) ||
-          (anchor.start.row > selection.start.row &&
-          anchor.start.row === selection.end.row &&
-          anchor.start.column < selection.end.column)) ||
-          // 2.仅只读范围终点在选取范围中
-          ((anchor.end.row > selection.start.row &&
-          anchor.end.row < selection.end.row) ||
-          (anchor.end.row === selection.start.row &&
-          anchor.end.column > selection.start.column &&
-          anchor.end.row === selection.end.row &&
-          anchor.end.column < selection.end.column) ||
-          (anchor.end.row === selection.start.row &&
-          anchor.end.column > selection.start.column &&
-          anchor.end.row < selection.end.row) ||
-          (anchor.end.row > selection.start.row &&
-          anchor.end.row === selection.end.row &&
-          anchor.end.column < selection.end.column)) ||
-          // 3.只读范围涵盖选取范围
-          // 3.1.起止不在同一行
-          (anchor.start.row < selection.start.row &&
-          anchor.end.row > selection.end.row) ||
-          // 3.2.起在同一行 止可能在同一行
-          (anchor.start.row === selection.start.row &&
-          anchor.start.column <= selection.start.column &&
-          (anchor.end.row > selection.end.row ||
-          (anchor.end.row === selection.end.row &&
-          anchor.end.column >= selection.end.column))) ||
-          // 3.3 止在同一行 起可能在同一行
-          (anchor.end.row === selection.end.row &&
-          anchor.end.column >= selection.end.column &&
-          (anchor.start.row > selection.start.row ||
-          (anchor.start.row === selection.start.row &&
-          anchor.start.column <= selection.start.column)))
-          ) {
-            return true;
-          } else {
+      this.editor.getSession().selection.on('changeCursor', () => {
+        // anchor更新是异步执行
+        setTimeout(() => {
+          const selection = this.editor.getSession().selection.getRange();
+          if (this.preservedAnchors.some((anchor) => {
+            if (
+              // 1.仅只读范围起点在选取范围中
+              ((anchor.start.row > selection.start.row
+              && anchor.start.row < selection.end.row)
+              || (anchor.start.row === selection.start.row
+              && anchor.start.column >= selection.start.column
+              && anchor.start.row === selection.end.row
+              && anchor.start.column <= selection.end.column)
+              || (anchor.start.row === selection.start.row
+              && anchor.start.column >= selection.start.column
+              && anchor.start.row < selection.end.row)
+              || (anchor.start.row > selection.start.row
+              && anchor.start.row === selection.end.row
+              && anchor.start.column <= selection.end.column))
+              // 2.仅只读范围终点在选取范围中
+              || ((anchor.end.row > selection.start.row
+              && anchor.end.row < selection.end.row)
+              || (anchor.end.row === selection.start.row
+              && anchor.end.column >= selection.start.column
+              && anchor.end.row === selection.end.row
+              && anchor.end.column <= selection.end.column)
+              || (anchor.end.row === selection.start.row
+              && anchor.end.column >= selection.start.column
+              && anchor.end.row < selection.end.row)
+              || (anchor.end.row > selection.start.row
+              && anchor.end.row === selection.end.row
+              && anchor.end.column <= selection.end.column))
+              // 3.只读范围涵盖选取范围
+              // 3.1.起止不在同一行
+              || (anchor.start.row < selection.start.row
+              && anchor.end.row > selection.end.row)
+              // 3.2.起在同一行 止可能在同一行
+              || (anchor.start.row === selection.start.row
+              && anchor.start.column <= selection.start.column
+              && (anchor.end.row > selection.end.row
+              || (anchor.end.row === selection.end.row
+              && anchor.end.column >= selection.end.column)))
+              // 3.3 止在同一行 起可能在同一行
+              || (anchor.end.row === selection.end.row
+              && anchor.end.column >= selection.end.column
+              && (anchor.start.row > selection.start.row
+              || (anchor.start.row === selection.start.row
+              && anchor.start.column <= selection.start.column)))
+            ) {
+              return true;
+            }
             return false;
+          })) {
+            this.editor.setReadOnly(true);
+          } else {
+            this.editor.setReadOnly(false);
           }
-        })) {
-          this.editor.clearSelection();
-          // this.editor.setReadOnly(true);
-        // } else {
-          // this.editor.setReadOnly(false);
-        }
+        }, 0);
       });
     }
   },
 
   methods: {
-    before(obj, method, wrapper) {
-      var orig = obj[method];
-      obj[method] = function () {
-        var args = Array.prototype.slice.call(arguments);
-        return wrapper.call(this, function () {
-          return orig.apply(obj, args);
-        }, args);
-      };
-      return obj[method];
-    },
-
-    intersects(range) {
-      return this.editor.getSelectionRange().intersects(range);
-    },
-
-    preventReadonly(next, args) {
-      if (this.intersects()) return;
-      next();
-    },
-
     insert(text, focus = true) {
       this.editor.insert(text);
       if (focus) this.editor.focus();
@@ -527,7 +494,7 @@ export default {
             // 编辑器回车是异步执行
             setTimeout(() => {
               let showCode = '';
-              let start = {
+              const start = {
                 row: 0,
                 column: 0,
               };
@@ -538,23 +505,27 @@ export default {
                     start.column,
                     this.preservedAnchors[i].start.row,
                     this.preservedAnchors[i].start.column,
-                  )
+                  ),
                 );
                 showCode += this.preserved[i];
                 start.row = this.preservedAnchors[i].end.row;
                 start.column = this.preservedAnchors[i].end.column;
                 if (i === len - 1) {
-                  let lastRow = this.editor.getSession().getLength() - 1;
-                  let lastColumn = this.editor.getSession().getLine(lastRow).length;
+                  const lastRow = this.editor.getSession().getLength() - 1;
+                  const lastColumn = this.editor.getSession().getLine(lastRow).length;
 
-                  if (start.row !== lastRow && start.column !== lastColumn) {
+                  if (
+                    (start.row === lastRow
+                    && start.column < lastColumn)
+                    || start.row < lastColumn
+                  ) {
                     showCode += this.editor.getSession().doc.getTextRange(
                       new Range(
                         start.row,
                         start.column,
                         lastRow,
                         lastColumn,
-                      )
+                      ),
                     );
                   }
                 }
