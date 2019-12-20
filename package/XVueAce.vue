@@ -1,8 +1,20 @@
 <template>
-  <div
-    ref="refEditor"
-    class="element-editor"
-  />
+  <div>
+    <div class="element-blank">
+      <input
+        class="blankInputs"
+        v-for="(item, index) in blanks"
+        :key="'blank' + index"
+        :id="'blank' + index"
+        :value="item"
+        @blur="blankChange($event, index)"
+      />
+    </div>
+    <div
+      ref="refEditor"
+      class="element-editor"
+    />
+  </div>
 </template>
 
 <script>
@@ -351,10 +363,23 @@ export default {
     if (this.blanks.length > 0) {
       this.editor.setReadOnly(true);
       for (let i = 0, len = this.blanks.length; i < len; i += 1) {
-        this.blankRanges.push(this.editor.find('<xhc_blank/>'));
+        const range = this.editor.find('<xhc_blank/>');
+        this.editor.session.addMarker(range, 'blank-highlight', null, true);
+        this.blankRanges.push(range);
       }
       this.editor.gotoLine(0);
+
+      setTimeout(() => {
+        const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
+        const blankArray = [...blankDoms];
+        blankArray.forEach((item, index) => {
+          const bound = item.getBoundingClientRect();
+          document.getElementById('blank' + index).style.top = bound.top + 'px';
+          document.getElementById('blank' + index).style.left = bound.left + 'px';
+        });
+      }, 1000);
     }
+
     if (this.preserved.length > 0) {
       this.preservedRanges = this.preserved.map(item => this.editor.find(item));
       this.preservedAnchors = this.preservedRanges.map((item, index) => {
@@ -447,6 +472,10 @@ export default {
   },
 
   methods: {
+    blankChange(evt, index) {
+      this.blanks[index] = evt.target.value;
+    },
+
     insert(text, focus = true) {
       this.editor.insert(text);
       if (focus) this.editor.focus();
@@ -649,7 +678,16 @@ export default {
 };
 </script>
 <style lang="less">
+.element-blank {
+  position: absolute;
+  z-index: 9;
+  .blankInputs {
+    position: absolute;
+  }
+}
 .element-editor {
+  width: 100%;
+  height: 100%;
   background-color: white;
 }
 
@@ -688,5 +726,10 @@ export default {
   background-color: #333;
   opacity: 0.2;
   position: absolute;
+}
+.blank-highlight {
+  background-color: #fff;
+  position: absolute;
+  border: 2px solid #333;
 }
 </style>
