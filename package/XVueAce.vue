@@ -147,6 +147,7 @@ export default {
       preserved: [],
       preservedRanges: [],
       preservedAnchors: [],
+      isPreservedReady: false,
     };
   },
 
@@ -394,6 +395,7 @@ export default {
         return range;
       });
       this.editor.gotoLine(0);
+      this.isPreservedReady = true;
 
       // 出现部分只读 => 要禁用选取
       this.editor.getSession().selection.on('changeSelection', (e) => {
@@ -448,9 +450,10 @@ export default {
             return false;
           }
         })) {
-          this.editor.setReadOnly(true);
-        } else {
-          this.editor.setReadOnly(false);
+          this.editor.clearSelection();
+          // this.editor.setReadOnly(true);
+        // } else {
+          // this.editor.setReadOnly(false);
         }
       });
     }
@@ -518,45 +521,58 @@ export default {
         let value = this.editor.getValue();
 
         if (this.enableMarkup) {
-          if (this.blankRanges.length > 0) {
+          if (this.blanks.length > 0) {
             // 替换代码
-          } else if (this.preservedAnchors.length > 0) {
-            let showCode = '';
-            let start = {
-              row: 0,
-              column: 0,
-            };
-            for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-              showCode += this.editor.getSession().doc.getTextRange(
-                new Range(
-                  start.row,
-                  start.column,
-                  this.preservedAnchors[i].start.row,
-                  this.preservedAnchors[i].start.column,
-                )
-              );
-              showCode += this.preserved[i];
-              start.row = this.preservedAnchors[i].end.row;
-              start.column = this.preservedAnchors[i].end.column;
-              if (i === len - 1) {
-                let lastRow = this.editor.getSession().getLength() - 1;
-                let lastColumn = this.editor.getSession().getLine(lastRow).length;
+          } else if (this.preserved.length > 0) {
+            // 编辑器回车是异步执行
+            setTimeout(() => {
+              let showCode = '';
+              let start = {
+                row: 0,
+                column: 0,
+              };
+              for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
                 showCode += this.editor.getSession().doc.getTextRange(
                   new Range(
                     start.row,
                     start.column,
-                    lastRow,
-                    lastColumn,
+                    this.preservedAnchors[i].start.row,
+                    this.preservedAnchors[i].start.column,
                   )
                 );
+                showCode += this.preserved[i];
+                start.row = this.preservedAnchors[i].end.row;
+                start.column = this.preservedAnchors[i].end.column;
+                if (i === len - 1) {
+                  let lastRow = this.editor.getSession().getLength() - 1;
+                  let lastColumn = this.editor.getSession().getLine(lastRow).length;
+
+                  if (start.row !== lastRow && start.column !== lastColumn) {
+                    showCode += this.editor.getSession().doc.getTextRange(
+                      new Range(
+                        start.row,
+                        start.column,
+                        lastRow,
+                        lastColumn,
+                      )
+                    );
+                  }
+                }
               }
-            }
-            value = `${this.headCode}${showCode}${this.tailCode}`;
+
+              if (this.isPreservedReady) {
+                value = `${this.headCode}${showCode}${this.tailCode}`;
+              } else {
+                value = this.originCode;
+              }
+              this.$emit('change', value, event, this.editor);
+            }, 0);
+            return;
           } else {
             value = `${this.headCode}${value}${this.tailCode}`;
           }
         }
-console.log('value:', value);
+
         this.$emit('change', value, event, this.editor);
       }
     },
