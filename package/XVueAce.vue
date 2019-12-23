@@ -1,13 +1,16 @@
 <template>
   <div>
-    <div class="element-blank">
+    <div
+      class="element-blank"
+      v-show="isBlankReady"
+    >
       <input
         class="blankInputs"
         v-for="(item, index) in blanks"
         :key="'blank' + index"
         :id="'blank' + index"
         :value="item"
-        @blur="blankChange($event, index)"
+        @input="blankChange($event, index)"
       />
     </div>
     <div
@@ -156,6 +159,7 @@ export default {
       tailCode: '',
       blanks: [],
       blankRanges: [],
+      isBlankReady: false,
       preserved: [],
       preservedRanges: [],
       preservedAnchors: [],
@@ -334,6 +338,10 @@ export default {
 
     this.$watch('fontSize', (newVal) => {
       this.editor.setFontSize(newVal);
+
+      if (this.blanks.length > 0) {
+        this.blankRender();
+      }
     });
 
     this.$watch('wrapEnabled', (newVal) => {
@@ -370,13 +378,8 @@ export default {
       this.editor.gotoLine(0);
 
       setTimeout(() => {
-        const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
-        const blankArray = [...blankDoms];
-        blankArray.forEach((item, index) => {
-          const bound = item.getBoundingClientRect();
-          document.getElementById('blank' + index).style.top = bound.top + 'px';
-          document.getElementById('blank' + index).style.left = bound.left + 'px';
-        });
+        this.isBlankReady = true;
+        this.blankRender();
       }, 1000);
     }
 
@@ -472,8 +475,29 @@ export default {
   },
 
   methods: {
+    blankRender() {
+      const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
+      const blankArray = [...blankDoms];
+      blankArray.forEach((item, index) => {
+        const {
+          top,
+          left,
+          width,
+          height,
+        } = item.getBoundingClientRect();
+        window.requestAnimationFrame(() => {
+          document.getElementById(`blank${index}`).style.top = `${top}px`;
+          document.getElementById(`blank${index}`).style.left = `${left}px`;
+          document.getElementById(`blank${index}`).style.width = `${width}px`;
+          document.getElementById(`blank${index}`).style.height = `${height - 6}px`;
+          document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
+        });
+      });
+    },
     blankChange(evt, index) {
       this.blanks[index] = evt.target.value;
+
+      this.handleChange();
     },
 
     insert(text, focus = true) {
@@ -519,6 +543,13 @@ export default {
         if (this.enableMarkup) {
           if (this.blanks.length > 0) {
             // 替换代码
+            this.blanks.forEach((item, index) => {
+              value = value.replace(
+                '<xhc_blank/>',
+                `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
+              );
+            });
+            value = `${this.headCode}${value}${this.tailCode}`;
           } else if (this.preserved.length > 0) {
             // 编辑器回车是异步执行
             setTimeout(() => {
@@ -543,11 +574,9 @@ export default {
                   const lastRow = this.editor.getSession().getLength() - 1;
                   const lastColumn = this.editor.getSession().getLine(lastRow).length;
 
-                  if (
-                    (start.row === lastRow
+                  if ((start.row === lastRow
                     && start.column < lastColumn)
-                    || start.row < lastColumn
-                  ) {
+                    || start.row < lastColumn) {
                     showCode += this.editor.getSession().doc.getTextRange(
                       new Range(
                         start.row,
@@ -683,6 +712,8 @@ export default {
   z-index: 9;
   .blankInputs {
     position: absolute;
+    outline: none;
+    border: 2px solid #333;
   }
 }
 .element-editor {
@@ -730,6 +761,5 @@ export default {
 .blank-highlight {
   background-color: #fff;
   position: absolute;
-  border: 2px solid #333;
 }
 </style>
