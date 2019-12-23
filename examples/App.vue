@@ -62,6 +62,11 @@ export default {
 
     handleEditorChange(val) {
       this.source = val;
+      // console.log(this.source);
+
+      // this.$refs.editor.getCode().then((val) => {
+      //   console.log(val);
+      // });
     },
   },
 

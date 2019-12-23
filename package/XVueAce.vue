@@ -475,6 +475,78 @@ export default {
   },
 
   methods: {
+    // public methods
+    getCode() {
+      return this.getCompleteCode().then(value => Promise.resolve(value.replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '')));
+    },
+
+    // private methods
+    getCompleteCode() {
+      let value = this.editor.getValue();
+
+      if (this.enableMarkup) {
+        if (this.blanks.length > 0) {
+          // 替换代码
+          this.blanks.forEach((item, index) => {
+            value = value.replace(
+              '<xhc_blank/>',
+              `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
+            );
+          });
+          value = `${this.headCode}${value}${this.tailCode}`;
+        } else if (this.preserved.length > 0) {
+          // 编辑器回车是异步执行
+          return setTimeout(() => {
+            let showCode = '';
+            const start = {
+              row: 0,
+              column: 0,
+            };
+            for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
+              showCode += this.editor.getSession().doc.getTextRange(
+                new Range(
+                  start.row,
+                  start.column,
+                  this.preservedAnchors[i].start.row,
+                  this.preservedAnchors[i].start.column,
+                ),
+              );
+              showCode += this.preserved[i];
+              start.row = this.preservedAnchors[i].end.row;
+              start.column = this.preservedAnchors[i].end.column;
+              if (i === len - 1) {
+                const lastRow = this.editor.getSession().getLength() - 1;
+                const lastColumn = this.editor.getSession().getLine(lastRow).length;
+
+                if ((start.row === lastRow
+                  && start.column < lastColumn)
+                  || start.row < lastColumn) {
+                  showCode += this.editor.getSession().doc.getTextRange(
+                    new Range(
+                      start.row,
+                      start.column,
+                      lastRow,
+                      lastColumn,
+                    ),
+                  );
+                }
+              }
+            }
+
+            if (this.isPreservedReady) {
+              value = `${this.headCode}${showCode}${this.tailCode}`;
+            } else {
+              value = this.originCode;
+            }
+            return Promise.resolve(value);
+          }, 0);
+        } else {
+          value = `${this.headCode}${value}${this.tailCode}`;
+        }
+      }
+
+      return Promise.resolve(value);
+    },
     blankRender() {
       const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
       const blankArray = [...blankDoms];
@@ -538,71 +610,9 @@ export default {
 
     handleChange(event) {
       if (!this.silent) {
-        let value = this.editor.getValue();
-
-        if (this.enableMarkup) {
-          if (this.blanks.length > 0) {
-            // 替换代码
-            this.blanks.forEach((item, index) => {
-              value = value.replace(
-                '<xhc_blank/>',
-                `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
-              );
-            });
-            value = `${this.headCode}${value}${this.tailCode}`;
-          } else if (this.preserved.length > 0) {
-            // 编辑器回车是异步执行
-            setTimeout(() => {
-              let showCode = '';
-              const start = {
-                row: 0,
-                column: 0,
-              };
-              for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-                showCode += this.editor.getSession().doc.getTextRange(
-                  new Range(
-                    start.row,
-                    start.column,
-                    this.preservedAnchors[i].start.row,
-                    this.preservedAnchors[i].start.column,
-                  ),
-                );
-                showCode += this.preserved[i];
-                start.row = this.preservedAnchors[i].end.row;
-                start.column = this.preservedAnchors[i].end.column;
-                if (i === len - 1) {
-                  const lastRow = this.editor.getSession().getLength() - 1;
-                  const lastColumn = this.editor.getSession().getLine(lastRow).length;
-
-                  if ((start.row === lastRow
-                    && start.column < lastColumn)
-                    || start.row < lastColumn) {
-                    showCode += this.editor.getSession().doc.getTextRange(
-                      new Range(
-                        start.row,
-                        start.column,
-                        lastRow,
-                        lastColumn,
-                      ),
-                    );
-                  }
-                }
-              }
-
-              if (this.isPreservedReady) {
-                value = `${this.headCode}${showCode}${this.tailCode}`;
-              } else {
-                value = this.originCode;
-              }
-              this.$emit('change', value, event, this.editor);
-            }, 0);
-            return;
-          } else {
-            value = `${this.headCode}${value}${this.tailCode}`;
-          }
-        }
-
-        this.$emit('change', value, event, this.editor);
+        this.getCompleteCode().then((value) => {
+          this.$emit('change', value, event, this.editor);
+        });
       }
     },
 
