@@ -486,7 +486,6 @@ export default {
 
       if (this.enableMarkup) {
         if (this.blanks.length > 0) {
-          // 替换代码
           this.blanks.forEach((item, index) => {
             value = value.replace(
               '<xhc_blank/>',
@@ -496,50 +495,47 @@ export default {
           value = `${this.headCode}${value}${this.tailCode}`;
         } else if (this.preserved.length > 0) {
           // 编辑器回车是异步执行
-          return setTimeout(() => {
-            let showCode = '';
-            const start = {
-              row: 0,
-              column: 0,
-            };
-            for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-              showCode += this.editor.getSession().doc.getTextRange(
-                new Range(
-                  start.row,
-                  start.column,
-                  this.preservedAnchors[i].start.row,
-                  this.preservedAnchors[i].start.column,
-                ),
-              );
-              showCode += this.preserved[i];
-              start.row = this.preservedAnchors[i].end.row;
-              start.column = this.preservedAnchors[i].end.column;
-              if (i === len - 1) {
-                const lastRow = this.editor.getSession().getLength() - 1;
-                const lastColumn = this.editor.getSession().getLine(lastRow).length;
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              let showCode = '';
+              const start = {
+                row: 0,
+                column: 0,
+              };
+              for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
+                showCode += this.editor.getSession().doc.getTextRange(
+                  new Range(
+                    start.row,
+                    start.column,
+                    this.preservedAnchors[i].start.row,
+                    this.preservedAnchors[i].start.column,
+                  ),
+                );
+                showCode += this.preserved[i];
+                start.row = this.preservedAnchors[i].end.row;
+                start.column = this.preservedAnchors[i].end.column;
+                if (i === len - 1) {
+                  const lastRow = this.editor.getSession().getLength() - 1;
+                  const lastColumn = this.editor.getSession().getLine(lastRow).length;
 
-                if ((start.row === lastRow
-                  && start.column < lastColumn)
-                  || start.row < lastColumn) {
-                  showCode += this.editor.getSession().doc.getTextRange(
-                    new Range(
-                      start.row,
-                      start.column,
-                      lastRow,
-                      lastColumn,
-                    ),
-                  );
+                  if ((start.row === lastRow
+                    && start.column < lastColumn)
+                    || start.row < lastColumn) {
+                    showCode += this.editor.getSession().doc.getTextRange(
+                      new Range(
+                        start.row,
+                        start.column,
+                        lastRow,
+                        lastColumn,
+                      ),
+                    );
+                  }
                 }
               }
-            }
 
-            if (this.isPreservedReady) {
-              value = `${this.headCode}${showCode}${this.tailCode}`;
-            } else {
-              value = this.originCode;
-            }
-            return Promise.resolve(value);
-          }, 0);
+              return resolve(`${this.headCode}${showCode}${this.tailCode}`);
+            }, 0)
+          });
         } else {
           value = `${this.headCode}${value}${this.tailCode}`;
         }
