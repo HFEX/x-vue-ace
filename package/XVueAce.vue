@@ -164,6 +164,7 @@ export default {
       preservedRanges: [],
       preservedAnchors: [],
       isPreservedReady: false,
+      isReadOnly: false,
     };
   },
 
@@ -369,7 +370,8 @@ export default {
     this.$watch('focus', () => this.editor.focus());
 
     if (this.blanks.length > 0) {
-      this.editor.setReadOnly(true);
+      this.isReadOnly = true;
+      this.editor.setReadOnly(this.isReadOnly);
       for (let i = 0, len = this.blanks.length; i < len; i += 1) {
         const range = this.editor.find('<xhc_blank/>');
         this.editor.session.addMarker(range, 'blank-highlight', null, true);
@@ -465,10 +467,11 @@ export default {
             }
             return false;
           })) {
-            this.editor.setReadOnly(true);
+            this.isReadOnly = true;
           } else {
-            this.editor.setReadOnly(false);
+            this.isReadOnly = false;
           }
+          this.editor.setReadOnly(this.isReadOnly);
         }, 0);
       });
     }
@@ -582,6 +585,10 @@ export default {
     },
 
     insert(text, focus = true) {
+      if (this.isReadOnly || this.readOnly) {
+        return;
+      }
+
       this.editor.insert(text);
       if (focus) this.editor.focus();
     },
