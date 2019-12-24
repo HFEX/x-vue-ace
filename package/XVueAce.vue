@@ -147,7 +147,7 @@ export default {
     },
     enableMarkup: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
 
