@@ -481,7 +481,7 @@ export default {
 
       if (this.enableMarkup) {
         if (this.blanks.length > 0) {
-          value = this.spliceBlanks();
+          value = this.spliceBlanks(value);
         } else if (this.preserved.length > 0) {
           value = this.splicePreserveds();
         } else {
@@ -498,7 +498,7 @@ export default {
 
       if (this.enableMarkup) {
         if (this.blanks.length > 0) {
-          value = this.spliceBlanks();
+          value = this.spliceBlanks(value);
         } else if (this.preserved.length > 0) {
           // 编辑器回车是异步执行
           return new Promise((resolve) => {
