@@ -477,7 +477,19 @@ export default {
   methods: {
     // public methods
     getCode() {
-      return this.getCompleteCode().then(value => Promise.resolve(value.replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '')));
+      let value = this.editor.getValue();
+
+      if (this.enableMarkup) {
+        if (this.blanks.length > 0) {
+          value = this.spliceBlanks();
+        } else if (this.preserved.length > 0) {
+          value = this.splicePreserveds();
+        } else {
+          value = `${this.headCode}${value}${this.tailCode}`;
+        }
+      }
+
+      return value.replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
     },
 
     // private methods
@@ -486,55 +498,11 @@ export default {
 
       if (this.enableMarkup) {
         if (this.blanks.length > 0) {
-          this.blanks.forEach((item, index) => {
-            value = value.replace(
-              '<xhc_blank/>',
-              `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
-            );
-          });
-          value = `${this.headCode}${value}${this.tailCode}`;
+          value = this.spliceBlanks();
         } else if (this.preserved.length > 0) {
           // 编辑器回车是异步执行
           return new Promise((resolve) => {
-            setTimeout(() => {
-              let showCode = '';
-              const start = {
-                row: 0,
-                column: 0,
-              };
-              for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-                showCode += this.editor.getSession().doc.getTextRange(
-                  new Range(
-                    start.row,
-                    start.column,
-                    this.preservedAnchors[i].start.row,
-                    this.preservedAnchors[i].start.column,
-                  ),
-                );
-                showCode += this.preserved[i];
-                start.row = this.preservedAnchors[i].end.row;
-                start.column = this.preservedAnchors[i].end.column;
-                if (i === len - 1) {
-                  const lastRow = this.editor.getSession().getLength() - 1;
-                  const lastColumn = this.editor.getSession().getLine(lastRow).length;
-
-                  if ((start.row === lastRow
-                    && start.column < lastColumn)
-                    || start.row < lastColumn) {
-                    showCode += this.editor.getSession().doc.getTextRange(
-                      new Range(
-                        start.row,
-                        start.column,
-                        lastRow,
-                        lastColumn,
-                      ),
-                    );
-                  }
-                }
-              }
-
-              return resolve(`${this.headCode}${showCode}${this.tailCode}`);
-            }, 0)
+            setTimeout(() => resolve(this.splicePreserveds()), 0);
           });
         } else {
           value = `${this.headCode}${value}${this.tailCode}`;
@@ -542,6 +510,51 @@ export default {
       }
 
       return Promise.resolve(value);
+    },
+    spliceBlanks(value) {
+      this.blanks.forEach((item, index) => {
+        /* eslint-disable-next-line no-param-reassign */
+        value = value.replace(
+          '<xhc_blank/>',
+          `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
+        );
+      });
+      return `${this.headCode}${value}${this.tailCode}`;
+    },
+    splicePreserveds() {
+      let showCode = '';
+      const start = {
+        row: 0,
+        column: 0,
+      };
+      for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
+        showCode += this.editor.getSession().doc.getTextRange(
+          new Range(
+            start.row,
+            start.column,
+            this.preservedAnchors[i].start.row,
+            this.preservedAnchors[i].start.column,
+          ),
+        );
+        showCode += this.preserved[i];
+        start.row = this.preservedAnchors[i].end.row;
+        start.column = this.preservedAnchors[i].end.column;
+        if (i === len - 1) {
+          const lastRow = this.editor.getSession().getLength() - 1;
+          const lastColumn = this.editor.getSession().getLine(lastRow).length;
+
+          showCode += this.editor.getSession().doc.getTextRange(
+            new Range(
+              start.row,
+              start.column,
+              lastRow,
+              lastColumn,
+            ),
+          );
+        }
+      }
+
+      return `${this.headCode}${showCode}${this.tailCode}`;
     },
     blankRender() {
       const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
