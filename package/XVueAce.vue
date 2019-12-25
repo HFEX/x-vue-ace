@@ -162,7 +162,6 @@ export default {
       preserved: [],
       preservedRanges: [],
       preservedAnchors: [],
-      isPreservedReady: false,
       isReadOnly: false,
     };
   },
@@ -343,8 +342,10 @@ export default {
 
     this.$watch('enableMarkup', (newVal) => {
       if (newVal) {
+        this.code = this.editor.getValue();
         this.handleMarkup();
         this.editor.setValue(this.code, this.cursorStart);
+        this.isBlankReady = false;
         setTimeout(() => {
           this.handleBlankOrPreserved();
         });
@@ -367,6 +368,7 @@ export default {
               this.editor.getSession().removeMarker(id);
             }
           });
+          this.editor.getSession().selection.off('changeCursor', this.handlePreservedRange);
         }
 
         this.code = this.syncGetCode(true);
@@ -467,70 +469,70 @@ export default {
           return range;
         });
         this.editor.gotoLine(0);
-        this.isPreservedReady = true;
 
         // 出现部分只读 => 要禁用选取
-        this.editor.getSession().selection.on('changeCursor', () => {
-          // anchor更新是异步执行
-          setTimeout(() => {
-            const selection = this.editor.getSession().selection.getRange();
-            if (this.preservedAnchors.some((anchor) => {
-              if (
-                // 1.仅只读范围起点在选取范围中
-                ((anchor.start.row > selection.start.row
-                && anchor.start.row < selection.end.row)
-                || (anchor.start.row === selection.start.row
-                && anchor.start.column >= selection.start.column
-                && anchor.start.row === selection.end.row
-                && anchor.start.column <= selection.end.column)
-                || (anchor.start.row === selection.start.row
-                && anchor.start.column >= selection.start.column
-                && anchor.start.row < selection.end.row)
-                || (anchor.start.row > selection.start.row
-                && anchor.start.row === selection.end.row
-                && anchor.start.column <= selection.end.column))
-                // 2.仅只读范围终点在选取范围中
-                || ((anchor.end.row > selection.start.row
-                && anchor.end.row < selection.end.row)
-                || (anchor.end.row === selection.start.row
-                && anchor.end.column >= selection.start.column
-                && anchor.end.row === selection.end.row
-                && anchor.end.column <= selection.end.column)
-                || (anchor.end.row === selection.start.row
-                && anchor.end.column >= selection.start.column
-                && anchor.end.row < selection.end.row)
-                || (anchor.end.row > selection.start.row
-                && anchor.end.row === selection.end.row
-                && anchor.end.column <= selection.end.column))
-                // 3.只读范围涵盖选取范围
-                // 3.1.起止不在同一行
-                || (anchor.start.row < selection.start.row
-                && anchor.end.row > selection.end.row)
-                // 3.2.起在同一行 止可能在同一行
-                || (anchor.start.row === selection.start.row
-                && anchor.start.column <= selection.start.column
-                && (anchor.end.row > selection.end.row
-                || (anchor.end.row === selection.end.row
-                && anchor.end.column >= selection.end.column)))
-                // 3.3 止在同一行 起可能在同一行
-                || (anchor.end.row === selection.end.row
-                && anchor.end.column >= selection.end.column
-                && (anchor.start.row > selection.start.row
-                || (anchor.start.row === selection.start.row
-                && anchor.start.column <= selection.start.column)))
-              ) {
-                return true;
-              }
-              return false;
-            })) {
-              this.isReadOnly = true;
-            } else {
-              this.isReadOnly = false;
-            }
-            this.editor.setReadOnly(this.isReadOnly);
-          }, 0);
-        });
+        this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
       }
+    },
+    handlePreservedRange() {
+      // anchor更新是异步执行
+      setTimeout(() => {
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.preservedAnchors.some((anchor) => {
+          if (
+            // 1.仅只读范围起点在选取范围中
+            ((anchor.start.row > selection.start.row
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row === selection.end.row
+            && anchor.start.column <= selection.end.column)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row > selection.start.row
+            && anchor.start.row === selection.end.row
+            && anchor.start.column <= selection.end.column))
+            // 2.仅只读范围终点在选取范围中
+            || ((anchor.end.row > selection.start.row
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column >= selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column >= selection.start.column
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row > selection.start.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column))
+            // 3.只读范围涵盖选取范围
+            // 3.1.起止不在同一行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 3.2.起在同一行 止可能在同一行
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column <= selection.start.column
+            && (anchor.end.row > selection.end.row
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column >= selection.end.column)))
+            // 3.3 止在同一行 起可能在同一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column >= selection.end.column
+            && (anchor.start.row > selection.start.row
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column <= selection.start.column)))
+          ) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = true;
+        } else {
+          this.isReadOnly = false;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
     },
     syncGetCode(notJudge) {
       let value = this.editor.getValue();
@@ -623,7 +625,7 @@ export default {
         window.requestAnimationFrame(() => {
           document.getElementById(`blank${index}`).style.top = `${top}px`;
           document.getElementById(`blank${index}`).style.left = `${left}px`;
-          document.getElementById(`blank${index}`).style.width = `${width}px`;
+          document.getElementById(`blank${index}`).style.width = `${width - 6}px`;
           document.getElementById(`blank${index}`).style.height = `${height - 6}px`;
           document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
         });
