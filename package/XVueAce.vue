@@ -2,7 +2,7 @@
   <div>
     <div
       class="element-blank"
-      v-show="isBlankReady"
+      v-show="enableMarkup && isBlankReady"
     >
       <input
         class="blankInputs"
@@ -153,7 +153,6 @@ export default {
 
   data() {
     return {
-      originCode: '',
       code: '',
       headCode: '',
       tailCode: '',
@@ -169,36 +168,9 @@ export default {
   },
 
   mounted() {
-    this.originCode = this.value;
     this.code = this.value;
 
-    if (this.enableMarkup) {
-      // code hide
-      const [fragment0, fragment1] = this.originCode.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
-      if (fragment0 && fragment1) {
-        this.headCode = fragment0;
-        this.tailCode = fragment1;
-      } else if (fragment0 && this.originCode.indexOf(fragment0) === 0 && !fragment1) {
-        this.headCode = fragment0;
-      } else if (fragment0 && this.originCode.indexOf(fragment0) !== 0 && !fragment1) {
-        this.tailCode = fragment0;
-      }
-
-      this.code = this.code.replace(this.headCode, '');
-      this.code = this.code.replace(this.tailCode, '');
-
-      // code lock or code blank
-      if (this.code.indexOf('<xiaohou-blank>') > -1) {
-        this.blanks = this.originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
-
-        this.blanks = this.blanks.map((item) => {
-          this.code = this.code.replace(item, '<xhc_blank/>');
-          return item.replace(/<\/?xiaohou-blank>/ig, '');
-        });
-      } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
-        this.preserved = this.originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
-      }
-    }
+    this.handleMarkup();
 
     this.editor = ace.edit(this.$refs.refEditor);
 
@@ -369,120 +341,201 @@ export default {
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
 
-    if (this.blanks.length > 0) {
-      this.isReadOnly = true;
-      this.editor.setReadOnly(this.isReadOnly);
-      for (let i = 0, len = this.blanks.length; i < len; i += 1) {
-        const range = this.editor.find('<xhc_blank/>');
-        this.editor.session.addMarker(range, 'blank-highlight', null, true);
-        this.blankRanges.push(range);
-      }
-      this.editor.gotoLine(0);
-
-      setTimeout(() => {
-        this.isBlankReady = true;
-        this.blankRender();
-      }, 1000);
-    }
-
-    if (this.preserved.length > 0) {
-      this.preservedRanges = this.preserved.map(item => this.editor.find(item));
-      this.preservedAnchors = this.preservedRanges.map((item, index) => {
-        let range;
-        if (item.start.row === item.end.row) {
-          range = new Range(item.start.row, item.start.column, item.end.row, item.end.column - 29);
-        } else {
-          range = new Range(item.start.row, item.start.column, item.end.row, item.end.column - 15);
-        }
-        this.editor.session.addMarker(range, 'readonly-highlight');
-        this.editor.session.replace(
-          new Range(
-            item.start.row,
-            item.start.column,
-            item.end.row,
-            item.end.column,
-          ),
-          this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
-        );
-
-        range.start = this.editor.session.doc.createAnchor(range.start);
-        range.end = this.editor.session.doc.createAnchor(range.end);
-        range.end.$insertRight = true;
-        return range;
-      });
-      this.editor.gotoLine(0);
-      this.isPreservedReady = true;
-
-      // 出现部分只读 => 要禁用选取
-      this.editor.getSession().selection.on('changeCursor', () => {
-        // anchor更新是异步执行
+    this.$watch('enableMarkup', (newVal) => {
+      if (newVal) {
+        this.handleMarkup();
+        this.editor.setValue(this.code, this.cursorStart);
         setTimeout(() => {
-          const selection = this.editor.getSession().selection.getRange();
-          if (this.preservedAnchors.some((anchor) => {
-            if (
-              // 1.仅只读范围起点在选取范围中
-              ((anchor.start.row > selection.start.row
-              && anchor.start.row < selection.end.row)
-              || (anchor.start.row === selection.start.row
-              && anchor.start.column >= selection.start.column
-              && anchor.start.row === selection.end.row
-              && anchor.start.column <= selection.end.column)
-              || (anchor.start.row === selection.start.row
-              && anchor.start.column >= selection.start.column
-              && anchor.start.row < selection.end.row)
-              || (anchor.start.row > selection.start.row
-              && anchor.start.row === selection.end.row
-              && anchor.start.column <= selection.end.column))
-              // 2.仅只读范围终点在选取范围中
-              || ((anchor.end.row > selection.start.row
-              && anchor.end.row < selection.end.row)
-              || (anchor.end.row === selection.start.row
-              && anchor.end.column >= selection.start.column
-              && anchor.end.row === selection.end.row
-              && anchor.end.column <= selection.end.column)
-              || (anchor.end.row === selection.start.row
-              && anchor.end.column >= selection.start.column
-              && anchor.end.row < selection.end.row)
-              || (anchor.end.row > selection.start.row
-              && anchor.end.row === selection.end.row
-              && anchor.end.column <= selection.end.column))
-              // 3.只读范围涵盖选取范围
-              // 3.1.起止不在同一行
-              || (anchor.start.row < selection.start.row
-              && anchor.end.row > selection.end.row)
-              // 3.2.起在同一行 止可能在同一行
-              || (anchor.start.row === selection.start.row
-              && anchor.start.column <= selection.start.column
-              && (anchor.end.row > selection.end.row
-              || (anchor.end.row === selection.end.row
-              && anchor.end.column >= selection.end.column)))
-              // 3.3 止在同一行 起可能在同一行
-              || (anchor.end.row === selection.end.row
-              && anchor.end.column >= selection.end.column
-              && (anchor.start.row > selection.start.row
-              || (anchor.start.row === selection.start.row
-              && anchor.start.column <= selection.start.column)))
-            ) {
-              return true;
+          this.handleBlankOrPreserved();
+        });
+      } else {
+        this.isReadOnly = false;
+        this.editor.setReadOnly(this.isReadOnly);
+
+        let markers;
+        if (this.blanks.length > 0) {
+          markers = this.editor.getSession().getMarkers(true);
+          Object.keys(markers).forEach((id) => {
+            if (markers[id].clazz === 'blank-highlight') {
+              this.editor.getSession().removeMarker(id);
             }
-            return false;
-          })) {
-            this.isReadOnly = true;
-          } else {
-            this.isReadOnly = false;
-          }
-          this.editor.setReadOnly(this.isReadOnly);
-        }, 0);
-      });
-    }
+          });
+        } else if (this.preserved.length > 0) {
+          markers = this.editor.getSession().getMarkers();
+          Object.keys(markers).forEach((id) => {
+            if (markers[id].clazz === 'readonly-highlight') {
+              this.editor.getSession().removeMarker(id);
+            }
+          });
+        }
+
+        this.code = this.syncGetCode(true);
+        this.editor.setValue(this.code, this.cursorStart);
+      }
+    });
+
+    this.handleBlankOrPreserved();
   },
 
   methods: {
     // public methods
     getCode() {
+      return this.syncGetCode().replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
+    },
+
+    // private methods
+    handleMarkup() {
+      const originCode = this.code;
+      if (this.enableMarkup) {
+        // code hide
+        const [fragment0, fragment1] = originCode.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+        if (fragment0 && fragment1) {
+          this.headCode = fragment0;
+          this.tailCode = fragment1;
+        } else if (fragment0 && originCode.indexOf(fragment0) === 0 && !fragment1) {
+          this.headCode = fragment0;
+        } else if (fragment0 && originCode.indexOf(fragment0) !== 0 && !fragment1) {
+          this.tailCode = fragment0;
+        }
+
+        this.code = this.code.replace(this.headCode, '');
+        this.code = this.code.replace(this.tailCode, '');
+
+        // code lock or code blank
+        if (this.code.indexOf('<xiaohou-blank>') > -1) {
+          this.blanks = originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+
+          this.blanks = this.blanks.map((item) => {
+            this.code = this.code.replace(item, '<xhc_blank/>');
+            return item.replace(/<\/?xiaohou-blank>/ig, '');
+          });
+        } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
+          this.preserved = originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+        }
+      }
+    },
+    handleBlankOrPreserved() {
+      if (this.blanks.length > 0) {
+        this.isReadOnly = true;
+        this.editor.setReadOnly(this.isReadOnly);
+        for (let i = 0, len = this.blanks.length; i < len; i += 1) {
+          const range = this.editor.find('<xhc_blank/>');
+          this.editor.session.addMarker(range, 'blank-highlight', null, true);
+          this.blankRanges.push(range);
+        }
+        this.editor.gotoLine(0);
+
+        setTimeout(() => {
+          this.isBlankReady = true;
+          this.blankRender();
+        }, 1000);
+      }
+
+      if (this.preserved.length > 0) {
+        this.preservedRanges = this.preserved.map(item => this.editor.find(item));
+        this.preservedAnchors = this.preservedRanges.map((item, index) => {
+          let range;
+          if (item.start.row === item.end.row) {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 29,
+            );
+          } else {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 15,
+            );
+          }
+          this.editor.session.addMarker(range, 'readonly-highlight');
+          this.editor.session.replace(
+            new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column,
+            ),
+            this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
+          );
+
+          range.start = this.editor.session.doc.createAnchor(range.start);
+          range.end = this.editor.session.doc.createAnchor(range.end);
+          range.end.$insertRight = true;
+          return range;
+        });
+        this.editor.gotoLine(0);
+        this.isPreservedReady = true;
+
+        // 出现部分只读 => 要禁用选取
+        this.editor.getSession().selection.on('changeCursor', () => {
+          // anchor更新是异步执行
+          setTimeout(() => {
+            const selection = this.editor.getSession().selection.getRange();
+            if (this.preservedAnchors.some((anchor) => {
+              if (
+                // 1.仅只读范围起点在选取范围中
+                ((anchor.start.row > selection.start.row
+                && anchor.start.row < selection.end.row)
+                || (anchor.start.row === selection.start.row
+                && anchor.start.column >= selection.start.column
+                && anchor.start.row === selection.end.row
+                && anchor.start.column <= selection.end.column)
+                || (anchor.start.row === selection.start.row
+                && anchor.start.column >= selection.start.column
+                && anchor.start.row < selection.end.row)
+                || (anchor.start.row > selection.start.row
+                && anchor.start.row === selection.end.row
+                && anchor.start.column <= selection.end.column))
+                // 2.仅只读范围终点在选取范围中
+                || ((anchor.end.row > selection.start.row
+                && anchor.end.row < selection.end.row)
+                || (anchor.end.row === selection.start.row
+                && anchor.end.column >= selection.start.column
+                && anchor.end.row === selection.end.row
+                && anchor.end.column <= selection.end.column)
+                || (anchor.end.row === selection.start.row
+                && anchor.end.column >= selection.start.column
+                && anchor.end.row < selection.end.row)
+                || (anchor.end.row > selection.start.row
+                && anchor.end.row === selection.end.row
+                && anchor.end.column <= selection.end.column))
+                // 3.只读范围涵盖选取范围
+                // 3.1.起止不在同一行
+                || (anchor.start.row < selection.start.row
+                && anchor.end.row > selection.end.row)
+                // 3.2.起在同一行 止可能在同一行
+                || (anchor.start.row === selection.start.row
+                && anchor.start.column <= selection.start.column
+                && (anchor.end.row > selection.end.row
+                || (anchor.end.row === selection.end.row
+                && anchor.end.column >= selection.end.column)))
+                // 3.3 止在同一行 起可能在同一行
+                || (anchor.end.row === selection.end.row
+                && anchor.end.column >= selection.end.column
+                && (anchor.start.row > selection.start.row
+                || (anchor.start.row === selection.start.row
+                && anchor.start.column <= selection.start.column)))
+              ) {
+                return true;
+              }
+              return false;
+            })) {
+              this.isReadOnly = true;
+            } else {
+              this.isReadOnly = false;
+            }
+            this.editor.setReadOnly(this.isReadOnly);
+          }, 0);
+        });
+      }
+    },
+    syncGetCode(notJudge) {
       let value = this.editor.getValue();
 
-      if (this.enableMarkup) {
+      if (this.enableMarkup || notJudge) {
         if (this.blanks.length > 0) {
           value = this.spliceBlanks(value);
         } else if (this.preserved.length > 0) {
@@ -492,11 +545,9 @@ export default {
         }
       }
 
-      return value.replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
+      return value;
     },
-
-    // private methods
-    getCompleteCode() {
+    asyncGetCode() {
       let value = this.editor.getValue();
 
       if (this.enableMarkup) {
@@ -626,7 +677,7 @@ export default {
 
     handleChange(event) {
       if (!this.silent) {
-        this.getCompleteCode().then((value) => {
+        this.asyncGetCode().then((value) => {
           this.$emit('change', value, event, this.editor);
         });
       }

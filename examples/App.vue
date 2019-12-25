@@ -7,7 +7,7 @@
       theme="chrome"
       enableLiveAutocompletion
       focus
-      enableMarkup
+      :enableMarkup="enableMarkup"
       :fontSize="17"
       :value="source"
       :annotations="annotations"
@@ -18,6 +18,7 @@
       <textarea v-model="blockText" /><br />
       <input v-model="pos" /><br />
       <button @click="handleInsert">insert</button>
+      <button @click="toggleMarkup">toggleMarkup</button>
     </div>
   </div>
 </template>
@@ -34,6 +35,7 @@ export default {
 
   data() {
     return {
+      // source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;<xiaohou-lock>1234</xiaohou-lock>\nvar b = 2;\nconst c = [a, b];<xiaohou-lock>zxcv</xiaohou-lock>\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
       source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;<xiaohou-blank>1234</xiaohou-blank>\nvar b = 2;\nconst c = [a, b];<xiaohou-blank>zxcv</xiaohou-blank>\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
       annotations: [{
         row: 0,
@@ -51,6 +53,7 @@ export default {
       }],
       blockText: '',
       pos: '1,3,5',
+      enableMarkup: true,
     };
   },
 
@@ -58,6 +61,10 @@ export default {
     handleInsert() {
       this.$refs.editor.insertAndSelect(this.blockText, this.pos);
       // this.blockText = '';
+    },
+
+    toggleMarkup() {
+      this.enableMarkup = !this.enableMarkup;
     },
 
     handleEditorChange(val) {
