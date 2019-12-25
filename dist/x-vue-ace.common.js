@@ -110,12 +110,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"33ac41f6-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=2efc8030&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"refEditor",staticClass:"element-editor"})}
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"06a15436-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=199a21fc&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.enableMarkup && _vm.isBlankReady),expression:"enableMarkup && isBlankReady"}],staticClass:"element-blank"},_vm._l((_vm.blanks),function(item,index){return _c('input',{key:'blank' + index,staticClass:"blankInputs",attrs:{"id":'blank' + index},domProps:{"value":item},on:{"input":function($event){return _vm.blankChange($event, index)}}})}),0),_c('div',{ref:"refEditor",staticClass:"element-editor"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=2efc8030&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=199a21fc&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -195,6 +195,21 @@ function debounce(func, wait = 0, immediate = true) {
 
 
 // CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -324,9 +339,32 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       type: String,
       default: '',
     },
+    enableMarkup: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
+  data() {
+    return {
+      code: '',
+      headCode: '',
+      tailCode: '',
+      blanks: [],
+      blankRanges: [],
+      isBlankReady: false,
+      preserved: [],
+      preservedRanges: [],
+      preservedAnchors: [],
+      isReadOnly: false,
+    };
   },
 
   mounted() {
+    this.code = this.value;
+
+    this.handleMarkup();
+
     this.editor = _brace_0_11_1_brace["edit"](this.$refs.refEditor);
 
     this.$emit('before-load', _brace_0_11_1_brace);
@@ -345,7 +383,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     this.editor.setFontSize(this.fontSize);
     this.editor
       .getSession()
-      .setValue(this.value, this.cursorStart);
+      .setValue(this.code, this.cursorStart);
     if (this.navigateToFileEnd) {
       this.editor.navigateFileEnd();
     }
@@ -436,7 +474,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       });
     }
 
-    this.$watch('value', (newVal) => {
+    this.$watch('code', (newVal) => {
       if (this.editor.getValue() !== newVal) {
         this.silent = true;
         const pos = this.editor.session.selection.toJSON();
@@ -466,6 +504,10 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
 
     this.$watch('fontSize', (newVal) => {
       this.editor.setFontSize(newVal);
+
+      if (this.blanks.length > 0) {
+        this.blankRender();
+      }
     });
 
     this.$watch('wrapEnabled', (newVal) => {
@@ -491,10 +533,309 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     this.$watch('height', () => this.editor.resize());
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
+
+    this.$watch('enableMarkup', (newVal) => {
+      if (newVal) {
+        this.code = this.editor.getValue();
+        this.handleMarkup();
+        this.editor.setValue(this.code, this.cursorStart);
+        this.isBlankReady = false;
+        setTimeout(() => {
+          this.handleBlankOrPreserved();
+        });
+      } else {
+        this.isReadOnly = false;
+        this.editor.setReadOnly(this.isReadOnly);
+
+        let markers;
+        if (this.blanks.length > 0) {
+          markers = this.editor.getSession().getMarkers(true);
+          Object.keys(markers).forEach((id) => {
+            if (markers[id].clazz === 'blank-highlight') {
+              this.editor.getSession().removeMarker(id);
+            }
+          });
+        } else if (this.preserved.length > 0) {
+          markers = this.editor.getSession().getMarkers();
+          Object.keys(markers).forEach((id) => {
+            if (markers[id].clazz === 'readonly-highlight') {
+              this.editor.getSession().removeMarker(id);
+            }
+          });
+          this.editor.getSession().selection.off('changeCursor', this.handlePreservedRange);
+        }
+
+        this.code = this.syncGetCode(true);
+        this.editor.setValue(this.code, this.cursorStart);
+      }
+    });
+
+    this.handleBlankOrPreserved();
   },
 
   methods: {
+    // public methods
+    getCode() {
+      return this.syncGetCode().replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
+    },
+
+    // private methods
+    handleMarkup() {
+      const originCode = this.code;
+      if (this.enableMarkup) {
+        // code hide
+        const [fragment0, fragment1] = originCode.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+        if (fragment0 && fragment1) {
+          this.headCode = fragment0;
+          this.tailCode = fragment1;
+        } else if (fragment0 && originCode.indexOf(fragment0) === 0 && !fragment1) {
+          this.headCode = fragment0;
+        } else if (fragment0 && originCode.indexOf(fragment0) !== 0 && !fragment1) {
+          this.tailCode = fragment0;
+        }
+
+        this.code = this.code.replace(this.headCode, '');
+        this.code = this.code.replace(this.tailCode, '');
+
+        // code lock or code blank
+        if (this.code.indexOf('<xiaohou-blank>') > -1) {
+          this.blanks = originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+
+          this.blanks = this.blanks.map((item) => {
+            this.code = this.code.replace(item, '<xhc_blank/>');
+            return item.replace(/<\/?xiaohou-blank>/ig, '');
+          });
+        } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
+          this.preserved = originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+        }
+      }
+    },
+    handleBlankOrPreserved() {
+      if (this.blanks.length > 0) {
+        this.isReadOnly = true;
+        this.editor.setReadOnly(this.isReadOnly);
+        for (let i = 0, len = this.blanks.length; i < len; i += 1) {
+          const range = this.editor.find('<xhc_blank/>');
+          this.editor.session.addMarker(range, 'blank-highlight', null, true);
+          this.blankRanges.push(range);
+        }
+        this.editor.gotoLine(0);
+
+        setTimeout(() => {
+          this.isBlankReady = true;
+          this.blankRender();
+        }, 1000);
+      }
+
+      if (this.preserved.length > 0) {
+        this.preservedRanges = this.preserved.map(item => this.editor.find(item));
+        this.preservedAnchors = this.preservedRanges.map((item, index) => {
+          let range;
+          if (item.start.row === item.end.row) {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 29,
+            );
+          } else {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 15,
+            );
+          }
+          this.editor.session.addMarker(range, 'readonly-highlight');
+          this.editor.session.replace(
+            new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column,
+            ),
+            this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
+          );
+
+          range.start = this.editor.session.doc.createAnchor(range.start);
+          range.end = this.editor.session.doc.createAnchor(range.end);
+          range.end.$insertRight = true;
+          return range;
+        });
+        this.editor.gotoLine(0);
+
+        // 出现部分只读 => 要禁用选取
+        this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
+      }
+    },
+    handlePreservedRange() {
+      // anchor更新是异步执行
+      setTimeout(() => {
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.preservedAnchors.some((anchor) => {
+          if (
+            // 1.仅只读范围起点在选取范围中
+            ((anchor.start.row > selection.start.row
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row === selection.end.row
+            && anchor.start.column <= selection.end.column)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row > selection.start.row
+            && anchor.start.row === selection.end.row
+            && anchor.start.column <= selection.end.column))
+            // 2.仅只读范围终点在选取范围中
+            || ((anchor.end.row > selection.start.row
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column >= selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column >= selection.start.column
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row > selection.start.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column))
+            // 3.只读范围涵盖选取范围
+            // 3.1.起止不在同一行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 3.2.起在同一行 止可能在同一行
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column <= selection.start.column
+            && (anchor.end.row > selection.end.row
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column >= selection.end.column)))
+            // 3.3 止在同一行 起可能在同一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column >= selection.end.column
+            && (anchor.start.row > selection.start.row
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column <= selection.start.column)))
+          ) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = true;
+        } else {
+          this.isReadOnly = false;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
+    },
+    syncGetCode(notJudge) {
+      let value = this.editor.getValue();
+
+      if (this.enableMarkup || notJudge) {
+        if (this.blanks.length > 0) {
+          value = this.spliceBlanks(value);
+        } else if (this.preserved.length > 0) {
+          value = this.splicePreserveds();
+        } else {
+          value = `${this.headCode}${value}${this.tailCode}`;
+        }
+      }
+
+      return value;
+    },
+    asyncGetCode() {
+      let value = this.editor.getValue();
+
+      if (this.enableMarkup) {
+        if (this.blanks.length > 0) {
+          value = this.spliceBlanks(value);
+        } else if (this.preserved.length > 0) {
+          // 编辑器回车是异步执行
+          return new Promise((resolve) => {
+            setTimeout(() => resolve(this.splicePreserveds()), 0);
+          });
+        } else {
+          value = `${this.headCode}${value}${this.tailCode}`;
+        }
+      }
+
+      return Promise.resolve(value);
+    },
+    spliceBlanks(value) {
+      this.blanks.forEach((item, index) => {
+        /* eslint-disable-next-line no-param-reassign */
+        value = value.replace(
+          '<xhc_blank/>',
+          `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
+        );
+      });
+      return `${this.headCode}${value}${this.tailCode}`;
+    },
+    splicePreserveds() {
+      let showCode = '';
+      const start = {
+        row: 0,
+        column: 0,
+      };
+      for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
+        showCode += this.editor.getSession().doc.getTextRange(
+          new Range(
+            start.row,
+            start.column,
+            this.preservedAnchors[i].start.row,
+            this.preservedAnchors[i].start.column,
+          ),
+        );
+        showCode += this.preserved[i];
+        start.row = this.preservedAnchors[i].end.row;
+        start.column = this.preservedAnchors[i].end.column;
+        if (i === len - 1) {
+          const lastRow = this.editor.getSession().getLength() - 1;
+          const lastColumn = this.editor.getSession().getLine(lastRow).length;
+
+          showCode += this.editor.getSession().doc.getTextRange(
+            new Range(
+              start.row,
+              start.column,
+              lastRow,
+              lastColumn,
+            ),
+          );
+        }
+      }
+
+      return `${this.headCode}${showCode}${this.tailCode}`;
+    },
+    blankRender() {
+      const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
+      const blankArray = [...blankDoms];
+      blankArray.forEach((item, index) => {
+        const {
+          top,
+          left,
+          width,
+          height,
+        } = item.getBoundingClientRect();
+        window.requestAnimationFrame(() => {
+          document.getElementById(`blank${index}`).style.top = `${top}px`;
+          document.getElementById(`blank${index}`).style.left = `${left}px`;
+          document.getElementById(`blank${index}`).style.width = `${width - 6}px`;
+          document.getElementById(`blank${index}`).style.height = `${height - 6}px`;
+          document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
+        });
+      });
+    },
+    blankChange(evt, index) {
+      this.blanks[index] = evt.target.value;
+
+      this.handleChange();
+    },
+
     insert(text, focus = true) {
+      if (this.isReadOnly || this.readOnly) {
+        return;
+      }
+
       this.editor.insert(text);
       if (focus) this.editor.focus();
     },
@@ -532,8 +873,9 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
 
     handleChange(event) {
       if (!this.silent) {
-        const value = this.editor.getValue();
-        this.$emit('change', value, event, this.editor);
+        this.asyncGetCode().then((value) => {
+          this.$emit('change', value, event, this.editor);
+        });
       }
     },
 
