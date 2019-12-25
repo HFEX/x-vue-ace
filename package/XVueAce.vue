@@ -519,7 +519,7 @@ export default {
             // 3.3 止在同一行 起可能在同一行
             || (anchor.end.row === selection.end.row
             && anchor.end.column >= selection.end.column
-            && (anchor.start.row > selection.start.row
+            && (anchor.start.row < selection.start.row
             || (anchor.start.row === selection.start.row
             && anchor.start.column <= selection.start.column)))
           ) {
