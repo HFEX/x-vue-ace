@@ -36,7 +36,6 @@ export default {
   data() {
     return {
       source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a =<xiaohou-lock> 1;\nvar b = 2;\nconst c = [a, b];zx</xiaohou-lock>asdf\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
-      // source: '<xiaohou-hide>\nprint(12345 67890);\n</xiaohou-hide>\nvar a = 1;<xiaohou-blank>1234</xiaohou-blank>\nvar b = 2;\nconst c = [a, b];<xiaohou-blank>zxcv</xiaohou-blank>\n<xiaohou-hide>\njhgh;\n</xiaohou-hide>',
       annotations: [{
         row: 0,
         column: 2,
@@ -70,8 +69,6 @@ export default {
     handleEditorChange(val) {
       this.source = val;
       // console.log(this.source);
-
-      // console.log(this.$refs.editor.getCode());
     },
   },
 

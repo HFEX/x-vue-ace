@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div @keydown.capture="handlePreservedBoundary">
     <div
       class="element-blank"
       v-show="enableMarkup && isBlankReady"
     >
       <input
-        class="blankInputs"
+        :class="{
+          'blankInputs': true,
+          'blankInputs-show': isCursor,
+        }"
         v-for="(item, index) in blanks"
         :key="'blank' + index"
         :id="'blank' + index"
@@ -17,6 +20,13 @@
       ref="refEditor"
       class="element-editor"
     />
+    <i
+      v-if="isReadOnly"
+      :class="{
+        'element-lock': true,
+        'element-lock-flash': isReadOnly && isCursor,
+      }"
+    ></i>
   </div>
 </template>
 
@@ -163,6 +173,7 @@ export default {
       preservedRanges: [],
       preservedAnchors: [],
       isReadOnly: false,
+      isCursor: false,
     };
   },
 
@@ -373,6 +384,12 @@ export default {
 
         this.code = this.syncGetCode(true);
         this.editor.setValue(this.code, this.cursorStart);
+
+        this.blanks = [];
+        this.blankRanges = [];
+        this.preserved = [];
+        this.preservedRanges = [];
+        this.preservedAnchors = [];
       }
     });
 
@@ -486,22 +503,22 @@ export default {
             || (anchor.start.row === selection.start.row
             && anchor.start.column >= selection.start.column
             && anchor.start.row === selection.end.row
-            && anchor.start.column <= selection.end.column)
+            && anchor.start.column < selection.end.column)
             || (anchor.start.row === selection.start.row
             && anchor.start.column >= selection.start.column
             && anchor.start.row < selection.end.row)
             || (anchor.start.row > selection.start.row
             && anchor.start.row === selection.end.row
-            && anchor.start.column <= selection.end.column))
+            && anchor.start.column < selection.end.column))
             // 2.仅只读范围终点在选取范围中
             || ((anchor.end.row > selection.start.row
             && anchor.end.row < selection.end.row)
             || (anchor.end.row === selection.start.row
-            && anchor.end.column >= selection.start.column
+            && anchor.end.column > selection.start.column
             && anchor.end.row === selection.end.row
             && anchor.end.column <= selection.end.column)
             || (anchor.end.row === selection.start.row
-            && anchor.end.column >= selection.start.column
+            && anchor.end.column > selection.start.column
             && anchor.end.row < selection.end.row)
             || (anchor.end.row > selection.start.row
             && anchor.end.row === selection.end.row
@@ -512,16 +529,16 @@ export default {
             && anchor.end.row > selection.end.row)
             // 3.2.起在同一行 止可能在同一行
             || (anchor.start.row === selection.start.row
-            && anchor.start.column <= selection.start.column
+            && anchor.start.column < selection.start.column
             && (anchor.end.row > selection.end.row
             || (anchor.end.row === selection.end.row
-            && anchor.end.column >= selection.end.column)))
-            // 3.3 止在同一行 起可能在同一行
+            && anchor.end.column > selection.end.column)))
+            // 3.3.止在同一行 起可能在同一行
             || (anchor.end.row === selection.end.row
-            && anchor.end.column >= selection.end.column
+            && anchor.end.column > selection.end.column
             && (anchor.start.row < selection.start.row
             || (anchor.start.row === selection.start.row
-            && anchor.start.column <= selection.start.column)))
+            && anchor.start.column < selection.start.column)))
           ) {
             return true;
           }
@@ -533,6 +550,35 @@ export default {
         }
         this.editor.setReadOnly(this.isReadOnly);
       }, 0);
+    },
+    handlePreservedBoundary(evt) {
+      if (this.preserved.length > 0) {
+        // 边界保护 开头禁del键 结尾禁back键
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.preservedAnchors.some((anchor) => {
+          if ((evt.keyCode === 8
+          && anchor.end.row === selection.start.row
+          && anchor.end.column === selection.start.column
+          && selection.end.row === selection.start.row
+          && selection.end.column === selection.start.column)
+          || (evt.keyCode === 46
+          && anchor.start.row === selection.start.row
+          && anchor.start.column === selection.start.column
+          && selection.end.row === selection.start.row
+          && selection.end.column === selection.start.column)) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = true;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+
+        this.isCursor = true;
+        setTimeout(() => {
+          this.isCursor = false;
+        }, 500);
+      }
     },
     syncGetCode(notJudge) {
       let value = this.editor.getValue();
@@ -702,6 +748,11 @@ export default {
     handleCursorChange(event) {
       const value = this.editor.getSelection();
       this.$emit('cursor-change', value, event);
+
+      this.isCursor = true;
+      setTimeout(() => {
+        this.isCursor = false;
+      }, 500);
     },
 
     handleValidate() {
@@ -793,12 +844,32 @@ export default {
     position: absolute;
     outline: none;
     border: 2px solid #333;
+    background-color: white;
+    transition: backgroundColor .6s;
+    &-show {
+      background-color: rgba(251,203,87,0.64);
+    }
   }
 }
 .element-editor {
   width: 100%;
   height: 100%;
   background-color: white;
+}
+.element-lock {
+  display: inline-block;
+  width: 100px;
+  height: 107px;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 1000;
+  background-image: url('~./lock.png');
+  opacity: 0;
+  transition: opacity .6s;
+  &-flash {
+    opacity: 1;
+  }
 }
 
 .ace {
