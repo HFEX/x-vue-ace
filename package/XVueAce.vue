@@ -385,6 +385,8 @@ export default {
         this.code = this.syncGetCode(true);
         this.editor.setValue(this.code, this.cursorStart);
 
+        this.headCode = '';
+        this.tailCode = '';
         this.blanks = [];
         this.blankRanges = [];
         this.preserved = [];
@@ -844,6 +846,7 @@ export default {
     position: absolute;
     outline: none;
     border: 2px solid #333;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     background-color: white;
     transition: backgroundColor .6s;
     &-show {

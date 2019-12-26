@@ -11,7 +11,6 @@
       :fontSize="17"
       :value="source"
       :annotations="annotations"
-      :markers="markers"
       @change="handleEditorChange"
     />
     <div class="tools">
@@ -42,14 +41,14 @@ export default {
         type: 'error',
         text: 'Some error.',
       }],
-      markers: [{
-        startRow: 0,
-        startCol: 5,
-        endRow: 0,
-        endCol: 9,
-        className: 'error-marker',
-        type: 'background',
-      }],
+      // markers: [{
+      //   startRow: 0,
+      //   startCol: 5,
+      //   endRow: 0,
+      //   endCol: 9,
+      //   className: 'error-marker',
+      //   type: 'background',
+      // }],
       blockText: '',
       pos: '1,3,5',
       enableMarkup: true,
