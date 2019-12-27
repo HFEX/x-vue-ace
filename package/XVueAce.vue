@@ -323,7 +323,8 @@ export default {
       this.editor.setFontSize(newVal);
 
       if (this.blanks.length > 0) {
-        this.blankRender();
+        this.isBlankReady = false;
+        setTimeout(this.blankRender, 500);
       }
     });
 
@@ -448,9 +449,8 @@ export default {
         this.editor.gotoLine(0);
 
         setTimeout(() => {
-          this.isBlankReady = true;
           this.blankRender();
-        }, 1000);
+        }, 500);
       }
 
       if (this.preserved.length > 0) {
@@ -660,14 +660,17 @@ export default {
       return `${this.headCode}${showCode}${this.tailCode}`;
     },
     blankRender() {
+      this.isBlankReady = true;
       const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
       const blankArray = [...blankDoms];
       blankArray.forEach((item, index) => {
         window.requestAnimationFrame(() => {
           document.getElementById(`blank${index}`).style.top = `${item.offsetTop}px`;
-          document.getElementById(`blank${index}`).style.left = `${item.offsetLeft + 44}px`;
-          document.getElementById(`blank${index}`).style.width = `${item.offsetWidth - 6}px`;
-          document.getElementById(`blank${index}`).style.height = `${item.offsetHeight - 6}px`;
+          document.getElementById(`blank${index}`).style.left = `
+          ${item.offsetLeft + document.getElementsByClassName('ace_gutter')[0].offsetWidth}px
+          `;
+          document.getElementById(`blank${index}`).style.width = `${item.offsetWidth}px`;
+          document.getElementById(`blank${index}`).style.height = `${item.offsetHeight}px`;
           document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
         });
       });
@@ -839,6 +842,7 @@ export default {
   .blankInputs {
     position: absolute;
     outline: none;
+    box-sizing: border-box;
     border: 2px solid #333;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     background-color: white;

@@ -12,7 +12,7 @@
           enableLiveAutocompletion
           focus
           :enableMarkup="enableMarkup"
-          :fontSize="17"
+          :fontSize="fontSize"
           :value="source"
           :annotations="annotations"
           @change="handleEditorChange"
@@ -25,6 +25,8 @@
       <input v-model="pos" /><br />
       <button @click="handleInsert">insert</button>
       <button @click="toggleMarkup">toggleMarkup</button>
+      <button @click="fontSizeA">fontSize+</button>
+      <button @click="fontSizeM">fontSize-</button>
     </div>
   </div>
 </template>
@@ -48,6 +50,7 @@ export default {
         type: 'error',
         text: 'Some error.',
       }],
+      fontSize: 20,
       // markers: [{
       //   startRow: 0,
       //   startCol: 5,
@@ -70,6 +73,13 @@ export default {
 
     toggleMarkup() {
       this.enableMarkup = !this.enableMarkup;
+    },
+
+    fontSizeA() {
+      this.fontSize += 1;
+    },
+    fontSizeM() {
+      this.fontSize -= 1;
     },
 
     handleEditorChange(val) {
