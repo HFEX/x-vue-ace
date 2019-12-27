@@ -393,6 +393,7 @@ export default {
         this.preservedRanges = [];
         this.preservedAnchors = [];
       }
+      this.editor.getSession().selection.off('changeCursor', this.showLock);
     });
 
     this.handleBlankOrPreserved();
@@ -492,6 +493,7 @@ export default {
         // 出现部分只读 => 要禁用选取
         this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
       }
+      this.editor.getSession().selection.on('changeCursor', this.showLock);
     },
     handlePreservedRange() {
       // anchor更新是异步执行
@@ -576,10 +578,7 @@ export default {
         }
         this.editor.setReadOnly(this.isReadOnly);
 
-        this.isCursor = true;
-        setTimeout(() => {
-          this.isCursor = false;
-        }, 500);
+        this.showLock();
       }
     },
     syncGetCode(notJudge) {
@@ -664,17 +663,11 @@ export default {
       const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
       const blankArray = [...blankDoms];
       blankArray.forEach((item, index) => {
-        const {
-          top,
-          left,
-          width,
-          height,
-        } = item.getBoundingClientRect();
         window.requestAnimationFrame(() => {
-          document.getElementById(`blank${index}`).style.top = `${top}px`;
-          document.getElementById(`blank${index}`).style.left = `${left}px`;
-          document.getElementById(`blank${index}`).style.width = `${width - 6}px`;
-          document.getElementById(`blank${index}`).style.height = `${height - 6}px`;
+          document.getElementById(`blank${index}`).style.top = `${item.offsetTop}px`;
+          document.getElementById(`blank${index}`).style.left = `${item.offsetLeft + 44}px`;
+          document.getElementById(`blank${index}`).style.width = `${item.offsetWidth - 6}px`;
+          document.getElementById(`blank${index}`).style.height = `${item.offsetHeight - 6}px`;
           document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
         });
       });
@@ -683,6 +676,12 @@ export default {
       this.blanks[index] = evt.target.value;
 
       this.handleChange();
+    },
+    showLock() {
+      this.isCursor = true;
+      setTimeout(() => {
+        this.isCursor = false;
+      }, 500);
     },
 
     insert(text, focus = true) {
@@ -750,11 +749,6 @@ export default {
     handleCursorChange(event) {
       const value = this.editor.getSelection();
       this.$emit('cursor-change', value, event);
-
-      this.isCursor = true;
-      setTimeout(() => {
-        this.isCursor = false;
-      }, 500);
     },
 
     handleValidate() {
