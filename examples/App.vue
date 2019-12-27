@@ -25,8 +25,6 @@
       <input v-model="pos" /><br />
       <button @click="handleInsert">insert</button>
       <button @click="toggleMarkup">toggleMarkup</button>
-      <button @click="getCode">getCode</button>
-      <button @click="getCompleteCode">getCompleteCode</button>
     </div>
   </div>
 </template>
