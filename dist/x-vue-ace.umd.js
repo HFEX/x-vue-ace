@@ -119,7 +119,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"78185476-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=d821e75c&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"46e1f6ec-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=38d2b0c2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.handlePreservedBoundary($event)}}},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.enableMarkup && _vm.isBlankReady),expression:"enableMarkup && isBlankReady"}],staticClass:"element-blank"},_vm._l((_vm.blanks),function(item,index){return _c('input',{key:'blank' + index,class:{
         'blankInputs': true,
         'blankInputs-show': _vm.isCursor,
@@ -130,7 +130,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=d821e75c&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=38d2b0c2&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -602,6 +602,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         this.preservedRanges = [];
         this.preservedAnchors = [];
       }
+      this.editor.getSession().selection.off('changeCursor', this.showLock);
     });
 
     this.handleBlankOrPreserved();
@@ -701,6 +702,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         // 出现部分只读 => 要禁用选取
         this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
       }
+      this.editor.getSession().selection.on('changeCursor', this.showLock);
     },
     handlePreservedRange() {
       // anchor更新是异步执行
@@ -785,10 +787,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         }
         this.editor.setReadOnly(this.isReadOnly);
 
-        this.isCursor = true;
-        setTimeout(() => {
-          this.isCursor = false;
-        }, 500);
+        this.showLock();
       }
     },
     syncGetCode(notJudge) {
@@ -873,17 +872,11 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
       const blankArray = [...blankDoms];
       blankArray.forEach((item, index) => {
-        const {
-          top,
-          left,
-          width,
-          height,
-        } = item.getBoundingClientRect();
         window.requestAnimationFrame(() => {
-          document.getElementById(`blank${index}`).style.top = `${top}px`;
-          document.getElementById(`blank${index}`).style.left = `${left}px`;
-          document.getElementById(`blank${index}`).style.width = `${width - 6}px`;
-          document.getElementById(`blank${index}`).style.height = `${height - 6}px`;
+          document.getElementById(`blank${index}`).style.top = `${item.offsetTop}px`;
+          document.getElementById(`blank${index}`).style.left = `${item.offsetLeft + 44}px`;
+          document.getElementById(`blank${index}`).style.width = `${item.offsetWidth - 6}px`;
+          document.getElementById(`blank${index}`).style.height = `${item.offsetHeight - 6}px`;
           document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
         });
       });
@@ -892,6 +885,12 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       this.blanks[index] = evt.target.value;
 
       this.handleChange();
+    },
+    showLock() {
+      this.isCursor = true;
+      setTimeout(() => {
+        this.isCursor = false;
+      }, 500);
     },
 
     insert(text, focus = true) {
@@ -959,11 +958,6 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     handleCursorChange(event) {
       const value = this.editor.getSelection();
       this.$emit('cursor-change', value, event);
-
-      this.isCursor = true;
-      setTimeout(() => {
-        this.isCursor = false;
-      }, 500);
     },
 
     handleValidate() {
