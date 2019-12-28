@@ -1,21 +1,5 @@
 <template>
-  <div @keydown.capture="handlePreservedBoundary">
-    <div
-      class="element-blank"
-      v-show="enableMarkup && isBlankReady"
-    >
-      <input
-        :class="{
-          'blankInputs': true,
-          'blankInputs-show': isCursor,
-        }"
-        v-for="(item, index) in blanks"
-        :key="'blank' + index"
-        :id="'blank' + index"
-        :value="item"
-        @input="blankChange($event, index)"
-      />
-    </div>
+  <div @keydown.capture="protectBoundary">
     <div
       ref="refEditor"
       class="element-editor"
@@ -167,8 +151,9 @@ export default {
       headCode: '',
       tailCode: '',
       blanks: [],
+      blanksGap: [],
       blankRanges: [],
-      isBlankReady: false,
+      blankAnchors: [],
       preserved: [],
       preservedRanges: [],
       preservedAnchors: [],
@@ -321,11 +306,6 @@ export default {
 
     this.$watch('fontSize', (newVal) => {
       this.editor.setFontSize(newVal);
-
-      if (this.blanks.length > 0) {
-        this.isBlankReady = false;
-        setTimeout(this.blankRender, 500);
-      }
     });
 
     this.$watch('wrapEnabled', (newVal) => {
@@ -360,19 +340,20 @@ export default {
         this.isBlankReady = false;
         setTimeout(() => {
           this.handleBlankOrPreserved();
-        });
+        }, 0);
       } else {
         this.isReadOnly = false;
         this.editor.setReadOnly(this.isReadOnly);
 
         let markers;
         if (this.blanks.length > 0) {
-          markers = this.editor.getSession().getMarkers(true);
+          markers = this.editor.getSession().getMarkers();
           Object.keys(markers).forEach((id) => {
             if (markers[id].clazz === 'blank-highlight') {
               this.editor.getSession().removeMarker(id);
             }
           });
+          this.editor.getSession().selection.off('changeCursor', this.handleBlankRange);
         } else if (this.preserved.length > 0) {
           markers = this.editor.getSession().getMarkers();
           Object.keys(markers).forEach((id) => {
@@ -389,7 +370,9 @@ export default {
         this.headCode = '';
         this.tailCode = '';
         this.blanks = [];
+        this.blanksGap = [];
         this.blankRanges = [];
+        this.blankAnchors = [];
         this.preserved = [];
         this.preservedRanges = [];
         this.preservedAnchors = [];
@@ -427,11 +410,7 @@ export default {
         // code lock or code blank
         if (this.code.indexOf('<xiaohou-blank>') > -1) {
           this.blanks = originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
-
-          this.blanks = this.blanks.map((item) => {
-            this.code = this.code.replace(item, '<xhc_blank/>');
-            return item.replace(/<\/?xiaohou-blank>/ig, '');
-          });
+          this.blanksGap = this.code.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
         } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
           this.preserved = originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
         }
@@ -439,21 +418,45 @@ export default {
     },
     handleBlankOrPreserved() {
       if (this.blanks.length > 0) {
-        this.isReadOnly = true;
-        this.editor.setReadOnly(this.isReadOnly);
-        for (let i = 0, len = this.blanks.length; i < len; i += 1) {
-          const range = this.editor.find('<xhc_blank/>');
-          this.editor.session.addMarker(range, 'blank-highlight', null, true);
-          this.blankRanges.push(range);
-        }
-        this.editor.gotoLine(0);
+        this.blankRanges = this.blanks.map(item => this.editor.find(item));
+        this.blankAnchors = this.blankRanges.map((item, index) => {
+          let range;
+          if (item.start.row === item.end.row) {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 29,
+            );
+          } else {
+            range = new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column - 15,
+            );
+          }
+          this.editor.getSession().addMarker(range, 'blank-highlight');
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column,
+              item.end.row,
+              item.end.column,
+            ),
+            this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' '),
+          );
+          range.start = this.editor.getSession().doc.createAnchor(range.start);
+          range.end = this.editor.getSession().doc.createAnchor(range.end);
+          return range;
+        });
+        this.editor.gotoLine(
+          this.blankAnchors[0].start.row + 1,
+          this.blankAnchors[0].start.column + 1,
+        );
 
-        setTimeout(() => {
-          this.blankRender();
-        }, 500);
-      }
-
-      if (this.preserved.length > 0) {
+        this.editor.getSession().selection.on('changeCursor', this.handleBlankRange);
+      } else if (this.preserved.length > 0) {
         this.preservedRanges = this.preserved.map(item => this.editor.find(item));
         this.preservedAnchors = this.preservedRanges.map((item, index) => {
           let range;
@@ -472,8 +475,8 @@ export default {
               item.end.column - 15,
             );
           }
-          this.editor.session.addMarker(range, 'readonly-highlight');
-          this.editor.session.replace(
+          this.editor.getSession().addMarker(range, 'readonly-highlight');
+          this.editor.getSession().replace(
             new Range(
               item.start.row,
               item.start.column,
@@ -483,8 +486,8 @@ export default {
             this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
           );
 
-          range.start = this.editor.session.doc.createAnchor(range.start);
-          range.end = this.editor.session.doc.createAnchor(range.end);
+          range.start = this.editor.getSession().doc.createAnchor(range.start);
+          range.end = this.editor.getSession().doc.createAnchor(range.end);
           range.end.$insertRight = true;
           return range;
         });
@@ -493,7 +496,61 @@ export default {
         // 出现部分只读 => 要禁用选取
         this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
       }
+
       this.editor.getSession().selection.on('changeCursor', this.showLock);
+    },
+    handleBlankRange() {
+      setTimeout(() => {
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.blankAnchors.some((anchor) => {
+          if (
+            // 0.单行 选取在填空中
+            (anchor.start.row === anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)
+            // 1.多行 选取填空中间某行
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 2.起在第一行 止可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            // 2.1.止在第一行
+            && ((anchor.start.row === selection.end.row
+            && anchor.start.column < selection.end.column)
+            // 2.2.止在中间行
+            || (anchor.start.row < selection.end.row
+            && anchor.end.row > selection.end.row)
+            // 2.3.止在最后一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)))
+            // 3.多行 止在最后一行 起可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column
+            // 3.1.起在第一行
+            && ((anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column)
+            // 3.2.起在中间行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.start.row)
+            // 3.3.起在最后一行
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column > selection.start.column)))
+          ) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = false;
+        } else {
+          this.isReadOnly = true;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
     },
     handlePreservedRange() {
       // anchor更新是异步执行
@@ -555,9 +612,33 @@ export default {
         this.editor.setReadOnly(this.isReadOnly);
       }, 0);
     },
-    handlePreservedBoundary(evt) {
-      if (this.preserved.length > 0) {
-        // 边界保护 开头禁del键 结尾禁back键
+    protectBoundary(evt) {
+      // 边界保护
+      if (this.blanks.length > 0) {
+        // 开头禁back键 结尾禁del键
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.blankAnchors.some((anchor) => {
+          if ((evt.keyCode === 46
+          && anchor.end.row === selection.start.row
+          && anchor.end.column - 1 === selection.start.column
+          && selection.end.row === selection.start.row
+          && selection.end.column === selection.start.column)
+          || (evt.keyCode === 8
+          && anchor.start.row === selection.start.row
+          && anchor.start.column + 1 === selection.start.column
+          && selection.end.row === selection.start.row
+          && selection.end.column === selection.start.column)) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = true;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+
+        this.showLock();
+      } else if (this.preserved.length > 0) {
+        // 开头禁del键 结尾禁back键
         const selection = this.editor.getSession().selection.getRange();
         if (this.preservedAnchors.some((anchor) => {
           if ((evt.keyCode === 8
@@ -586,7 +667,7 @@ export default {
 
       if (this.enableMarkup || notJudge) {
         if (this.blanks.length > 0) {
-          value = this.spliceBlanks(value);
+          value = this.spliceBlanks();
         } else if (this.preserved.length > 0) {
           value = this.splicePreserveds();
         } else {
@@ -601,7 +682,10 @@ export default {
 
       if (this.enableMarkup) {
         if (this.blanks.length > 0) {
-          value = this.spliceBlanks(value);
+          return new Promise((resolve) => {
+            setTimeout(() => resolve(this.spliceBlanks()), 0);
+          });
+        /* eslint-disable-next-line no-else-return */
         } else if (this.preserved.length > 0) {
           // 编辑器回车是异步执行
           return new Promise((resolve) => {
@@ -614,15 +698,25 @@ export default {
 
       return Promise.resolve(value);
     },
-    spliceBlanks(value) {
-      this.blanks.forEach((item, index) => {
-        /* eslint-disable-next-line no-param-reassign */
-        value = value.replace(
-          '<xhc_blank/>',
-          `<xiaohou-blank>${this.blanks[index]}</xiaohou-blank>`,
-        );
-      });
-      return `${this.headCode}${value}${this.tailCode}`;
+    spliceBlanks() {
+      let showCode = '';
+
+      for (let i = 0, len = this.blankAnchors.length; i < len; i += 1) {
+        showCode = `${showCode}${this.blanksGap[2 * i]}<xiaohou-blank>${this.editor.getSession().doc.getTextRange(
+          new Range(
+            this.blankAnchors[i].start.row,
+            this.blankAnchors[i].start.column + 1,
+            this.blankAnchors[i].end.row,
+            this.blankAnchors[i].end.column - 1,
+          ),
+        )}</xiaohou-blank>`;
+
+        if (i === len - 1) {
+          showCode += this.blanksGap[2 * (i + 1)];
+        }
+      }
+
+      return `${this.headCode}${showCode}${this.tailCode}`;
     },
     splicePreserveds() {
       let showCode = '';
@@ -659,27 +753,7 @@ export default {
 
       return `${this.headCode}${showCode}${this.tailCode}`;
     },
-    blankRender() {
-      this.isBlankReady = true;
-      const blankDoms = this.$refs.refEditor.getElementsByClassName('blank-highlight');
-      const blankArray = [...blankDoms];
-      blankArray.forEach((item, index) => {
-        window.requestAnimationFrame(() => {
-          document.getElementById(`blank${index}`).style.top = `${item.offsetTop}px`;
-          document.getElementById(`blank${index}`).style.left = `
-          ${item.offsetLeft + document.getElementsByClassName('ace_gutter')[0].offsetWidth}px
-          `;
-          document.getElementById(`blank${index}`).style.width = `${item.offsetWidth}px`;
-          document.getElementById(`blank${index}`).style.height = `${item.offsetHeight}px`;
-          document.getElementById(`blank${index}`).style.fontSize = `${this.fontSize}px`;
-        });
-      });
-    },
-    blankChange(evt, index) {
-      this.blanks[index] = evt.target.value;
 
-      this.handleChange();
-    },
     showLock() {
       this.isCursor = true;
       setTimeout(() => {
@@ -836,22 +910,6 @@ export default {
 };
 </script>
 <style lang="less">
-.element-blank {
-  position: absolute;
-  z-index: 9;
-  .blankInputs {
-    position: absolute;
-    outline: none;
-    box-sizing: border-box;
-    border: 2px solid #333;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-    background-color: white;
-    transition: backgroundColor .6s;
-    &-show {
-      background-color: rgba(251,203,87,0.64);
-    }
-  }
-}
 .element-editor {
   width: 100%;
   height: 100%;
@@ -912,5 +970,12 @@ export default {
 .blank-highlight {
   background-color: #fff;
   position: absolute;
+  box-sizing: border-box;
+  border: 1px solid #333;
+}
+.blankInputs {
+  &-show {
+    background-color: rgba(251,203,87,0.64);
+  }
 }
 </style>
