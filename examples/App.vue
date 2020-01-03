@@ -11,7 +11,7 @@
           theme="chrome"
           enableLiveAutocompletion
           focus
-          :enableMarkup="enableMarkup"
+          :markup="enableMarkup"
           :fontSize="fontSize"
           :value="source"
           :annotations="annotations"
