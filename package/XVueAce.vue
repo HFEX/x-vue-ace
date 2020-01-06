@@ -378,6 +378,7 @@ export default {
     this.$watch('markup', (newVal) => {
       if (newVal) {
         this.plugins = [];
+        this.editorValue = this.getEditorValue();
         this.parseMarkup();
         this.editor.setValue(this.editorValue, this.cursorStart);
         setTimeout(() => {
@@ -397,9 +398,6 @@ export default {
           }
         });
       } else {
-        this.isReadOnly = false;
-        this.editor.setReadOnly(this.isReadOnly);
-
         this.editor.setValue(this.getValue(true), this.cursorStart);
 
         if (this.plugins.length > 0) {
@@ -422,6 +420,11 @@ export default {
           this.editor.getSession().selection.off('changeCursor', this.showLock);
         }
         this.plugins = [];
+
+        setTimeout(() => {
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
+        }, 0);
       }
     });
   },
