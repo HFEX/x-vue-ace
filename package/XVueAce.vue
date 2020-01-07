@@ -295,20 +295,23 @@ export default {
     }
 
     this.$watch('value', (newVal) => {
-      if (this.editor.getValue() !== newVal) {
+      if (this.getValue() !== newVal) {
         this.silent = true;
+        this.isVaryCurrValue = true;
 
         this.editorValue = newVal;
         if (this.currValue !== newVal) {
           this.clearPlugins();
-          this.parseMarkup();
+          if (this.markup) {
+            this.parseMarkup();
+          }
         }
 
         const pos = this.editor.session.selection.toJSON();
         this.editor.setValue(this.editorValue, this.cursorStart);
         this.editor.session.selection.fromJSON(pos);
 
-        if (this.currValue !== newVal) {
+        if (this.currValue !== newVal && this.markup) {
           if (this.plugins.length > 0) {
             for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
               switch (this.plugins[idx]) {
@@ -701,7 +704,8 @@ export default {
       // 开头禁backspace键 结尾禁del键
       const selection = this.editor.getSession().selection.getRange();
       if (this.blankAnchors.some((anchor) => {
-        if ((evt.keyCode === 46
+        if (((evt.keyCode === 46
+        || evt.keyCode === 13)
         && anchor.end.row === selection.start.row
         && anchor.end.column - 1 === selection.start.column
         && selection.end.row === selection.start.row
@@ -791,11 +795,17 @@ export default {
       let code = this.getEditorValue();
 
       if (this.markup || notJudge) {
-        if (this.blanks.length > 0) {
-          code = this.spliceBlanks();
-        } else if (this.preserveds.length > 0) {
-          code = this.splicePreserveds();
-        }
+        this.plugins.forEach((plugin) => {
+          switch (plugin) {
+            case 'blank':
+              code = this.spliceBlanks();
+              break;
+            case 'lock':
+              code = this.splicePreserveds();
+              break;
+            default:
+          }
+        });
         code = `${this.startCode}${code}${this.endCode}`;
       }
 
