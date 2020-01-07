@@ -298,14 +298,14 @@ export default {
       if (this.editor.getValue() !== newVal) {
         this.silent = true;
 
+        this.editorValue = newVal;
         if (this.currValue !== newVal) {
-          this.plugins = [];
-          this.editorValue = newVal;
+          this.clearPlugins();
           this.parseMarkup();
         }
 
         const pos = this.editor.session.selection.toJSON();
-        this.editor.setValue(newVal, this.cursorStart);
+        this.editor.setValue(this.editorValue, this.cursorStart);
         this.editor.session.selection.fromJSON(pos);
 
         if (this.currValue !== newVal) {
@@ -400,26 +400,7 @@ export default {
       } else {
         this.editor.setValue(this.getValue(true), this.cursorStart);
 
-        if (this.plugins.length > 0) {
-          for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
-            switch (this.plugins[idx]) {
-              case 'blank':
-                this.clearAnchors('blank');
-                this.editor.getSession().selection.off('changeCursor', this.protectExternal);
-                break;
-              case 'lock':
-                this.clearAnchors('preserved');
-                this.editor.getSession().selection.off('changeCursor', this.protectInternal);
-                break;
-              case 'hide':
-                this.clearHide();
-                break;
-              default:
-            }
-          }
-          this.editor.getSession().selection.off('changeCursor', this.showLock);
-        }
-        this.plugins = [];
+        this.clearPlugins();
 
         setTimeout(() => {
           this.isReadOnly = false;
@@ -546,7 +527,7 @@ export default {
         }
       });
 
-      switch(type) {
+      switch (type) {
         case 'blank':
           this.blanks = [];
           this.blankGaps = [];
@@ -562,6 +543,28 @@ export default {
     clearHide() {
       this.startCode = '';
       this.endCode = '';
+    },
+    clearPlugins() {
+      if (this.plugins.length > 0) {
+        for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
+          switch (this.plugins[idx]) {
+            case 'blank':
+              this.clearAnchors('blank');
+              this.editor.getSession().selection.off('changeCursor', this.protectExternal);
+              break;
+            case 'lock':
+              this.clearAnchors('preserved');
+              this.editor.getSession().selection.off('changeCursor', this.protectInternal);
+              break;
+            case 'hide':
+              this.clearHide();
+              break;
+            default:
+          }
+        }
+        this.editor.getSession().selection.off('changeCursor', this.showLock);
+      }
+      this.plugins = [];
     },
     protectInternal() {
       setTimeout(() => {
