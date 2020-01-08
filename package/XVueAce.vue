@@ -190,7 +190,7 @@ export default {
       .setValue(this.editorValue, this.cursorStart);
 
     if (this.plugins.length > 0) {
-      for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
+      for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
         switch (this.plugins[idx]) {
           case 'blank':
             this.affectBlank();
@@ -313,7 +313,7 @@ export default {
 
         if (this.currValue !== newVal && this.markup) {
           if (this.plugins.length > 0) {
-            for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
               switch (this.plugins[idx]) {
                 case 'blank':
                   this.affectBlank();
@@ -386,7 +386,7 @@ export default {
         this.editor.setValue(this.editorValue, this.cursorStart);
         setTimeout(() => {
           if (this.plugins.length > 0) {
-            for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
               switch (this.plugins[idx]) {
                 case 'blank':
                   this.affectBlank();
@@ -549,7 +549,7 @@ export default {
     },
     clearPlugins() {
       if (this.plugins.length > 0) {
-        for (let idx = this.plugins.length - 1; idx > 0; idx -= 1) {
+        for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
           switch (this.plugins[idx]) {
             case 'blank':
               this.clearAnchors('blank');
