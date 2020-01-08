@@ -110,15 +110,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"546eeadc-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=29117d4c&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a3946d04-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=4f495200&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),(_vm.isReadOnly)?_c('i',{class:{
       'element-lock': true,
-      'element-lock-flash': _vm.isReadOnly && _vm.isCursor,
+      'element-lock-flash': _vm.isReadOnly && _vm.isShowLock,
     }}):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=29117d4c&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=4f495200&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -267,6 +267,10 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       type: Boolean,
       default: false,
     },
+    markup: {
+      type: Boolean,
+      default: true,
+    },
     highlightActiveLine: {
       type: Boolean,
       default: true,
@@ -336,33 +340,31 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       type: String,
       default: '',
     },
-    enableMarkup: {
-      type: Boolean,
-      default: true,
-    },
   },
 
   data() {
     return {
-      code: '',
-      headCode: '',
-      tailCode: '',
-      blanks: [],
-      blanksGap: [],
-      blankRanges: [],
-      blankAnchors: [],
-      preserved: [],
-      preservedRanges: [],
-      preservedAnchors: [],
-      isReadOnly: false,
-      isCursor: false,
+      currValue: '', // 当前全量代码
+      editorValue: '', // 文本 编辑器代码
+      execValue: '', // 计算代码
+
+      plugins: [], // 插件
+      isVaryCurrValue: true, // 是否变更过当前全量代码
+      startCode: '', // 开头隐藏代码
+      endCode: '', // 结尾隐藏代码
+      blanks: [], // 空白处初始内容
+      blankGaps: [], // 空白与空白之间内容
+      blankAnchors: [], // 空白范围
+      preserveds: [], // 只读处初始内容
+      preservedAnchors: [], // 只读范围
+      isReadOnly: false, // 编辑器是否只读
+      isShowLock: false, // 是否展示锁 🔒
     };
   },
 
   mounted() {
-    this.code = this.value;
-
-    this.handleMarkup();
+    this.editorValue = this.value;
+    this.parseMarkup();
 
     this.editor = _brace_0_11_1_brace["edit"](this.$refs.refEditor);
 
@@ -382,7 +384,23 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     this.editor.setFontSize(this.fontSize);
     this.editor
       .getSession()
-      .setValue(this.code, this.cursorStart);
+      .setValue(this.editorValue, this.cursorStart);
+
+    if (this.plugins.length > 0) {
+      for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+        switch (this.plugins[idx]) {
+          case 'blank':
+            this.affectBlank();
+            break;
+          case 'lock':
+            this.affectPreserved();
+            break;
+          default:
+        }
+      }
+      this.editor.getSession().selection.on('changeCursor', this.showLock);
+    }
+
     if (this.navigateToFileEnd) {
       this.editor.navigateFileEnd();
     }
@@ -473,12 +491,40 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       });
     }
 
-    this.$watch('code', (newVal) => {
-      if (this.editor.getValue() !== newVal) {
+    this.$watch('value', (newVal) => {
+      if (this.getValue() !== newVal) {
         this.silent = true;
+        this.isVaryCurrValue = true;
+
+        this.editorValue = newVal;
+        if (this.currValue !== newVal) {
+          this.clearPlugins();
+          if (this.markup) {
+            this.parseMarkup();
+          }
+        }
+
         const pos = this.editor.session.selection.toJSON();
-        this.editor.setValue(newVal, this.cursorStart);
+        this.editor.setValue(this.editorValue, this.cursorStart);
         this.editor.session.selection.fromJSON(pos);
+
+        if (this.currValue !== newVal && this.markup) {
+          if (this.plugins.length > 0) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+              switch (this.plugins[idx]) {
+                case 'blank':
+                  this.affectBlank();
+                  break;
+                case 'lock':
+                  this.affectPreserved();
+                  break;
+                default:
+              }
+            }
+          }
+          this.editor.getSession().selection.on('changeCursor', this.showLock);
+        }
+
         this.silent = false;
       }
     });
@@ -529,228 +575,198 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
 
-    this.$watch('enableMarkup', (newVal) => {
+    this.$watch('markup', (newVal) => {
       if (newVal) {
-        this.code = this.editor.getValue();
-        this.handleMarkup();
-        this.editor.setValue(this.code, this.cursorStart);
-        this.isBlankReady = false;
+        this.clearPlugins();
+        this.editorValue = this.getEditorValue();
+        this.parseMarkup();
+        this.editor.setValue(this.editorValue, this.cursorStart);
         setTimeout(() => {
-          this.handleBlankOrPreserved();
-        }, 0);
+          if (this.plugins.length > 0) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+              switch (this.plugins[idx]) {
+                case 'blank':
+                  this.affectBlank();
+                  break;
+                case 'lock':
+                  this.affectPreserved();
+                  break;
+                default:
+              }
+            }
+            this.editor.getSession().selection.on('changeCursor', this.showLock);
+          }
+        });
       } else {
-        this.isReadOnly = false;
-        this.editor.setReadOnly(this.isReadOnly);
+        this.editor.setValue(this.getValue(true), this.cursorStart);
 
-        let markers;
-        if (this.blanks.length > 0) {
-          markers = this.editor.getSession().getMarkers();
-          Object.keys(markers).forEach((id) => {
-            if (markers[id].clazz === 'blank-highlight') {
-              this.editor.getSession().removeMarker(id);
-            }
-          });
-          this.editor.getSession().selection.off('changeCursor', this.handleBlankRange);
-        } else if (this.preserved.length > 0) {
-          markers = this.editor.getSession().getMarkers();
-          Object.keys(markers).forEach((id) => {
-            if (markers[id].clazz === 'readonly-highlight') {
-              this.editor.getSession().removeMarker(id);
-            }
-          });
-          this.editor.getSession().selection.off('changeCursor', this.handlePreservedRange);
-        }
+        this.clearPlugins();
 
-        this.code = this.syncGetCode(true);
-        this.editor.setValue(this.code, this.cursorStart);
-
-        this.headCode = '';
-        this.tailCode = '';
-        this.blanks = [];
-        this.blanksGap = [];
-        this.blankRanges = [];
-        this.blankAnchors = [];
-        this.preserved = [];
-        this.preservedRanges = [];
-        this.preservedAnchors = [];
+        setTimeout(() => {
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
+        }, 0);
       }
-      this.editor.getSession().selection.off('changeCursor', this.showLock);
     });
-
-    this.handleBlankOrPreserved();
   },
 
   methods: {
-    // public methods
-    getCode() {
-      return this.syncGetCode().replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
-    },
+    parseMarkup() {
+      if (this.markup) {
+        // xiaohou-hide
+        this.parseHide();
 
-    // private methods
-    handleMarkup() {
-      const originCode = this.code;
-      if (this.enableMarkup) {
-        // code hide
-        const [fragment0, fragment1] = originCode.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
-        if (fragment0 && fragment1) {
-          this.headCode = fragment0;
-          this.tailCode = fragment1;
-        } else if (fragment0 && originCode.indexOf(fragment0) === 0 && !fragment1) {
-          this.headCode = fragment0;
-        } else if (fragment0 && originCode.indexOf(fragment0) !== 0 && !fragment1) {
-          this.tailCode = fragment0;
-        }
-
-        this.code = this.code.replace(this.headCode, '');
-        this.code = this.code.replace(this.tailCode, '');
-
-        // code lock or code blank
-        if (this.code.indexOf('<xiaohou-blank>') > -1) {
-          this.blanks = originCode.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
-          this.blanksGap = this.code.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
-        } else if (this.code.indexOf('<xiaohou-lock>') > -1) {
-          this.preserved = originCode.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
-        }
+        // xiaohou-blank or xiaohou-lock
+        this.parseBlank();
+        this.parseLock();
       }
     },
-    handleBlankOrPreserved() {
-      if (this.blanks.length > 0) {
-        this.blankRanges = this.blanks.map(item => this.editor.find(item));
-        this.blankAnchors = this.blankRanges.map((item, index) => {
-          let range;
-          if (item.start.row === item.end.row) {
-            range = new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column - 29,
-            );
-          } else {
-            range = new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column - 15,
-            );
-          }
-          this.editor.getSession().addMarker(range, 'blank-highlight');
-          this.editor.getSession().replace(
-            new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column,
-            ),
-            this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' '),
-          );
-          range.start = this.editor.getSession().doc.createAnchor(range.start);
-          range.end = this.editor.getSession().doc.createAnchor(range.end);
-          return range;
-        });
-        this.editor.gotoLine(
-          this.blankAnchors[0].start.row + 1,
-          this.blankAnchors[0].start.column + 1,
-        );
-
-        this.editor.getSession().selection.on('changeCursor', this.handleBlankRange);
-      } else if (this.preserved.length > 0) {
-        this.preservedRanges = this.preserved.map(item => this.editor.find(item));
-        this.preservedAnchors = this.preservedRanges.map((item, index) => {
-          let range;
-          if (item.start.row === item.end.row) {
-            range = new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column - 29,
-            );
-          } else {
-            range = new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column - 15,
-            );
-          }
-          this.editor.getSession().addMarker(range, 'readonly-highlight');
-          this.editor.getSession().replace(
-            new Range(
-              item.start.row,
-              item.start.column,
-              item.end.row,
-              item.end.column,
-            ),
-            this.preserved[index].replace(/<\/?xiaohou-lock>/ig, ''),
-          );
-
-          range.start = this.editor.getSession().doc.createAnchor(range.start);
-          range.end = this.editor.getSession().doc.createAnchor(range.end);
-          range.end.$insertRight = true;
-          return range;
-        });
-        this.editor.gotoLine(0);
-
-        // 出现部分只读 => 要禁用选取
-        this.editor.getSession().selection.on('changeCursor', this.handlePreservedRange);
-      }
-
-      this.editor.getSession().selection.on('changeCursor', this.showLock);
-    },
-    handleBlankRange() {
-      setTimeout(() => {
-        const selection = this.editor.getSession().selection.getRange();
-        if (this.blankAnchors.some((anchor) => {
-          if (
-            // 0.单行 选取在填空中
-            (anchor.start.row === anchor.end.row
-            && anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column
-            && anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column)
-            // 1.多行 选取填空中间某行
-            || (anchor.start.row < anchor.end.row
-            && anchor.start.row < selection.start.row
-            && anchor.end.row > selection.end.row)
-            // 2.起在第一行 止可能在填空中
-            || (anchor.start.row < anchor.end.row
-            && anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column
-            // 2.1.止在第一行
-            && ((anchor.start.row === selection.end.row
-            && anchor.start.column < selection.end.column)
-            // 2.2.止在中间行
-            || (anchor.start.row < selection.end.row
-            && anchor.end.row > selection.end.row)
-            // 2.3.止在最后一行
-            || (anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column)))
-            // 3.多行 止在最后一行 起可能在填空中
-            || (anchor.start.row < anchor.end.row
-            && anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column
-            // 3.1.起在第一行
-            && ((anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column)
-            // 3.2.起在中间行
-            || (anchor.start.row < selection.start.row
-            && anchor.end.row > selection.start.row)
-            // 3.3.起在最后一行
-            || (anchor.end.row === selection.start.row
-            && anchor.end.column > selection.start.column)))
-          ) {
-            return true;
-          }
-          return false;
-        })) {
-          this.isReadOnly = false;
+    parseHide() {
+      const [fragment0, fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      if (fragment0 || fragment1) {
+        if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
+          this.endCode = fragment0;
         } else {
-          this.isReadOnly = true;
+          this.startCode = fragment0;
+          this.endCode = fragment1;
         }
-        this.editor.setReadOnly(this.isReadOnly);
-      }, 0);
+
+        this.editorValue = this.editorValue.replace(this.startCode, '');
+        this.editorValue = this.editorValue.replace(this.endCode, '');
+
+        this.plugins.push('hide');
+      }
     },
-    handlePreservedRange() {
-      // anchor更新是异步执行
+    parseBlank() {
+      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
+        this.blanks = this.editorValue.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+        this.blankGaps = this.editorValue.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
+
+        this.plugins.push('blank');
+      }
+    },
+    parseLock() {
+      if (this.editorValue.indexOf('<xiaohou-lock>') > -1) {
+        this.preserveds = this.editorValue.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+
+        this.plugins.push('lock');
+      }
+    },
+
+    affectBlank() {
+      this.blankAnchors = this.produceAnchors('blank');
+
+      this.editor.gotoLine(
+        this.blankAnchors[0].start.row + 1,
+        this.blankAnchors[0].start.column + 1,
+      );
+
+      this.editor.getSession().selection.on('changeCursor', this.protectExternal);
+    },
+    affectPreserved() {
+      this.preservedAnchors = this.produceAnchors('preserved');
+
+      this.editor.gotoLine(0);
+
+      this.editor.getSession().selection.on('changeCursor', this.protectInternal);
+    },
+    produceAnchors(type) {
+      const ranges = this[`${type}s`].map(item => this.editor.find(item));
+      return ranges.map((item, index) => {
+        let range;
+
+        if (item.start.row === item.end.row) {
+          range = new Range(
+            item.start.row,
+            item.start.column,
+            item.end.row,
+            item.end.column - 29,
+          );
+        } else {
+          range = new Range(
+            item.start.row,
+            item.start.column,
+            item.end.row,
+            item.end.column - 15,
+          );
+        }
+
+        this.editor.getSession().addMarker(range, `${type}-highlight`);
+
+        let tempStr = '';
+        switch (type) {
+          case 'blank':
+            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' ');
+            break;
+          case 'preserved':
+            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/ig, '');
+            break;
+          default:
+        }
+
+        this.editor.getSession().replace(
+          new Range(
+            item.start.row,
+            item.start.column,
+            item.end.row,
+            item.end.column,
+          ),
+          tempStr,
+        );
+        range.start = this.editor.getSession().doc.createAnchor(range.start);
+        range.end = this.editor.getSession().doc.createAnchor(range.end);
+        range.end.$insertRight = true;
+        return range;
+      });
+    },
+    clearAnchors(type) {
+      const markers = this.editor.getSession().getMarkers();
+      Object.keys(markers).forEach((id) => {
+        if (markers[id].clazz === `${type}-highlight`) {
+          this.editor.getSession().removeMarker(id);
+        }
+      });
+
+      switch (type) {
+        case 'blank':
+          this.blanks = [];
+          this.blankGaps = [];
+          this.blankAnchors = [];
+          break;
+        case 'preserved':
+          this.preserveds = [];
+          this.preservedAnchors = [];
+          break;
+        default:
+      }
+    },
+    clearHide() {
+      this.startCode = '';
+      this.endCode = '';
+    },
+    clearPlugins() {
+      if (this.plugins.length > 0) {
+        for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+          switch (this.plugins[idx]) {
+            case 'blank':
+              this.clearAnchors('blank');
+              this.editor.getSession().selection.off('changeCursor', this.protectExternal);
+              break;
+            case 'lock':
+              this.clearAnchors('preserved');
+              this.editor.getSession().selection.off('changeCursor', this.protectInternal);
+              break;
+            case 'hide':
+              this.clearHide();
+              break;
+            default:
+          }
+        }
+        this.editor.getSession().selection.off('changeCursor', this.showLock);
+      }
+      this.plugins = [];
+    },
+    protectInternal() {
       setTimeout(() => {
         const selection = this.editor.getSession().selection.getRange();
         if (this.preservedAnchors.some((anchor) => {
@@ -809,97 +825,194 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         this.editor.setReadOnly(this.isReadOnly);
       }, 0);
     },
-    protectBoundary(evt) {
-      // 边界保护
-      if (this.blanks.length > 0) {
-        // 开头禁back键 结尾禁del键
+    protectExternal() {
+      setTimeout(() => {
         const selection = this.editor.getSession().selection.getRange();
         if (this.blankAnchors.some((anchor) => {
-          if ((evt.keyCode === 46
-          && anchor.end.row === selection.start.row
-          && anchor.end.column - 1 === selection.start.column
-          && selection.end.row === selection.start.row
-          && selection.end.column === selection.start.column)
-          || (evt.keyCode === 8
-          && anchor.start.row === selection.start.row
-          && anchor.start.column + 1 === selection.start.column
-          && selection.end.row === selection.start.row
-          && selection.end.column === selection.start.column)) {
+          if (
+            // 0.单行 选取在填空中
+            (anchor.start.row === anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)
+            // 1.多行 选取填空中间某行
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 2.起在第一行 止可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            // 2.1.止在第一行
+            && ((anchor.start.row === selection.end.row
+            && anchor.start.column < selection.end.column)
+            // 2.2.止在中间行
+            || (anchor.start.row < selection.end.row
+            && anchor.end.row > selection.end.row)
+            // 2.3.止在最后一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)))
+            // 3.多行 止在最后一行 起可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column
+            // 3.1.起在第一行
+            && ((anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column)
+            // 3.2.起在中间行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.start.row)
+            // 3.3.起在最后一行
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column > selection.start.column)))
+          ) {
             return true;
           }
           return false;
         })) {
+          this.isReadOnly = false;
+        } else {
           this.isReadOnly = true;
         }
         this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
+    },
 
-        this.showLock();
-      } else if (this.preserved.length > 0) {
-        // 开头禁del键 结尾禁back键
-        const selection = this.editor.getSession().selection.getRange();
-        if (this.preservedAnchors.some((anchor) => {
-          if ((evt.keyCode === 8
-          && anchor.end.row === selection.start.row
-          && anchor.end.column === selection.start.column
-          && selection.end.row === selection.start.row
-          && selection.end.column === selection.start.column)
-          || (evt.keyCode === 46
-          && anchor.start.row === selection.start.row
-          && anchor.start.column === selection.start.column
-          && selection.end.row === selection.start.row
-          && selection.end.column === selection.start.column)) {
-            return true;
+    protectBoundary(evt) {
+      // 边界保护
+      this.plugins.forEach((plugin) => {
+        switch (plugin) {
+          case 'blank':
+            this.protectBlankBoundary(evt);
+            break;
+          case 'lock':
+            this.protectPreservedBoundary(evt);
+            break;
+          default:
+        }
+      });
+
+      if (!this.isReadOnly) {
+        this.isVaryCurrValue = true;
+      }
+    },
+    protectBlankBoundary(evt) {
+      // 开头禁backspace键 结尾禁del键
+      const selection = this.editor.getSession().selection.getRange();
+      if (this.blankAnchors.some((anchor) => {
+        if (((evt.keyCode === 46
+        || evt.keyCode === 13)
+        && anchor.end.row === selection.start.row
+        && anchor.end.column - 1 === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column)
+        || (evt.keyCode === 8
+        && anchor.start.row === selection.start.row
+        && anchor.start.column + 1 === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column)) {
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = true;
+      }
+      if (this.blankAnchors.some((anchor) => {
+        if (evt.keyCode !== 8
+        && anchor.start.row === selection.start.row
+        && anchor.start.column + 1 === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column) {
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = false;
+      }
+      this.editor.setReadOnly(this.isReadOnly);
+
+      this.showLock();
+    },
+    protectPreservedBoundary(evt) {
+      // 开头禁del键 结尾禁backspace键
+      const selection = this.editor.getSession().selection.getRange();
+      if (this.preservedAnchors.some((anchor) => {
+        if ((evt.keyCode === 8
+        && anchor.end.row === selection.start.row
+        && anchor.end.column === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column)
+        || (evt.keyCode === 46
+        && anchor.start.row === selection.start.row
+        && anchor.start.column === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column)) {
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = true;
+      }
+      if (this.preservedAnchors.some((anchor) => {
+        if (evt.keyCode !== 8
+        && anchor.end.row === selection.start.row
+        && anchor.end.column === selection.start.column
+        && selection.end.row === selection.start.row
+        && selection.end.column === selection.start.column) {
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = false;
+      }
+      this.editor.setReadOnly(this.isReadOnly);
+
+      this.showLock();
+    },
+
+    getEditorValue() {
+      return this.editor.getValue();
+    },
+
+    getExecValue() {
+      return this.getValue().replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
+    },
+
+    getValue(notJudge) {
+      if (this.isVaryCurrValue) {
+        this.currValue = this.splitCode(notJudge);
+        this.isVaryCurrValue = false;
+      }
+      const code = this.currValue;
+      return code;
+    },
+
+    splitCode(notJudge) {
+      let code = this.getEditorValue();
+
+      if (this.markup || notJudge) {
+        this.plugins.forEach((plugin) => {
+          switch (plugin) {
+            case 'blank':
+              code = this.spliceBlanks();
+              break;
+            case 'lock':
+              code = this.splicePreserveds();
+              break;
+            default:
           }
-          return false;
-        })) {
-          this.isReadOnly = true;
-        }
-        this.editor.setReadOnly(this.isReadOnly);
-
-        this.showLock();
-      }
-    },
-    syncGetCode(notJudge) {
-      let value = this.editor.getValue();
-
-      if (this.enableMarkup || notJudge) {
-        if (this.blanks.length > 0) {
-          value = this.spliceBlanks();
-        } else if (this.preserved.length > 0) {
-          value = this.splicePreserveds();
-        } else {
-          value = `${this.headCode}${value}${this.tailCode}`;
-        }
+        });
+        code = `${this.startCode}${code}${this.endCode}`;
       }
 
-      return value;
-    },
-    asyncGetCode() {
-      let value = this.editor.getValue();
-
-      if (this.enableMarkup) {
-        if (this.blanks.length > 0) {
-          return new Promise((resolve) => {
-            setTimeout(() => resolve(this.spliceBlanks()), 0);
-          });
-        /* eslint-disable-next-line no-else-return */
-        } else if (this.preserved.length > 0) {
-          // 编辑器回车是异步执行
-          return new Promise((resolve) => {
-            setTimeout(() => resolve(this.splicePreserveds()), 0);
-          });
-        } else {
-          value = `${this.headCode}${value}${this.tailCode}`;
-        }
-      }
-
-      return Promise.resolve(value);
+      return code;
     },
     spliceBlanks() {
-      let showCode = '';
+      let code = '';
 
       for (let i = 0, len = this.blankAnchors.length; i < len; i += 1) {
-        showCode = `${showCode}${this.blanksGap[2 * i]}<xiaohou-blank>${this.editor.getSession().doc.getTextRange(
+        code = `${code}${this.blankGaps[2 * i]}<xiaohou-blank>${this.editor.getSession().doc.getTextRange(
           new Range(
             this.blankAnchors[i].start.row,
             this.blankAnchors[i].start.column + 1,
@@ -909,52 +1022,54 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         )}</xiaohou-blank>`;
 
         if (i === len - 1) {
-          showCode += this.blanksGap[2 * (i + 1)];
+          code += this.blankGaps[2 * (i + 1)];
         }
       }
 
-      return `${this.headCode}${showCode}${this.tailCode}`;
+      return code;
     },
     splicePreserveds() {
-      let showCode = '';
+      let code = '';
+
       const start = {
         row: 0,
         column: 0,
       };
       for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-        showCode += this.editor.getSession().doc.getTextRange(
+        code = `${code}${this.editor.getSession().doc.getTextRange(
           new Range(
             start.row,
             start.column,
             this.preservedAnchors[i].start.row,
             this.preservedAnchors[i].start.column,
           ),
-        );
-        showCode += this.preserved[i];
+        )}${this.preserveds[i]}`;
+
         start.row = this.preservedAnchors[i].end.row;
         start.column = this.preservedAnchors[i].end.column;
+
         if (i === len - 1) {
           const lastRow = this.editor.getSession().getLength() - 1;
           const lastColumn = this.editor.getSession().getLine(lastRow).length;
 
-          showCode += this.editor.getSession().doc.getTextRange(
+          code = `${code}${this.editor.getSession().doc.getTextRange(
             new Range(
               start.row,
               start.column,
               lastRow,
               lastColumn,
             ),
-          );
+          )}`;
         }
       }
 
-      return `${this.headCode}${showCode}${this.tailCode}`;
+      return code;
     },
 
     showLock() {
-      this.isCursor = true;
+      this.isShowLock = true;
       setTimeout(() => {
-        this.isCursor = false;
+        this.isShowLock = false;
       }, 500);
     },
 
@@ -1000,9 +1115,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
 
     handleChange(event) {
       if (!this.silent) {
-        this.asyncGetCode().then((value) => {
-          this.$emit('change', value, event, this.editor);
-        });
+        this.$emit('change', this.getEditorValue(), event, this.editor);
       }
     },
 
@@ -1250,7 +1363,7 @@ exports = module.exports = __webpack_require__("690e")(false);
 
 
 // module
-exports.push([module.i, ".element-editor{width:100%;height:100%;background-color:#fff}.element-lock{display:inline-block;width:100px;height:107px;position:absolute;top:0;right:10px;z-index:1000;background-image:url(" + escape(__webpack_require__("7bba")) + ");opacity:0;-webkit-transition:opacity .6s;transition:opacity .6s}.element-lock-flash{opacity:1}.ace-tm .ace_gutter{background-color:#fff}.ace_gutter-cell{color:#cfcfcf}.ace_invisible{opacity:0}.ace_gutter-layer,.ace_print-margin{background-color:#fff}.ace_line.highlighted{background-color:#fabd2f}.ace_line.highlighted.bright{background-color:#fae8c3}.ace_content.blink{background-color:rgba(251,203,87,.64)}.readonly-highlight{background-color:#333;opacity:.2;position:absolute}.blank-highlight{background-color:#fff;position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #333}.blankInputs-show{background-color:rgba(251,203,87,.64)}", ""]);
+exports.push([module.i, ".element-editor{width:100%;height:100%;background-color:#fff}.element-lock{display:inline-block;width:100px;height:107px;position:absolute;top:0;right:10px;z-index:1000;background-image:url(" + escape(__webpack_require__("7bba")) + ");opacity:0;-webkit-transition:opacity .6s;transition:opacity .6s}.element-lock-flash{opacity:1}.ace-tm .ace_gutter{background-color:#fff}.ace_gutter-cell{color:#cfcfcf}.ace_invisible{opacity:0}.ace_gutter-layer,.ace_print-margin{background-color:#fff}.ace_line.highlighted{background-color:#fabd2f}.ace_line.highlighted.bright{background-color:#fae8c3}.ace_content.blink{background-color:rgba(251,203,87,.64)}.preserved-highlight{background-color:#333;opacity:.2;position:absolute}.blank-highlight{background-color:#fff;position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #333}.blank-highlight-flash{background-color:rgba(251,203,87,.64)}", ""]);
 
 // exports
 
