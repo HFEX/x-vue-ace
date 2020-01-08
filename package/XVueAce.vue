@@ -425,9 +425,9 @@ export default {
       }
     },
     parseHide() {
-      const [fragment0, fragment1] = this.value.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      const [fragment0, fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
       if (fragment0 || fragment1) {
-        if (fragment0 && this.value.indexOf(fragment0) !== 0 && !fragment1) {
+        if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
         } else {
           this.startCode = fragment0;
