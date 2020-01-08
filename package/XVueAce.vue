@@ -380,7 +380,7 @@ export default {
 
     this.$watch('markup', (newVal) => {
       if (newVal) {
-        this.plugins = [];
+        this.clearPlugins();
         this.editorValue = this.getEditorValue();
         this.parseMarkup();
         this.editor.setValue(this.editorValue, this.cursorStart);
@@ -442,7 +442,7 @@ export default {
     },
     parseBlank() {
       if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
-        this.blanks = this.value.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+        this.blanks = this.editorValue.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
         this.blankGaps = this.editorValue.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
 
         this.plugins.push('blank');
@@ -450,7 +450,7 @@ export default {
     },
     parseLock() {
       if (this.editorValue.indexOf('<xiaohou-lock>') > -1) {
-        this.preserveds = this.value.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+        this.preserveds = this.editorValue.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
 
         this.plugins.push('lock');
       }
