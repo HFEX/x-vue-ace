@@ -701,11 +701,13 @@ export default {
       }
     },
     protectBlankBoundary(evt) {
+      if (evt.keyCode === 13) {
+        evt.preventDefault();
+      }
       // 开头禁backspace键 结尾禁del键
       const selection = this.editor.getSession().selection.getRange();
       if (this.blankAnchors.some((anchor) => {
-        if (((evt.keyCode === 46
-        || evt.keyCode === 13)
+        if ((evt.keyCode === 46
         && anchor.end.row === selection.start.row
         && anchor.end.column - 1 === selection.start.column
         && selection.end.row === selection.start.row
@@ -867,6 +869,9 @@ export default {
       }
 
       return code;
+    },
+    checkMarkup() {
+      return this.markup && this.plugins.length !== 0;
     },
 
     showLock() {
