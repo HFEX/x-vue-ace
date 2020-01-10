@@ -432,8 +432,8 @@ export default {
         if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
         } else {
-          this.startCode = fragment0;
-          this.endCode = fragment1;
+          this.startCode = fragment0 || '';
+          this.endCode = fragment1 || '';
         }
 
         this.editorValue = this.editorValue.replace(this.startCode, '');
