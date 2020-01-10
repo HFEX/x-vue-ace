@@ -110,7 +110,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4210f664-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=761a91a0&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"ae284424-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=38c8b0a0&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),(_vm.isReadOnly)?_c('i',{class:{
       'element-lock': true,
       'element-lock-flash': _vm.isReadOnly && _vm.isShowLock,
@@ -118,7 +118,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=761a91a0&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=38c8b0a0&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -629,8 +629,8 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
         } else {
-          this.startCode = fragment0;
-          this.endCode = fragment1;
+          this.startCode = fragment0 || '';
+          this.endCode = fragment1 || '';
         }
 
         this.editorValue = this.editorValue.replace(this.startCode, '');
