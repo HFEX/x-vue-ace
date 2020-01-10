@@ -302,6 +302,8 @@ export default {
         this.editorValue = newVal;
         if (this.currValue !== newVal) {
           this.clearPlugins();
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
           if (this.markup) {
             this.parseMarkup();
           }
