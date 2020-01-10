@@ -969,9 +969,12 @@ export default {
       currentMarkers = this.editor.getSession().getMarkers(false);
       Object.keys(currentMarkers)
         .forEach((i) => {
+          const { clazz } = currentMarkers[i];
           if (
-            currentMarkers[i].clazz !== 'ace_active-line'
-            && currentMarkers[i].clazz !== 'ace_selected-word'
+            clazz !== 'ace_active-line'
+            && clazz !== 'ace_selected-word'
+            && clazz !== 'preserved-highlight'
+            && clazz !== 'blank-highlight'
           ) {
             this.editor.getSession().removeMarker(currentMarkers[i].id);
           }
@@ -1084,10 +1087,12 @@ export default {
   background-color: #333;
   opacity: 0.2;
   position: absolute;
+  z-index: 1;
 }
 .blank-highlight {
   background-color: #fff;
   position: absolute;
+  z-index: 1;
   box-sizing: border-box;
   border: 1px solid #333;
   &-flash {

@@ -15,6 +15,7 @@
           :fontSize="fontSize"
           :value="source"
           :annotations="annotations"
+          :markers="markers"
           @change="handleEditorChange"
         />
       </div>
@@ -43,7 +44,7 @@ export default {
 
   data() {
     return {
-      source: '<xiaohou-blank>hgfhk</xiaohou-blank>var a = 1;\nvar b = 2;\nconst c = [a, b];<xiaohou-blank>hgfhk</xiaohou-blank>asdf\n<xiaohou-blank>hgfhk</xiaohou-blank>',
+      source: '<xiaohou-blank>hgfhkslsldjlsdjf</xiaohou-blank>\nvar a = 1;\nvar b = 2;\nconst c = [a, b];<xiaohou-blank>hgfhk</xiaohou-blank>asdf\n<xiaohou-blank>hgfhk</xiaohou-blank>',
       annotations: [{
         row: 0,
         column: 2,
@@ -51,14 +52,14 @@ export default {
         text: 'Some error.',
       }],
       fontSize: 20,
-      // markers: [{
-      //   startRow: 0,
-      //   startCol: 5,
-      //   endRow: 0,
-      //   endCol: 9,
-      //   className: 'error-marker',
-      //   type: 'background',
-      // }],
+      markers: [{
+        startRow: 0,
+        startCol: 0,
+        endRow: 0,
+        endCol: 5,
+        className: 'error-marker',
+        type: 'background',
+      }],
       blockText: '',
       pos: '1,3,5',
       enableMarkup: true,
