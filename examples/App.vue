@@ -6,11 +6,11 @@
       mode="python"
       theme="chrome"
       enableLiveAutocompletion
+      preventPasteOther
       focus
       :fontSize="17"
       :value="source"
       :annotations="annotations"
-      :markers="markers"
       @change="handleEditorChange"
     />
     <div class="tools">
