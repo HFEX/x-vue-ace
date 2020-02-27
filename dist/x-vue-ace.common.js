@@ -110,12 +110,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2c724d63-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=275ef9b0&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"fe0ed926-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=35c98550&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"refEditor",staticClass:"element-editor"})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=275ef9b0&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=35c98550&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -324,10 +324,18 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       type: String,
       default: '',
     },
+    preventPasteOther: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   mounted() {
     this.editor = _brace_0_11_1_brace["edit"](this.$refs.refEditor);
+    this.sid = Math.random().toString().slice(2);
+    this.copyrightText = `\n小猴编程（${this.sid}）`;
+
+    if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
 
     this.$emit('before-load', _brace_0_11_1_brace);
 
@@ -356,7 +364,23 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     this.editor.on('focus', (...args) => this.$emit('focus', ...args, this.editor));
     this.editor.on('blur', (...args) => this.$emit('blur', ...args, this.editor));
     this.editor.on('copy', (...args) => this.$emit('copy', ...args, this.editor));
-    this.editor.on('paste', (...args) => this.$emit('paste', ...args, this.editor));
+    this.editor.on('paste', (event) => {
+      const reg = /\n小猴编程（(\d+)）/g;
+      let { text } = event;
+      if (reg.test(event.text)) {
+        if (RegExp.$1 === this.sid) {
+          text = event.text.replace(reg, '');
+        } else {
+          text = '';
+        }
+        // eslint-disable-next-line no-param-reassign
+        event.text = text;
+      }
+      this.$emit('paste', event, this.editor);
+    });
+
+    this.$el.addEventListener('copy', this.handleCopy);
+    this.$el.addEventListener('cut', this.handleCut);
 
     if (this.debounceChangePeriod) {
       this.editor.on('change', debounce(this.handleChange.bind(this), this.debounceChangePeriod));
@@ -509,7 +533,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         this.insert(text, focus);
         this.select(
           start.row + (posArr[0] - 1 || 0),
-          start.column + (posArr[1] || 0),
+          posArr[0] > 1 ? (posArr[1] || 0) : start.column + (posArr[1] || 0),
           posArr[2],
           focus,
         );
@@ -548,6 +572,10 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
 
     handleSelectionChange(event) {
       const value = this.editor.getSelection();
+      if (this.preventPasteOther) {
+        this.selectedText = this.editor.getSelectedText() || this.selectedText;
+      }
+
       this.$emit('selection-change', value, event);
     },
 
@@ -629,6 +657,29 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     resize() {
       this.editor.resize();
     },
+
+    handleCopy(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.editor.getCopyText()}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+
+    handleCut(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.selectedText}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('copy', this.handleCopy);
+    this.$el.removeEventListener('cut', this.handleCut);
   },
 
   destroyed() {
