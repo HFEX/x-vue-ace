@@ -10,6 +10,7 @@
           mode="python"
           theme="chrome"
           enableLiveAutocompletion
+          preventPasteOther
           focus
           :markup="enableMarkup"
           :fontSize="fontSize"

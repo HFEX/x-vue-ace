@@ -143,10 +143,21 @@ export default {
       type: String,
       default: '',
     },
+    preventPasteOther: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    copyrightText() {
+      return `\n小猴编程（${this.sid}）`;
+    },
   },
 
   data() {
     return {
+      sid: '',
       currValue: '', // 当前全量代码
       editorValue: '', // 文本 编辑器代码
       execValue: '', // 计算代码
@@ -170,6 +181,9 @@ export default {
     this.parseMarkup();
 
     this.editor = ace.edit(this.$refs.refEditor);
+    this.genSid();
+
+    if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
 
     this.$emit('before-load', ace);
 
@@ -214,7 +228,23 @@ export default {
     this.editor.on('focus', (...args) => this.$emit('focus', ...args, this.editor));
     this.editor.on('blur', (...args) => this.$emit('blur', ...args, this.editor));
     this.editor.on('copy', (...args) => this.$emit('copy', ...args, this.editor));
-    this.editor.on('paste', (...args) => this.$emit('paste', ...args, this.editor));
+    this.editor.on('paste', (event) => {
+      const reg = /\n小猴编程（(\d+)）/g;
+      let { text } = event;
+      if (reg.test(event.text)) {
+        if (RegExp.$1 === this.sid) {
+          text = event.text.replace(reg, '');
+        } else {
+          text = '';
+        }
+        // eslint-disable-next-line no-param-reassign
+        event.text = text;
+      }
+      this.$emit('paste', event, this.editor);
+    });
+
+    this.$el.addEventListener('copy', this.handleCopy);
+    this.$el.addEventListener('cut', this.handleCut);
 
     if (this.debounceChangePeriod) {
       this.editor.on('change', debounce(this.handleChange.bind(this), this.debounceChangePeriod));
@@ -940,6 +970,10 @@ export default {
 
     handleSelectionChange(event) {
       const value = this.editor.getSelection();
+      if (this.preventPasteOther) {
+        this.selectedText = this.editor.getSelectedText() || this.selectedText;
+      }
+
       this.$emit('selection-change', value, event);
     },
 
@@ -1024,6 +1058,33 @@ export default {
     resize() {
       this.editor.resize();
     },
+
+    handleCopy(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.editor.getCopyText()}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+
+    handleCut(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.selectedText}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+
+    genSid() {
+      this.sid = Math.random().toString().slice(2);
+    },
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('copy', this.handleCopy);
+    this.$el.removeEventListener('cut', this.handleCut);
   },
 
   destroyed() {
