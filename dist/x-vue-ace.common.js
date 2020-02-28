@@ -110,12 +110,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"fe0ed926-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=35c98550&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42fe375c-vue-loader-template"}!./node_modules/_vue-loader@15.7.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.7.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=67443c02&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"refEditor",staticClass:"element-editor"})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=35c98550&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=67443c02&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -330,10 +330,21 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     },
   },
 
+  data() {
+    return {
+      sid: '',
+    };
+  },
+
+  computed: {
+    copyrightText() {
+      return `\n小猴编程（${this.sid}）`;
+    },
+  },
+
   mounted() {
     this.editor = _brace_0_11_1_brace["edit"](this.$refs.refEditor);
-    this.sid = Math.random().toString().slice(2);
-    this.copyrightText = `\n小猴编程（${this.sid}）`;
+    this.genSid();
 
     if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
 
@@ -674,6 +685,10 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         `${this.selectedText}${this.copyrightText}`,
       );
       event.preventDefault();
+    },
+
+    genSid() {
+      this.sid = Math.random().toString().slice(2);
     },
   },
 
