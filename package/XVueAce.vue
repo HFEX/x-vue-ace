@@ -136,10 +136,21 @@ export default {
     },
   },
 
+  data() {
+    return {
+      sid: '',
+    };
+  },
+
+  computed: {
+    copyrightText() {
+      return `\n小猴编程（${this.sid}）`;
+    },
+  },
+
   mounted() {
     this.editor = ace.edit(this.$refs.refEditor);
-    this.sid = Math.random().toString().slice(2);
-    this.copyrightText = `\n小猴编程（${this.sid}）`;
+    this.genSid();
 
     if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
 
@@ -480,6 +491,10 @@ export default {
         `${this.selectedText}${this.copyrightText}`,
       );
       event.preventDefault();
+    },
+
+    genSid() {
+      this.sid = Math.random().toString().slice(2);
     },
   },
 
