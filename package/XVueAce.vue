@@ -456,6 +456,7 @@ export default {
         this.parseLock();
       }
     },
+    // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
     parseHide() {
       const [fragment0, fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
       if (fragment0 || fragment1) {
@@ -831,11 +832,11 @@ export default {
       if (this.markup || notJudge) {
         this.plugins.forEach((plugin) => {
           switch (plugin) {
-            case 'blank':
-              code = this.spliceBlanks();
-              break;
             case 'lock':
               code = this.splicePreserveds();
+              break;
+            case 'blank':
+              code = this.spliceBlanks();
               break;
             default:
           }
