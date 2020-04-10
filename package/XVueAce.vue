@@ -448,12 +448,21 @@ export default {
   methods: {
     parseMarkup() {
       if (this.markup) {
+        // 某些插件在功能上可能是相互冲突的，此处对此做处理
+        this.beforeParse()
+
         // xiaohou-hide
         this.parseHide();
 
         // xiaohou-blank or xiaohou-lock
         this.parseLock();
         this.parseBlank();
+      }
+    },
+    // blank lock 同时存在时，处理blank,删掉 lock
+    beforeParse() {
+      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
+        this.editorValue = this.editorValue.replace(/<xiaohou-lock>|<\/xiaohou-lock>/igm, '')
       }
     },
     // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
