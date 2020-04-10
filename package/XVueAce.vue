@@ -206,11 +206,11 @@ export default {
     if (this.plugins.length > 0) {
       for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
         switch (this.plugins[idx]) {
-          case 'blank':
-            this.affectBlank();
-            break;
           case 'lock':
             this.affectPreserved();
+            break;
+          case 'blank':
+            this.affectBlank();
             break;
           default:
         }
@@ -347,11 +347,11 @@ export default {
           if (this.plugins.length > 0) {
             for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
               switch (this.plugins[idx]) {
-                case 'blank':
-                  this.affectBlank();
-                  break;
                 case 'lock':
                   this.affectPreserved();
+                  break;
+                case 'blank':
+                  this.affectBlank();
                   break;
                 default:
               }
@@ -420,11 +420,11 @@ export default {
           if (this.plugins.length > 0) {
             for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
               switch (this.plugins[idx]) {
-                case 'blank':
-                  this.affectBlank();
-                  break;
                 case 'lock':
                   this.affectPreserved();
+                  break;
+                case 'blank':
+                  this.affectBlank();
                   break;
                 default:
               }
@@ -452,8 +452,8 @@ export default {
         this.parseHide();
 
         // xiaohou-blank or xiaohou-lock
-        this.parseBlank();
         this.parseLock();
+        this.parseBlank();
       }
     },
     // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
@@ -531,11 +531,11 @@ export default {
 
         let tempStr = '';
         switch (type) {
-          case 'blank':
-            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' ');
-            break;
           case 'preserved':
             tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/ig, '');
+            break;
+          case 'blank':
+            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' ');
             break;
           default:
         }

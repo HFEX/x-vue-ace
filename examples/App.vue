@@ -86,7 +86,7 @@ export default {
 
     handleEditorChange(val) {
       // this.source = val;
-      // console.log(this.source);
+      console.log(val);
     },
   },
 
