@@ -120,7 +120,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"49b6658a-vue-loader-template"}!./node_modules/_vue-loader@15.9.1@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.1@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=15169183&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f72b84c8-vue-loader-template"}!./node_modules/_vue-loader@15.9.1@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.1@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=6fbacb5f&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),(_vm.isReadOnly)?_c('i',{class:{
       'element-lock': true,
       'element-lock-flash': _vm.isReadOnly && _vm.isShowLock,
@@ -128,7 +128,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=15169183&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=6fbacb5f&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -675,6 +675,7 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
     // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
     parseHide() {
       const [fragment0, fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      console.log('=3=3=3=',fragment0,fragment1)
       if (fragment0 || fragment1) {
         if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
@@ -1057,6 +1058,12 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
             default:
           }
         });
+        if(!code.match(/^\s/)){
+          code =  '\n'+code
+        }
+        if(!code.match(/^s$/)){
+          code = code + '\n'
+        }
         code = `${this.startCode}${code}${this.endCode}`;
       }
 
