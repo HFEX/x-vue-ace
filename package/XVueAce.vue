@@ -468,6 +468,7 @@ export default {
     // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
     parseHide() {
       const [fragment0, fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      console.log('=3=3=3=',fragment0,fragment1)
       if (fragment0 || fragment1) {
         if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
@@ -850,6 +851,12 @@ export default {
             default:
           }
         });
+        if(!code.match(/^\s/)){
+          code =  '\n'+code
+        }
+        if(!code.match(/^s$/)){
+          code = code + '\n'
+        }
         code = `${this.startCode}${code}${this.endCode}`;
       }
 

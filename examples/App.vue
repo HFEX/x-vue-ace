@@ -45,7 +45,7 @@ export default {
 
   data() {
     return {
-      source: '<xiaohou-blank>hgfhkslsldjlsdjf</xiaohou-blank>\nvar a = 1;\nvar b = 2;\nconst c = [a, b];<xiaohou-blank>hgfhk</xiaohou-blank>asdf\n<xiaohou-blank>hgfhk</xiaohou-blank>',
+      source: '<xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-lock>var a = 1;</xiaohou-lock>\nvar b = 2;\nconst c = [a, b];<xiaohou-lock>asdf</xiaohou-lock>\n<xiaohou-hide>hgfhk</xiaohou-hide>',
       annotations: [{
         row: 0,
         column: 2,
