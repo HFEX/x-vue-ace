@@ -45,10 +45,9 @@ export default {
 
   data() {
     return {
-      source: `
-      <xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-hide>var a = 1;</xiaohou-hide>var b = 2;
+      source: `<xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-lock>var a = 1;var b = 2;</xiaohou-lock>
                const c = [a, b];
-               <xiaohou-hide>asdf</xiaohou-hide>\n<xiaohou-hide>hgfhk</xiaohou-hide>`,
+               asdf\n<xiaohou-hide>hgfhk</xiaohou-hide>`,
       annotations: [{
         row: 0,
         column: 2,
@@ -87,7 +86,7 @@ export default {
       this.fontSize -= 1;
     },
 
-    handleEditorChange(val) {
+    handleEditorChange() {
       // this.source = val;
       // console.log(val);
     },

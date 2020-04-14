@@ -486,7 +486,7 @@ export default {
                 arr[len - 1] = '';
               }
             } else if (arr[index + 1] && !arr[index + 1].match(regAfter)) {
-              arr[index + 1] = '\n' + arr[index + 1];
+              arr[index + 1] = `\n${arr[index + 1]}`;
             }
           });
         }
@@ -878,10 +878,10 @@ export default {
             default:
           }
         });
-        if (!code.match(/^[\n\f\r]/)) {
+        if (this.startCode && !code.match(/^[\n\f\r]/)) {
           code = `\n${code}`;
         }
-        if (!code.match(/[\n\f\r]$/)) {
+        if (this.endCode && !code.match(/[\n\f\r]$/)) {
           code += '\n';
         }
 
