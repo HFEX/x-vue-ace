@@ -45,7 +45,10 @@ export default {
 
   data() {
     return {
-      source: '<xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-lock>var a = 1;</xiaohou-lock>\nvar b = 2;\nconst c = [a, b];<xiaohou-lock>asdf</xiaohou-lock>\n<xiaohou-hide>hgfhk</xiaohou-hide>',
+      source: `
+      <xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-hide>var a = 1;</xiaohou-hide>var b = 2;
+               const c = [a, b];
+               <xiaohou-hide>asdf</xiaohou-hide>\n<xiaohou-hide>hgfhk</xiaohou-hide>`,
       annotations: [{
         row: 0,
         column: 2,
@@ -86,7 +89,7 @@ export default {
 
     handleEditorChange(val) {
       // this.source = val;
-      console.log(val);
+      // console.log(val);
     },
   },
 

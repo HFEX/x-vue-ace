@@ -449,7 +449,7 @@ export default {
     parseMarkup() {
       if (this.markup) {
         // 某些插件在功能上可能是相互冲突的，此处对此做处理
-        this.beforeParse()
+        this.beforeParse();
 
         // xiaohou-hide
         this.parseHide();
@@ -459,16 +459,58 @@ export default {
         this.parseBlank();
       }
     },
+    // content 整段文本
+    // splitCode 分隔字段
+    // mode 换行模式，分隔字段前添加 before,分隔字段后添加 after
+    wrapParse(content, splitCode, mode) {
+      const arr = content.split(splitCode);
+      if (arr) {
+        const len = arr.length;
+        const regBefore = new RegExp(/[\f\n\r]$/);
+        const regAfter = new RegExp(/^[\f\n\r]/);
+        if (mode === 'before') {
+          arr.forEach((item, index) => {
+            if (index === 0) {
+              if (arr[0].match(/^\s+$/)) {
+                arr[0] = '';
+              }
+            } else if (arr[index - 1] && !arr[index - 1].match(regBefore)) {
+              arr[index - 1] += '\n';
+            }
+          });
+        }
+        if (mode === 'after') {
+          arr.forEach((item, index) => {
+            if (index === len - 1) {
+              if (arr[len - 1].match(/^\s+$/)) {
+                arr[len - 1] = '';
+              }
+            } else if (arr[index + 1] && !arr[index + 1].match(regAfter)) {
+              arr[index + 1] = '\n' + arr[index + 1];
+            }
+          });
+        }
+        return arr.join(splitCode);
+      }
+      return content;
+    },
     // blank lock 同时存在时，处理blank,删掉 lock
+    // hide , lock 只存在于首尾，中间位置的为非法格式，处理掉
     beforeParse() {
       if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
-        this.editorValue = this.editorValue.replace(/<xiaohou-lock>|<\/xiaohou-lock>/igm, '')
+        this.editorValue = this.editorValue.replace(/<\/?xiaohou-lock>/igm, '');
       }
+      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
+      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
+      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-lock>', 'before');
+      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-lock>', 'after');
     },
     // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
     parseHide() {
-      const [fragment0] = this.editorValue.match(/^<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
-      const [fragment1] = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>$/igm) || [];
+      const args = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      const len = args.length;
+      const fragment0 = args[0];
+      const fragment1 = len > 1 ? args[len - 1] : undefined;
       if (fragment0 || fragment1) {
         if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
           this.endCode = fragment0;
@@ -476,10 +518,8 @@ export default {
           this.startCode = fragment0 || '';
           this.endCode = fragment1 || '';
         }
-
         this.editorValue = this.editorValue.replace(this.startCode, '');
         this.editorValue = this.editorValue.replace(this.endCode, '');
-
         this.plugins.push('hide');
       }
     },
@@ -487,14 +527,13 @@ export default {
       if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
         this.blanks = this.editorValue.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
         this.blankGaps = this.editorValue.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
-
         this.plugins.push('blank');
       }
     },
     parseLock() {
       if (this.editorValue.indexOf('<xiaohou-lock>') > -1) {
         this.preserveds = this.editorValue.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
-
+        this.preservedGaps = this.editorValue.split(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
         this.plugins.push('lock');
       }
     },
@@ -785,37 +824,25 @@ export default {
     protectPreservedBoundary(evt) {
       // 开头禁del键 结尾禁backspace键
       const selection = this.editor.getSession().selection.getRange();
+      const startA = selection.start.row;
+      const endA = selection.end.row;
+
       if (this.preservedAnchors.some((anchor) => {
-        if ((evt.keyCode === 8
-        && anchor.end.row === selection.start.row
-        && anchor.end.column === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column)
-        || (evt.keyCode === 46
-        && anchor.start.row === selection.start.row
-        && anchor.start.column === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column)) {
+        const startB = anchor.start.row;
+        const endB = anchor.end.row;
+        if (Math.max(startA, startB) <= Math.min(endA, endB)) {
           return true;
+        }
+        if (evt.keyCode === 8 || evt.keyCode === 46) {
+          if (Math.max(startA - 1, startB) <= Math.min(endA, endB) && !selection.start.column) {
+            return true;
+          }
         }
         return false;
       })) {
         this.isReadOnly = true;
       }
-      if (this.preservedAnchors.some((anchor) => {
-        if (evt.keyCode !== 8
-        && anchor.end.row === selection.start.row
-        && anchor.end.column === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column) {
-          return true;
-        }
-        return false;
-      })) {
-        this.isReadOnly = false;
-      }
       this.editor.setReadOnly(this.isReadOnly);
-
       this.showLock();
     },
 
@@ -851,12 +878,13 @@ export default {
             default:
           }
         });
-        if(!code.match(/^\s/)){
-          code =  '\n'+code
+        if (!code.match(/^[\n\f\r]/)) {
+          code = `\n${code}`;
         }
-        if(!code.match(/^s$/)){
-          code = code + '\n'
+        if (!code.match(/[\n\f\r]$/)) {
+          code += '\n';
         }
+
         code = `${this.startCode}${code}${this.endCode}`;
       }
 
