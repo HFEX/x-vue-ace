@@ -120,7 +120,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"ceaa431a-vue-loader-template"}!./node_modules/_vue-loader@15.9.1@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.1@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=0f529aaa&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"55ee57d2-vue-loader-template"}!./node_modules/_vue-loader@15.9.1@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.1@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=46c0b267&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),(_vm.isReadOnly)?_c('i',{class:{
       'element-lock': true,
       'element-lock-flash': _vm.isReadOnly && _vm.isShowLock,
@@ -128,7 +128,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=0f529aaa&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=46c0b267&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -773,20 +773,25 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         }
         return -1;
       });
+      let rate = 0;
       return ranges.map((item, index) => {
         let range;
-
+        if (index > 0 && item.start.row === ranges[index - 1].start.row) {
+          rate += 1;
+        } else {
+          rate = 0;
+        }
         if (item.start.row === item.end.row) {
           range = new Range(
             item.start.row,
-            item.start.column,
+            item.start.column - rate * 29,
             item.end.row,
-            item.end.column - 29,
+            item.end.column - (rate + 1) * 29,
           );
         } else {
           range = new Range(
             item.start.row,
-            item.start.column,
+            item.start.column - rate * 29,
             item.end.row,
             item.end.column - 15,
           );
@@ -797,23 +802,34 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
         let tempStr = '';
         switch (type) {
           case 'preserved':
-            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/ig, '');
+            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/img, '');
             break;
           case 'blank':
-            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' ');
+            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/img, ' ');
             break;
           default:
         }
-
-        this.editor.getSession().replace(
-          new Range(
-            item.start.row,
-            item.start.column,
-            item.end.row,
-            item.end.column,
-          ),
-          tempStr,
-        );
+        if (item.start.row === item.end.row) {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column - rate * 29,
+            ),
+            tempStr,
+          );  
+        } else {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column,
+            ),
+            tempStr,
+          ); 
+        }
         range.start = this.editor.getSession().doc.createAnchor(range.start);
         range.end = this.editor.getSession().doc.createAnchor(range.end);
         range.end.$insertRight = true;
