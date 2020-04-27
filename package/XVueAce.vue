@@ -540,7 +540,6 @@ export default {
 
     affectBlank() {
       this.blankAnchors = this.produceAnchors('blank');
-
       this.editor.gotoLine(
         this.blankAnchors[0].start.row + 1,
         this.blankAnchors[0].start.column + 1,
@@ -557,6 +556,16 @@ export default {
     },
     produceAnchors(type) {
       const ranges = this[`${type}s`].map(item => this.editor.find(item));
+      ranges.sort((a, b) => {
+        const arow = a.start.row;
+        const brow = b.start.row;
+        const acolumn = a.start.column;
+        const bcolumn = b.start.column;
+        if (arow > brow || (arow === brow && acolumn > bcolumn)) {
+          return 1;
+        }
+        return -1;
+      });
       return ranges.map((item, index) => {
         let range;
 

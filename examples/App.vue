@@ -29,6 +29,8 @@
       <button @click="toggleMarkup">toggleMarkup</button>
       <button @click="fontSizeA">fontSize+</button>
       <button @click="fontSizeM">fontSize-</button>
+      <button @click="getValue">getValue</button>
+      <button @click="resetValue">resetValue</button>
     </div>
   </div>
 </template>
@@ -45,9 +47,23 @@ export default {
 
   data() {
     return {
-      source: `<xiaohou-hide>hgfhkslsldjlsdjf</xiaohou-hide>\n<xiaohou-lock>var a = 1;var b = 2;</xiaohou-lock>
-               const c = [a, b];
-               asdf\n<xiaohou-hide>hgfhk</xiaohou-hide>`,
+      source: `# 输入
+num = int(input("共有多少只乌龟："))
+# 第一次数1只
+step =  <xiaohou-blank></xiaohou-blank>
+# 模拟
+turtles = []
+for i in range(num):
+    turtles.append(i)
+index = 0
+for i in range(num - 1):
+    # 算出要被淘汰的乌龟编号：（当前编号+步长-1）对乌龟数量取余数
+    index = <xiaohou-blank></xiaohou-blank>
+    # 使用pop函数淘汰第index只乌龟
+    turtles<xiaohou-blank></xiaohou-blank>
+    # 每次数的数量是上一次的2倍
+    step<xiaohou-blank></xiaohou-blank> 
+print("赢家是 %d 号乌龟！" % turtles[0])`,
       annotations: [{
         row: 0,
         column: 2,
@@ -89,6 +105,14 @@ export default {
     handleEditorChange() {
       // this.source = val;
       // console.log(val);
+    },
+
+    getValue() {
+      // console.log(this.$refs.editor.getValue());
+    },
+
+    resetValue() {
+      this.source = '';
     },
   },
 
