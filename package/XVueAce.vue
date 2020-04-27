@@ -566,20 +566,25 @@ export default {
         }
         return -1;
       });
+      let rate = 0;
       return ranges.map((item, index) => {
         let range;
-
+        if (index > 0 && item.start.row === ranges[index - 1].start.row) {
+          rate += 1;
+        } else {
+          rate = 0;
+        }
         if (item.start.row === item.end.row) {
           range = new Range(
             item.start.row,
-            item.start.column,
+            item.start.column - rate * 29,
             item.end.row,
-            item.end.column - 29,
+            item.end.column - (rate + 1) * 29,
           );
         } else {
           range = new Range(
             item.start.row,
-            item.start.column,
+            item.start.column - rate * 29,
             item.end.row,
             item.end.column - 15,
           );
@@ -590,23 +595,34 @@ export default {
         let tempStr = '';
         switch (type) {
           case 'preserved':
-            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/ig, '');
+            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/img, '');
             break;
           case 'blank':
-            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/ig, ' ');
+            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/img, ' ');
             break;
           default:
         }
-
-        this.editor.getSession().replace(
-          new Range(
-            item.start.row,
-            item.start.column,
-            item.end.row,
-            item.end.column,
-          ),
-          tempStr,
-        );
+        if (item.start.row === item.end.row) {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column - rate * 29,
+            ),
+            tempStr,
+          );  
+        } else {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column,
+            ),
+            tempStr,
+          ); 
+        }
         range.start = this.editor.getSession().doc.createAnchor(range.start);
         range.end = this.editor.getSession().doc.createAnchor(range.end);
         range.end.$insertRight = true;
