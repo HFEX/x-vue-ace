@@ -883,11 +883,11 @@ export default {
     },
 
     getEditorValue() {
-      return this.editor.getValue();
+      return this.editor ? this.editor.getValue() : this.editorValue;
     },
 
     getExecValue() {
-      return this.getValue().replace(/<\/?xiaohou-(hide|lock|blank)>/ig, '');
+      return this.getValue().replace(/<\/?xiaohou-\w*>/ig, '');
     },
 
     getValue(notJudge) {
