@@ -13,6 +13,7 @@
           preventPasteOther
           focus
           :markup="enableMarkup"
+          :removeMark="removeMark"
           :fontSize="fontSize"
           :value="source"
           :annotations="annotations"
@@ -31,6 +32,7 @@
       <button @click="fontSizeM">fontSize-</button>
       <button @click="getValue">getValue</button>
       <button @click="resetValue">resetValue</button>
+      <button @click="handleRemoveMark">handleRemoveMark</button>
     </div>
   </div>
 </template>
@@ -81,7 +83,8 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
       }],
       blockText: '',
       pos: '1,3,5',
-      enableMarkup: true,
+      enableMarkup: false,
+      removeMark: true,
     };
   },
 
@@ -100,6 +103,10 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
     },
     fontSizeM() {
       this.fontSize -= 1;
+    },
+
+    handleRemoveMark() {
+      this.removeMark = !this.removeMark;
     },
 
     handleEditorChange() {

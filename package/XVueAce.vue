@@ -74,6 +74,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    removeMark: {
+      type: Boolean,
+      default: false,
+    },
     highlightActiveLine: {
       type: Boolean,
       default: true,
@@ -457,7 +461,12 @@ export default {
         // xiaohou-blank or xiaohou-lock
         this.parseLock();
         this.parseBlank();
+      } else if (this.removeMark) { // 过滤掉所有的 xiaohou 标签
+        this.removeMarkup();
       }
+    },
+    removeMarkup() {
+      this.editorValue = this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '');
     },
     // content 整段文本
     // splitCode 分隔字段
@@ -611,7 +620,7 @@ export default {
               item.end.column - rate * 29,
             ),
             tempStr,
-          );  
+          );
         } else {
           this.editor.getSession().replace(
             new Range(
@@ -621,7 +630,7 @@ export default {
               item.end.column,
             ),
             tempStr,
-          ); 
+          );
         }
         range.start = this.editor.getSession().doc.createAnchor(range.start);
         range.end = this.editor.getSession().doc.createAnchor(range.end);
