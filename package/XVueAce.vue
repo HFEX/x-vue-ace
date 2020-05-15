@@ -340,6 +340,8 @@ export default {
           this.editor.setReadOnly(this.isReadOnly);
           if (this.markup) {
             this.parseMarkup();
+          } else if (this.removeMark) {
+            this.removeMarkup();
           }
         }
 
@@ -466,7 +468,7 @@ export default {
       }
     },
     removeMarkup() {
-      this.editorValue = this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '');
+      this.editorValue = (this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '')).trim();
     },
     // content 整段文本
     // splitCode 分隔字段
