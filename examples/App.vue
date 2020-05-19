@@ -96,6 +96,7 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
 
     toggleMarkup() {
       this.enableMarkup = !this.enableMarkup;
+      console.log(this.enableMarkup);
     },
 
     fontSizeA() {
@@ -107,6 +108,7 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
 
     handleRemoveMark() {
       this.removeMark = !this.removeMark;
+      console.log(this.removeMark);
     },
 
     handleEditorChange() {
@@ -167,7 +169,7 @@ body {
     &-left {
       position: relative;
       z-index: 10;
-      width: 400px;
+      width: 0px;
       height: 100%;
       background-color: #8cac4b;
       border: 1px solid #6da00a;

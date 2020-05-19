@@ -416,7 +416,68 @@ export default {
     this.$watch('width', () => this.editor.resize());
     this.$watch('focus', () => this.editor.focus());
 
-    this.$watch('markup', (newVal) => {
+    this.$watch('markup', this.watchMarkup);
+
+    this.$watch('removeMark', (newVal) => {
+      // if (this.getValue() !== newVal) {
+        this.silent = true;
+        this.isVaryCurrValue = true;
+
+        this.editorValue = this.value;
+        // if (this.currValue !== newVal) {
+          this.clearPlugins();
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
+          if (this.markup && !newVal) {
+            this.parseMarkup();
+          } else if (newVal) {
+            this.removeMarkup();
+          }
+        // }
+
+        const pos = this.editor.session.selection.toJSON();
+        this.editor.setValue(this.editorValue, this.cursorStart);
+        this.editor.session.selection.fromJSON(pos);
+
+        if (!newVal && this.markup) {
+          if (this.plugins.length > 0) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+              switch (this.plugins[idx]) {
+                case 'lock':
+                  this.affectPreserved();
+                  break;
+                case 'blank':
+                  this.affectBlank();
+                  break;
+                default:
+              }
+            }
+          }
+          this.editor.getSession().selection.on('changeCursor', this.showLock);
+        }
+
+        this.silent = false;
+      // }
+    })
+  },
+
+  methods: {
+    parseMarkup() {
+      if (this.markup) {
+        // 某些插件在功能上可能是相互冲突的，此处对此做处理
+        this.beforeParse();
+
+        // xiaohou-hide
+        this.parseHide();
+
+        // xiaohou-blank or xiaohou-lock
+        this.parseLock();
+        this.parseBlank();
+      } else if (this.removeMark) { // 过滤掉所有的 xiaohou 标签
+        this.removeMarkup();
+      }
+    },
+    watchMarkup(newVal) {
       if (newVal) {
         this.clearPlugins();
         this.editorValue = this.getEditorValue();
@@ -440,7 +501,6 @@ export default {
         });
       } else {
         this.editor.setValue(this.getValue(true), this.cursorStart);
-
         this.clearPlugins();
 
         setTimeout(() => {
@@ -448,24 +508,9 @@ export default {
           this.editor.setReadOnly(this.isReadOnly);
         }, 0);
       }
-    });
-  },
-
-  methods: {
-    parseMarkup() {
-      if (this.markup) {
-        // 某些插件在功能上可能是相互冲突的，此处对此做处理
-        this.beforeParse();
-
-        // xiaohou-hide
-        this.parseHide();
-
-        // xiaohou-blank or xiaohou-lock
-        this.parseLock();
-        this.parseBlank();
-      } else if (this.removeMark) { // 过滤掉所有的 xiaohou 标签
-        this.removeMarkup();
-      }
+    },
+    addMarkup() {
+      this.editorValue = this.value;
     },
     removeMarkup() {
       this.editorValue = (this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '')).trim();
@@ -842,7 +887,7 @@ export default {
         this.isReadOnly = true;
       }
       if (this.blankAnchors.some((anchor) => {
-        if (evt.keyCode !== 8
+        if (evt.keyCode !== 8 && evt.keyCode !== 46
         && anchor.start.row === selection.start.row
         && anchor.start.column + 1 === selection.start.column
         && selection.end.row === selection.start.row
