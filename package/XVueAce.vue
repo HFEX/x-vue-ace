@@ -420,45 +420,43 @@ export default {
 
     this.$watch('removeMark', (newVal) => {
       // if (this.getValue() !== newVal) {
-        this.silent = true;
-        this.isVaryCurrValue = true;
+      this.silent = true;
+      this.isVaryCurrValue = true;
 
-        this.editorValue = this.value;
-        // if (this.currValue !== newVal) {
-          this.clearPlugins();
-          this.isReadOnly = false;
-          this.editor.setReadOnly(this.isReadOnly);
-          if (this.markup && !newVal) {
-            this.parseMarkup();
-          } else if (newVal) {
-            this.removeMarkup();
-          }
-        // }
+      this.editorValue = this.value;
+      // if (this.currValue !== newVal) {
+      this.clearPlugins();
+      this.isReadOnly = false;
+      this.editor.setReadOnly(this.isReadOnly);
+      if (this.markup && !newVal) {
+        this.parseMarkup();
+      } else if (newVal) {
+        this.removeMarkup();
+      }
 
-        const pos = this.editor.session.selection.toJSON();
-        this.editor.setValue(this.editorValue, this.cursorStart);
-        this.editor.session.selection.fromJSON(pos);
+      const pos = this.editor.session.selection.toJSON();
+      this.editor.setValue(this.editorValue, this.cursorStart);
+      this.editor.session.selection.fromJSON(pos);
 
-        if (!newVal && this.markup) {
-          if (this.plugins.length > 0) {
-            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-              switch (this.plugins[idx]) {
-                case 'lock':
-                  this.affectPreserved();
-                  break;
-                case 'blank':
-                  this.affectBlank();
-                  break;
-                default:
-              }
+      if (!newVal && this.markup) {
+        if (this.plugins.length > 0) {
+          for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+            switch (this.plugins[idx]) {
+              case 'lock':
+                this.affectPreserved();
+                break;
+              case 'blank':
+                this.affectBlank();
+                break;
+              default:
             }
           }
-          this.editor.getSession().selection.on('changeCursor', this.showLock);
         }
+        this.editor.getSession().selection.on('changeCursor', this.showLock);
+      }
 
-        this.silent = false;
-      // }
-    })
+      this.silent = false;
+    });
   },
 
   methods: {
