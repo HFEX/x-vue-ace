@@ -1043,6 +1043,7 @@ export default {
       }
 
       this.editor.insert(text);
+      this.isVaryCurrValue = true;
       if (focus) this.editor.focus();
     },
 
