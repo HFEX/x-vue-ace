@@ -157,6 +157,15 @@ export default {
     copyrightText() {
       return `\n小猴编程（${this.sid}）`;
     },
+
+    isReadOnly: {
+      get() {
+        return this.readOnly || this.lisReadOnly;
+      },
+      set(newValue) {
+        this.lisReadOnly = newValue;
+      },
+    },
   },
 
   data() {
@@ -175,7 +184,7 @@ export default {
       blankAnchors: [], // 空白范围
       preserveds: [], // 只读处初始内容
       preservedAnchors: [], // 只读范围
-      isReadOnly: false, // 编辑器是否只读
+      lisReadOnly: false, // 编辑器是否只读
       isShowLock: false, // 是否展示锁 🔒
     };
   },
