@@ -4,13 +4,9 @@
       ref="refEditor"
       class="element-editor"
     />
-    <i
-      v-if="isReadOnly"
-      :class="{
-        'element-lock': true,
-        'element-lock-flash': isReadOnly && isShowLock,
-      }"
-    ></i>
+    <transition name="fade">
+      <i v-show="isReadOnly && isShowLock" class="element-lock"></i>
+    </transition>
   </div>
 </template>
 
@@ -1255,6 +1251,12 @@ export default {
 };
 </script>
 <style lang="less">
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .6s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 .element-editor {
   width: 100%;
   height: 100%;
@@ -1269,11 +1271,6 @@ export default {
   right: 10px;
   z-index: 1000;
   background-image: url('~./lock.png');
-  opacity: 0;
-  transition: opacity .6s;
-  &-flash {
-    opacity: 1;
-  }
 }
 
 .ace {
