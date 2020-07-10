@@ -111,15 +111,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"13b6689c-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=45cc9db2&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),(_vm.isReadOnly)?_c('i',{class:{
-      'element-lock': true,
-      'element-lock-flash': _vm.isReadOnly && _vm.isShowLock,
-    }}):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"50e6ba06-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=cfe70b04&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),_c('transition',{attrs:{"name":"fade"}},[_c('i',{directives:[{name:"show",rawName:"v-show",value:(_vm.isReadOnly && _vm.isShowLock),expression:"isReadOnly && isShowLock"}],staticClass:"element-lock"})])],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=45cc9db2&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=cfe70b04&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -199,10 +196,6 @@ function debounce(func, wait = 0, immediate = true) {
 
 
 // CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=script&lang=js&
-//
-//
-//
-//
 //
 //
 //
@@ -22269,7 +22262,7 @@ exports = module.exports = __webpack_require__("690e")(false);
 
 
 // module
-exports.push([module.i, ".element-editor{width:100%;height:100%;background-color:#fff}.element-lock{display:inline-block;width:100px;height:107px;position:absolute;top:0;right:10px;z-index:1000;background-image:url(" + escape(__webpack_require__("7bba")) + ");opacity:0;-webkit-transition:opacity .6s;transition:opacity .6s}.element-lock-flash{opacity:1}.ace-tm .ace_gutter{background-color:#fff}.ace_gutter-cell{color:#cfcfcf}.ace_invisible{opacity:0}.ace_gutter-layer,.ace_print-margin{background-color:#fff}.ace_line.highlighted{background-color:#fabd2f}.ace_line.highlighted.bright{background-color:#fae8c3}.ace_content.blink{background-color:rgba(251,203,87,.64)}.preserved-highlight{background-color:#333;opacity:.2;position:absolute;z-index:1}.blank-highlight{background-color:#fff;position:absolute;z-index:1;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #333}.blank-highlight-flash{background-color:rgba(251,203,87,.64)}", ""]);
+exports.push([module.i, ".fade-enter-active,.fade-leave-active{-webkit-transition:opacity .6s;transition:opacity .6s}.fade-enter,.fade-leave-to{opacity:0}.element-editor{width:100%;height:100%;background-color:#fff}.element-lock{display:inline-block;width:100px;height:107px;position:absolute;top:0;right:10px;z-index:1000;background-image:url(" + escape(__webpack_require__("7bba")) + ")}.ace-tm .ace_gutter{background-color:#fff}.ace_gutter-cell{color:#cfcfcf}.ace_invisible{opacity:0}.ace_gutter-layer,.ace_print-margin{background-color:#fff}.ace_line.highlighted{background-color:#fabd2f}.ace_line.highlighted.bright{background-color:#fae8c3}.ace_content.blink{background-color:rgba(251,203,87,.64)}.preserved-highlight{background-color:#333;opacity:.2;position:absolute;z-index:1}.blank-highlight{background-color:#fff;position:absolute;z-index:1;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #333}.blank-highlight-flash{background-color:rgba(251,203,87,.64)}", ""]);
 
 // exports
 
