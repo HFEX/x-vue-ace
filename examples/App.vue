@@ -50,21 +50,25 @@ export default {
   data() {
     return {
       source: `# 输入
-num = int(input("共有多少只乌龟："))
+<xiaohou-blank>num = int(input("共有多少只乌龟："))</xiaohou-blank>
 # 第一次数1只
-step =  <xiaohou-blank></xiaohou-blank>
+step =  <xiaohou-blank>        </xiaohou-blank>
 # 模拟
 turtles = []
 for i in range(num):
     turtles.append(i)
 index = 0
 for i in range(num - 1):
-    # 算出要被淘汰的乌龟编号：（当前编号+步长-1）对乌龟数量取余数
-    index = <xiaohou-blank></xiaohou-blank>
+    # 算出要被淘汰的乌龟编号：
+    <xiaohou-blank>          </xiaohou-blank>
+    <xiaohou-blank>1234567890</xiaohou-blank>
     # 使用pop函数淘汰第index只乌龟
-    turtles<xiaohou-blank></xiaohou-blank>
+    turtles
+    <xiaohou-blank>
+
+    </xiaohou-blank>
     # 每次数的数量是上一次的2倍
-    step<xiaohou-blank></xiaohou-blank> 
+    step<xiaohou-blank> </xiaohou-blank> 
 print("赢家是 %d 号乌龟！" % turtles[0])`,
       annotations: [{
         row: 0,
@@ -83,8 +87,8 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
       }],
       blockText: '',
       pos: '1,3,5',
-      enableMarkup: false,
-      removeMark: true,
+      enableMarkup: true,
+      removeMark: false,
     };
   },
 

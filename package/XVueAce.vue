@@ -232,6 +232,7 @@ export default {
     }
     this.editor.renderer.setShowGutter(this.showGutter);
     this.editor.getSession().setUseWrapMode(this.wrapEnabled);
+    this.editor.getSession().setUseSoftTabs(false); // 禁空格转为tab
     this.editor.setShowPrintMargin(this.showPrintMargin);
     // const events = ['focus', 'blur', 'copy', 'paste', 'change', 'input'];
     this.editor.on('focus', (...args) => this.$emit('focus', ...args, this.editor));
@@ -873,16 +874,18 @@ export default {
       // 开头禁backspace键 结尾禁del键
       const selection = this.editor.getSession().selection.getRange();
       if (this.blankAnchors.some((anchor) => {
-        if ((evt.keyCode === 46
-        && anchor.end.row === selection.start.row
-        && anchor.end.column - 1 === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column)
-        || (evt.keyCode === 8
-        && anchor.start.row === selection.start.row
-        && anchor.start.column + 1 === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column)) {
+        if ((evt.keyCode === 46 // del键
+        && anchor.end.row === selection.start.row // 并且 挖空的最后一行 等于 选中区域的第一行
+        && anchor.end.column - 1 === selection.start.column // 并且 挖空的最后一行的倒数第二格 等于 选中区域的第一行的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column) // 并且 选中区域就一格
+        // 以上逻辑是代表 光标停在了 挖空的 倒数第二格，用户按了 del 键
+        || (evt.keyCode === 8 // backspace 键
+        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
+        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column)) { // 并且选中区域只有一格
+        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 backspace 键
           return true;
         }
         return false;
@@ -890,11 +893,12 @@ export default {
         this.isReadOnly = true;
       }
       if (this.blankAnchors.some((anchor) => {
-        if (evt.keyCode !== 8 && evt.keyCode !== 46
-        && anchor.start.row === selection.start.row
-        && anchor.start.column + 1 === selection.start.column
-        && selection.end.row === selection.start.row
-        && selection.end.column === selection.start.column) {
+        if (evt.keyCode !== 8 && evt.keyCode !== 46 // 非 backspace 和 非 del 键
+        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
+        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column) { // 并且选中区域只有一格
+        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 非 backspace 和 非 del 键
           return true;
         }
         return false;
@@ -906,25 +910,34 @@ export default {
       this.showLock();
     },
     protectPreservedBoundary(evt) {
-      // 开头禁del键 结尾禁backspace键
+      // 被锁定行的下一行开头禁backspace键 被锁定行的上一行结尾禁del键
       const selection = this.editor.getSession().selection.getRange();
       const startA = selection.start.row;
       const endA = selection.end.row;
-
+      const len = this.editor.session.getLine(endA).length;
       if (this.preservedAnchors.some((anchor) => {
         const startB = anchor.start.row;
         const endB = anchor.end.row;
         if (Math.max(startA, startB) <= Math.min(endA, endB)) {
           return true;
         }
-        if (evt.keyCode === 8 || evt.keyCode === 46) {
-          if (Math.max(startA - 1, startB) <= Math.min(endA, endB) && !selection.start.column) {
+        if (evt.keyCode === 8) {
+          if (Math.max(startA - 1, startB) <= Math.min(endA - 1, endB)
+              && selection.start.column === 0) {
+            return true;
+          }
+        }
+        if (evt.keyCode === 46) {
+          if (Math.max(startA + 1, startB) <= Math.min(endA + 1, endB)
+              && selection.end.column === len) {
             return true;
           }
         }
         return false;
       })) {
         this.isReadOnly = true;
+      } else {
+        this.isReadOnly = false;
       }
       this.editor.setReadOnly(this.isReadOnly);
       this.showLock();
