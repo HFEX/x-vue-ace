@@ -20389,12 +20389,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5ec155b3-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=152a4645&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"18003976-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=9755749c&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),_c('transition',{attrs:{"name":"fade"}},[_c('i',{directives:[{name:"show",rawName:"v-show",value:(_vm.isReadOnly && _vm.isShowLock),expression:"isReadOnly && isShowLock"}],staticClass:"element-lock"})])],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=152a4645&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=9755749c&
 
 // EXTERNAL MODULE: ./node_modules/brace/index.js
 var brace = __webpack_require__("061c");
@@ -21598,6 +21598,7 @@ const { Range } = brace["acequire"]('ace/range');
 
     handleChange(event) {
       if (!this.silent) {
+        this.isVaryCurrValue = true;
         this.$emit('change', this.getEditorValue(), event, this.editor);
       }
     },
