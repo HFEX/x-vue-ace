@@ -1125,6 +1125,7 @@ export default {
 
     handleChange(event) {
       if (!this.silent) {
+        this.isVaryCurrValue = true;
         this.$emit('change', this.getEditorValue(), event, this.editor);
       }
     },

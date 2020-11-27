@@ -50,9 +50,9 @@ export default {
   data() {
     return {
       source: `# 输入
-<xiaohou-blank>num = int(input("共有多少只乌龟："))</xiaohou-blank>
+num = int(input("共有多少只乌龟："))
 # 第一次数1只
-step =  <xiaohou-blank>        </xiaohou-blank>
+step =          
 # 模拟
 turtles = []
 for i in range(num):
@@ -60,15 +60,15 @@ for i in range(num):
 index = 0
 for i in range(num - 1):
     # 算出要被淘汰的乌龟编号：
-    <xiaohou-blank>          </xiaohou-blank>
-    <xiaohou-blank>1234567890</xiaohou-blank>
+              
+    1234567890
     # 使用pop函数淘汰第index只乌龟
     turtles
-    <xiaohou-blank>
+    
 
-    </xiaohou-blank>
+    
     # 每次数的数量是上一次的2倍
-    step<xiaohou-blank> </xiaohou-blank> 
+    step  
 print("赢家是 %d 号乌龟！" % turtles[0])`,
       annotations: [{
         row: 0,
@@ -115,13 +115,13 @@ print("赢家是 %d 号乌龟！" % turtles[0])`,
       console.log(this.removeMark);
     },
 
-    handleEditorChange() {
+    handleEditorChange(val) {
       // this.source = val;
-      // console.log(val);
+      console.log(val);
     },
 
     getValue() {
-      // console.log(this.$refs.editor.getValue());
+      console.log(this.$refs.editor.getValue());
     },
 
     resetValue() {
