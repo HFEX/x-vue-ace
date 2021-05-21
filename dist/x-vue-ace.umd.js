@@ -120,12 +120,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1d3a8cca-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=152a4645&
+// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"19f5a59b-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=227e38b5&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),_c('transition',{attrs:{"name":"fade"}},[_c('i',{directives:[{name:"show",rawName:"v-show",value:(_vm.isReadOnly && _vm.isShowLock),expression:"isReadOnly && isShowLock"}],staticClass:"element-lock"})])],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=152a4645&
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=227e38b5&
 
 // EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
 var _brace_0_11_1_brace = __webpack_require__("8d9d");
@@ -764,8 +764,8 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
       if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
         this.editorValue = this.editorValue.replace(/<\/?xiaohou-lock>/igm, '');
       }
-      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
-      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
+      // this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
+      // this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
       this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-lock>', 'before');
       this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-lock>', 'after');
     },
@@ -1179,12 +1179,12 @@ const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
             default:
           }
         });
-        if (this.startCode && !code.match(/^[\n\f\r]/)) {
-          code = `\n${code}`;
-        }
-        if (this.endCode && !code.match(/[\n\f\r]$/)) {
-          code += '\n';
-        }
+        // if (this.startCode && !code.match(/^[\n\f\r]/)) {
+        //   code = `\n${code}`;
+        // }
+        // if (this.endCode && !code.match(/[\n\f\r]$/)) {
+        //   code += '\n';
+        // }
 
         code = `${this.startCode}${code}${this.endCode}`;
       }
