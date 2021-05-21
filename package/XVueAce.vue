@@ -560,8 +560,8 @@ export default {
       if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
         this.editorValue = this.editorValue.replace(/<\/?xiaohou-lock>/igm, '');
       }
-      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
-      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
+      // this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
+      // this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
       this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-lock>', 'before');
       this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-lock>', 'after');
     },
@@ -975,12 +975,12 @@ export default {
             default:
           }
         });
-        if (this.startCode && !code.match(/^[\n\f\r]/)) {
-          code = `\n${code}`;
-        }
-        if (this.endCode && !code.match(/[\n\f\r]$/)) {
-          code += '\n';
-        }
+        // if (this.startCode && !code.match(/^[\n\f\r]/)) {
+        //   code = `\n${code}`;
+        // }
+        // if (this.endCode && !code.match(/[\n\f\r]$/)) {
+        //   code += '\n';
+        // }
 
         code = `${this.startCode}${code}${this.endCode}`;
       }
