@@ -18,6 +18,7 @@
           :value="source"
           :annotations="annotations"
           :markers="markers"
+          :highlightActiveLine="false"
           @change="handleEditorChange"
         />
       </div>
@@ -37,100 +38,111 @@
   </div>
 </template>
 
-<script>
-import Editor from '../package/index';
-import 'brace/theme/chrome';
-import 'brace/ext/language_tools';
-import 'brace/ext/searchbox';
-import 'brace/mode/python';
-
-export default {
-  name: 'app',
-
-  data() {
-    return {
-      source: `# 输入
+<script lang="ts">
+import Editor from "../package/index";
+import { ref, reactive, defineComponent } from "vue";
+export default defineComponent({
+  components: {
+    Editor
+  },
+  setup:() => {
+  const source = ref(`# 输入
 num = int(input("共有多少只乌龟："))
 # 第一次数1只
-step =          
+step =  <xiaohou-blank></xiaohou-blank>
 # 模拟
 turtles = []
 for i in range(num):
-    turtles.append(i)
-index = 0
-for i in range(num - 1):
-    # 算出要被淘汰的乌龟编号：
-              
-    1234567890
-    # 使用pop函数淘汰第index只乌龟
-    turtles
-    
+    turtles.append(<xiaohou-blank></xiaohou-blank>)
+    index = 0
+    for i in range(num - <xiaohou-blank></xiaohou-blank>):
+      # 算出要被淘汰的乌龟编号：（当前编号+步长-1）对乌龟数量取余数
+      index = (index+step-1)%len(turtles)
+      # 使用pop函数淘汰第index只乌龟
+      turtles.pop(<xiaohou-blank></xiaohou-blank>)
+      # 每次数的数量是上一次的2倍
+      step*=2
+print("赢家是 %d 号乌龟！" % turtles[0])`);
 
-    
-    # 每次数的数量是上一次的2倍
-    step  
-print("赢家是 %d 号乌龟！" % turtles[0])`,
-      annotations: [{
-        row: 0,
-        column: 2,
-        type: 'error',
-        text: 'Some error.',
-      }],
-      fontSize: 20,
-      markers: [{
-        startRow: 0,
-        startCol: 0,
-        endRow: 0,
-        endCol: 5,
-        className: 'error-marker',
-        type: 'background',
-      }],
-      blockText: '',
-      pos: '1,3,5',
-      enableMarkup: true,
-      removeMark: false,
-    };
-  },
+  const annotations = reactive([
+    {
+      row: 0,
+      column: 2,
+      type: "error",
+      text: "Some error."
+    }
+  ]);
+  const fontSize = ref(20);
+  const markers = reactive([
+    {
+      startRow: 0,
+      startCol: 0,
+      endRow: 0,
+      endCol: 5,
+      className: "error-marker",
+      type: "background"
+    }
+  ]);
+  const blockText = ref("");
+  const pos = ref("1,3,5");
+  const enableMarkup = ref(true);
+  const removeMark = ref(false);
+  const editorRef = ref<InstanceType<typeof Editor>>();
 
-  methods: {
-    handleInsert() {
-      this.$refs.editor.insertAndSelect(this.blockText, this.pos);
-      // this.blockText = '';
-    },
+  const handleInsert = () => {
+    editorRef.value?.insertAndSelect(blockText.value, pos.value);
+    // this.blockText = '';
+  };
 
-    toggleMarkup() {
-      this.enableMarkup = !this.enableMarkup;
-      console.log(this.enableMarkup);
-    },
+  const toggleMarkup = () => {
+    enableMarkup.value = !enableMarkup.value;
+    console.log(enableMarkup.value);
+  };
+  const fontSizeA = () => {
+    fontSize.value += 1;
+  };
+  const fontSizeM = () => {
+    fontSize.value -= 1;
+  };
 
-    fontSizeA() {
-      this.fontSize += 1;
-    },
-    fontSizeM() {
-      this.fontSize -= 1;
-    },
+  const handleRemoveMark = () => {
+    removeMark.value = !removeMark.value;
+    console.log(removeMark.value);
+  };
 
-    handleRemoveMark() {
-      this.removeMark = !this.removeMark;
-      console.log(this.removeMark);
-    },
+  const handleEditorChange = (val: string) => {
+    // this.source = val;
+    console.log(val);
+  };
 
-    handleEditorChange(val) {
-      // this.source = val;
-      console.log(val);
-    },
+  const getValue = () => {
+    console.log(editorRef.value?.getValue());
+  };
 
-    getValue() {
-      console.log(this.$refs.editor.getValue());
-    },
-
-    resetValue() {
-      this.source = '';
-    },
-  },
-
-  components: { Editor },
-};
+  const resetValue = () => {
+    source.value = "";
+  };
+  return {
+    handleInsert,
+    handleRemoveMark,
+    toggleMarkup,
+    fontSize,
+    enableMarkup,
+    removeMark,
+    editorRef,
+    source,
+    annotations,
+    markers,
+    blockText,
+    pos,
+    Editor,
+    fontSizeA,
+    fontSizeM,
+    handleEditorChange,
+    getValue,
+    resetValue
+  };
+}});
 </script>
 
 <style lang="less">
@@ -210,12 +222,12 @@ body {
   }
 }
 .editor {
-    position: relative;
-    width: 100%;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    min-height: 1%;
+  position: relative;
+  width: 100%;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-height: 1%;
 }
 
 .app {

@@ -30,10 +30,10 @@ const editorEvents = [
  * @param  {boolean}  immediate   设置为ture时，是否立即调用函数
  * @return {function}             返回客户调用函数
  */
-function debounce(func, wait = 0, immediate = true) {
-  let timer;
-  let context;
-  let args;
+function debounce(func:Function, wait:number = 0, immediate:boolean = true) {
+  let timer:number|null;
+  let context:any;
+  let args:Array<any>|null;
 
   // 延迟执行函数
   const later = () => setTimeout(() => {
@@ -49,7 +49,7 @@ function debounce(func, wait = 0, immediate = true) {
   }, wait);
 
   // 这里返回的函数是每次实际调用的函数
-  return function fn(...params) {
+  return function fn(this: any, ...params: any[]) {
     // 如果没有创建延迟执行函数（later），就创建一个
     if (!timer) {
       timer = later();
