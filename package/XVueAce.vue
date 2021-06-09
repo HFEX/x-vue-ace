@@ -22,6 +22,10 @@ import beforeParse from "./utils/prase";
 import watchAnnotations from "./watchAnnotations";
 import watchMarkers from "./watchMarkers";
 import {editorEvents} from './editor-options'
+// @ts-ignore
+import styleInject from 'style-inject';
+import css from './index.less'
+styleInject(css);
 export default defineComponent({
   props: {
     mode: {
@@ -338,76 +342,3 @@ export default defineComponent({
   };
 }});
 </script>
-<style lang="less">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.6s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-.element-editor {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-}
-.element-lock {
-  display: inline-block;
-  width: 100px;
-  height: 107px;
-  position: absolute;
-  top: 0;
-  right: 10px;
-  z-index: 1000;
-  background-image: url(./lock.png);
-}
-
-.ace {
-  &-tm .ace_gutter {
-    background-color: white;
-  }
-
-  &_gutter-cell {
-    color: #cfcfcf;
-  }
-
-  &_invisible {
-    opacity: 0;
-  }
-
-  &_gutter-layer,
-  &_print-margin {
-    background-color: white;
-  }
-
-  &_line.highlighted {
-    background-color: #fabd2f;
-  }
-
-  &_line.highlighted.bright {
-    background-color: #fae8c3;
-  }
-
-  &_content.blink {
-    background-color: rgba(251, 203, 87, 0.64);
-  }
-}
-
-.preserved-highlight {
-  background-color: #333;
-  opacity: 0.2;
-  position: absolute;
-  z-index: 1;
-}
-.blank-highlight {
-  background-color: #fff;
-  position: absolute;
-  z-index: 1;
-  box-sizing: border-box;
-  border: 1px solid #333;
-  &-flash {
-    background-color: rgba(251, 203, 87, 0.64);
-  }
-}
-</style>
