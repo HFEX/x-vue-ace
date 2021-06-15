@@ -10,22 +10,23 @@
 <script lang="ts">
 // @ts-ignore
 import AceAjax from "brace";
-import { onMounted, ref, defineComponent, PropType } from "vue";
+import { onMounted, ref, defineComponent } from "vue";
+import type { PropType } from 'vue';
 import getEditorRef from "./editorRef";
 import getEditorValueRef from "./editorValueRef";
 import { usePluginsRef } from "./pluginsRef";
 import getReadOnlyRef from "./readOnlyRef";
 import getSidRef from "./sidRef";
-import { marker, Props } from "./types/props";
+import type { marker, Props } from "./types/props";
 import getFormatfunction from "./utils/formatCode";
 import beforeParse from "./utils/prase";
 import watchAnnotations from "./watchAnnotations";
 import watchMarkers from "./watchMarkers";
-import {editorEvents} from './editor-options'
 // @ts-ignore
 import styleInject from 'style-inject';
 import css from './index.less'
 styleInject(css);
+
 export default defineComponent({
   props: {
     mode: {
@@ -102,21 +103,15 @@ export default defineComponent({
     },
     editorProps: {
       type: Object,
-      default() {
-        return {};
-      }
+      default:() => ({}),
     },
     setOptions: {
       type: Object,
-      default() {
-        return {};
-      }
+      default: () => ({}),
     },
     scrollMargin: {
-      type: Array,
-      default() {
-        return [0, 0, 0, 0];
-      }
+      type: Array as PropType<number[]>,
+      default: () =>  [0, 0, 0, 0],
     },
     annotations: {
       type: Array as PropType<AceAjax.Annotation[]>
@@ -168,177 +163,177 @@ export default defineComponent({
     'scroll',
     'handle-options'
   ],
-  setup:(props: Props,ctx) => {
-  const {emit} = ctx;
-  const silent = ref(false);
-  const selectedText = ref("");
-  const { sid } = getSidRef();
-  // computed: {
-  //   copyrightText() {
-  //     return `\n小猴编程（${this.sid}）`;
-  //   },
-  // },
-  // @ts-ignore
-  // 初始化编辑器
-  const refEditor = ref<HTMLElement | undefined>(undefined);
-  const { editorValue, getValueFunction, currValue, isVaryCurrValue } = getEditorValueRef(props);
-  const { editor, getEditorValue, watchEditorValue } = getEditorRef(
-    refEditor,
-    editorValue,
-    selectedText,
-    silent,
-    emit,
-    sid,
-    props
-  );
-
-  const { lisReadOnly, isReadOnly } = getReadOnlyRef(props);
-  const plugins = usePluginsRef({
-    editor: editor,
-    editorValue: editorValue,
-    isReadOnly
-  });
-  const { isShowLock } = plugins;
-  const { getValue } = getValueFunction({
-    ...plugins,
-    getEditorValue
-  });
-
-  const addMarkup = () => {
-    editorValue.value = props.value;
-  };
-  const removeMarkup = () => {
-    editorValue.value = editorValue.value.replace(/<\/?xiaohou-\w*>/gim, "").trim();
-  };
-  const parseMarkup = () => {
-    if (props.markup) {
-      // 某些插件在功能上可能是相互冲突的，此处对此做处理
-      editorValue.value = beforeParse(editorValue.value);
-
-      // xiaohou-hide
-      plugins.parseHide();
-
-      // xiaohou-blank or xiaohou-lock
-      plugins.parseLock();
-      plugins.parseBlank();
-    } else if (props.removeMark) {
-      // 过滤掉所有的 xiaohou 标签
-      removeMarkup();
-    }
-  };
-  const formatCode = getFormatfunction({ editor, ...plugins });
-
-  function protectBoundary(evt: KeyboardEvent) {
-    // 边界保护
-    plugins.plugins.value.forEach(plugin => {
-      switch (plugin) {
-        case "blank":
-          plugins.protectBlankBoundary(evt);
-          break;
-        case "lock":
-          plugins.protectPreservedBoundary(evt);
-          break;
-        default:
-      }
-    });
-
-    if (!isReadOnly.value) {
-      isVaryCurrValue.value = true;
-    }
-  }
-  watchEditorValue(
-    {
-      getValue,
-      isVaryCurrValue,
-      currValue,
-      isReadOnly,
-      parseMarkup,
-      removeMarkup,
-      formatCode
-    },
-    plugins
-  );
-  watchMarkers(editor,props);
-  watchAnnotations(editor,props);
-  onMounted(() => {
-    // this.parseMarkup();
+  setup(props,{emit}) {
+    const silent = ref(false);
+    const selectedText = ref("");
+    const { sid } = getSidRef();
+    // computed: {
+    //   copyrightText() {
+    //     return `\n小猴编程（${this.sid}）`;
+    //   },
+    // },
     // @ts-ignore
-    if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
-    editor.value.getSession().selection.on('changeSelection', (event: any)=>{
-      const value = editor.value.getSelection();
-      if (props.preventPasteOther) {
-        // @ts-ignore
-        selectedText.value = editor.value.getSelectedText() || selectedText;
+    // 初始化编辑器
+    const refEditor = ref<HTMLElement | undefined>(undefined);
+    const { editorValue, getValueFunction, currValue, isVaryCurrValue } = getEditorValueRef(props);
+    const { editor, getEditorValue, watchEditorValue } = getEditorRef(
+      refEditor,
+      editorValue,
+      selectedText,
+      silent,
+      emit,
+      sid,
+      props
+    );
+
+    const { lisReadOnly, isReadOnly } = getReadOnlyRef(props);
+    const plugins = usePluginsRef({
+      editor: editor,
+      editorValue: editorValue,
+      isReadOnly
+    });
+    const { isShowLock } = plugins;
+    const { getValue } = getValueFunction({
+      ...plugins,
+      getEditorValue
+    });
+
+    const addMarkup = () => {
+      editorValue.value = props.value;
+    };
+    const removeMarkup = () => {
+      editorValue.value = editorValue.value.replace(/<\/?xiaohou-\w*>/gim, "").trim();
+    };
+    const parseMarkup = () => {
+      if (props.markup) {
+        // 某些插件在功能上可能是相互冲突的，此处对此做处理
+        editorValue.value = beforeParse(editorValue.value);
+
+        // xiaohou-hide
+        plugins.parseHide();
+
+        // xiaohou-blank or xiaohou-lock
+        plugins.parseLock();
+        plugins.parseBlank();
+      } else if (props.removeMark) {
+        // 过滤掉所有的 xiaohou 标签
+        removeMarkup();
       }
+    };
+    const formatCode = getFormatfunction({ editor, ...plugins });
 
-      emit('selection-change', value, event);
-    });
-    editor.value.getSession().selection.on('changeCursor', (event: any)=>{
-      const value = editor.value.getSelection();
-      emit('cursor-change', value, event);
-    });
-    editor.value.session.on('changeScrollTop', (...args) => emit('scroll', ...args, editor.value));
-  });
-  const insertAndSelect = (txt: string, pos = "", focus = true) => {
-    const { start } = editor.value.getSelection().getRange();
-    const currLine = editor.value
-      .getSession()
-      .getDocument()
-      .getLine(start.row);
-    const m = currLine.match(/^\s*\t*/);
-
-    let text = txt;
-    // 如果当前行存在缩进，则在要插入的代码第二行及之后都加上缩进
-    if (m) {
-      const indent = m[0];
-      text = text.replace(/^/gm, (match, p) => {
-        if (p > 0) return `${indent}${match}`;
-        return match;
+    function protectBoundary(evt: KeyboardEvent) {
+      // 边界保护
+      plugins.plugins.value.forEach(plugin => {
+        switch (plugin) {
+          case "blank":
+            plugins.protectBlankBoundary(evt);
+            break;
+          case "lock":
+            plugins.protectPreservedBoundary(evt);
+            break;
+          default:
+        }
       });
+
+      if (!isReadOnly.value) {
+        isVaryCurrValue.value = true;
+      }
     }
-    if (pos) {
-      const posArr = pos.split(/,|，/).map(v => parseInt(v, 10));
+    watchEditorValue(
+      {
+        getValue,
+        isVaryCurrValue,
+        currValue,
+        isReadOnly,
+        parseMarkup,
+        removeMarkup,
+        formatCode
+      },
+      plugins
+    );
+    watchMarkers(editor,props);
+    watchAnnotations(editor,props);
+    onMounted(() => {
+      // this.parseMarkup();
+      // @ts-ignore
+      if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
+      editor.value.getSession().selection.on('changeSelection', (event: any)=>{
+        const value = editor.value.getSelection();
+        if (props.preventPasteOther) {
+          // @ts-ignore
+          selectedText.value = editor.value.getSelectedText() || selectedText;
+        }
+
+        emit('selection-change', value, event);
+      });
+      editor.value.getSession().selection.on('changeCursor', (event: any)=>{
+        const value = editor.value.getSelection();
+        emit('cursor-change', value, event);
+      });
+      editor.value.session.on('changeScrollTop', (...args) => emit('scroll', ...args, editor.value));
+    });
+    const insertAndSelect = (txt: string, pos = "", focus = true) => {
+      const { start } = editor.value.getSelection().getRange();
+      const currLine = editor.value
+        .getSession()
+        .getDocument()
+        .getLine(start.row);
+      const m = currLine.match(/^\s*\t*/);
+
+      let text = txt;
+      // 如果当前行存在缩进，则在要插入的代码第二行及之后都加上缩进
+      if (m) {
+        const indent = m[0];
+        text = text.replace(/^/gm, (match, p) => {
+          if (p > 0) return `${indent}${match}`;
+          return match;
+        });
+      }
+      if (pos) {
+        const posArr = pos.split(/,|，/).map(v => parseInt(v, 10));
+
+        insert(text, focus);
+        const p1 = posArr[0] - 1 || 0;
+        const r = start.row + p1;
+        let c = posArr[0] > 1 ? posArr[1] || 0 : (posArr[1] || 0) + start.column;
+        // 如果存在缩进&&要选中的是第二行及之后，则加上缩进的位移
+        if (m && p1 > 0) {
+          c += m[0].length;
+        }
+
+        select(r, c, posArr[2], focus);
+        return;
+      }
 
       insert(text, focus);
-      const p1 = posArr[0] - 1 || 0;
-      const r = start.row + p1;
-      let c = posArr[0] > 1 ? posArr[1] || 0 : (posArr[1] || 0) + start.column;
-      // 如果存在缩进&&要选中的是第二行及之后，则加上缩进的位移
-      if (m && p1 > 0) {
-        c += m[0].length;
+    };
+    const insert = (text: string, focus = true) => {
+      if (isReadOnly.value || props.readOnly) {
+        return;
       }
 
-      select(r, c, posArr[2], focus);
-      return;
-    }
-
-    insert(text, focus);
-  };
-  const insert = (text: string, focus = true) => {
-    if (isReadOnly.value || props.readOnly) {
-      return;
-    }
-
-    editor.value.insert(text);
-    isVaryCurrValue.value = true;
-    if (focus) editor.value.focus();
-  };
-  const select = (row: number, col: number, length: number, focus = true) => {
-    editor.value.navigateTo(row, col);
-    if (length) editor.value.getSelection().selectTo(row, col + length);
-    if (focus) editor.value.focus();
-  };
-  return {
-    protectBoundary,
-    insertAndSelect,
-    formatCode,
-    addMarkup,
-    insert,
-    select,
-    isReadOnly,
-    getValue,
-    refEditor,
-    ...plugins
-  };
-}});
+      editor.value.insert(text);
+      isVaryCurrValue.value = true;
+      if (focus) editor.value.focus();
+    };
+    const select = (row: number, col: number, length: number, focus = true) => {
+      editor.value.navigateTo(row, col);
+      if (length) editor.value.getSelection().selectTo(row, col + length);
+      if (focus) editor.value.focus();
+    };
+    return {
+      protectBoundary,
+      insertAndSelect,
+      formatCode,
+      addMarkup,
+      insert,
+      select,
+      isReadOnly,
+      getValue,
+      refEditor,
+      ...plugins
+    };
+  }
+})
 </script>

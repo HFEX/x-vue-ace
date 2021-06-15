@@ -1,6 +1,6 @@
 import AceAjax from "brace";
 import { getCurrentInstance, onMounted, Ref, toRef, watch } from "vue";
-import { Props } from "./types/props";
+import type { Props } from "./types/props";
 
 export default function watchAnnotations(editor:Ref<AceAjax.Editor>,props:Props) {
   onMounted(() => {

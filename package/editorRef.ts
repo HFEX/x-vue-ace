@@ -1,12 +1,13 @@
 import { computed, onMounted, onUnmounted, ref, Ref, toRef, watch } from "vue";
-import ace, { Editor } from 'brace';
-import { Plugins } from "./pluginsRef";
+import ace from 'brace';
+import type { Editor } from 'brace';
+import type { Plugins } from "./pluginsRef";
 import { debounce, editorOptions } from "./editor-options";
 import "brace/theme/chrome";
 import "brace/ext/language_tools";
 import "brace/ext/searchbox";
 import "brace/mode/python";
-import { Props } from "./types/props";
+import type { Props } from "./types/props";
 namespace editorRef{
   export interface params {
     getValue: (notJudge?: boolean) => string,

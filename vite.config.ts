@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [vue(), dts({
     outputDir: 'types',
     staticImport: true
-  }),viteSingleFile()],
+  })],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'package/index'),

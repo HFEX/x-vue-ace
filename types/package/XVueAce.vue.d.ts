@@ -1,6 +1,6 @@
 import AceAjax from "brace";
 import type { DefineComponent, Ref, WritableComputedRef, ComponentOptionsMixin, VNodeProps, AllowedComponentProps, ComponentCustomProps, PropType } from 'vue';
-import { marker } from "./types/props";
+import type { marker } from "./types/props";
 declare const _default: DefineComponent<{
     mode: {
         type: StringConstructor;
@@ -75,15 +75,15 @@ declare const _default: DefineComponent<{
     };
     editorProps: {
         type: ObjectConstructor;
-        default(): {};
+        default: () => {};
     };
     setOptions: {
         type: ObjectConstructor;
-        default(): {};
+        default: () => {};
     };
     scrollMargin: {
-        type: ArrayConstructor;
-        default(): number[];
+        type: PropType<number[]>;
+        default: () => number[];
     };
     annotations: {
         type: PropType<AceAjax.Annotation[]>;
@@ -176,7 +176,7 @@ declare const _default: DefineComponent<{
     cursorStart: number;
     editorProps: Record<string, any>;
     setOptions: Record<string, any>;
-    scrollMargin: unknown[];
+    scrollMargin: number[];
     wrapEnabled: boolean;
     navigateToFileEnd: boolean;
     placeholder: string;
@@ -209,7 +209,7 @@ declare const _default: DefineComponent<{
     cursorStart: number;
     editorProps: Record<string, any>;
     setOptions: Record<string, any>;
-    scrollMargin: unknown[];
+    scrollMargin: number[];
     wrapEnabled: boolean;
     navigateToFileEnd: boolean;
     placeholder: string;

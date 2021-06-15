@@ -1,10 +1,12 @@
 import ace from 'brace';
 import { ref, Ref } from "vue";
 import { clearAnchors } from "./utils/Anchors";
-import {useLockPlugin,LockPlugin} from './plugins/lockPlugin'
-import {useHideCodePlugin, HideCodePlugin} from './plugins/hidePlugin';
-
-import {useBlankPlugin,BlankPlugin} from './plugins/blankPlugin';
+import {useLockPlugin} from './plugins/lockPlugin'
+import type {LockPlugin }  from './plugins/lockPlugin'
+import {useHideCodePlugin} from './plugins/hidePlugin';
+import type {HideCodePlugin} from './plugins/hidePlugin';
+import {useBlankPlugin} from './plugins/blankPlugin';
+import type {BlankPlugin} from './plugins/blankPlugin';
 interface params {
   editor: Ref<ace.Editor>,
   editorValue: Ref<string>

@@ -1,8 +1,8 @@
 import ace from 'brace';
 import { Ref } from "vue";
-import { LockPlugin } from './plugins/lockPlugin';
-import { HideCodePlugin } from './plugins/hidePlugin';
-import { BlankPlugin } from './plugins/blankPlugin';
+import type { LockPlugin } from './plugins/lockPlugin';
+import type { HideCodePlugin } from './plugins/hidePlugin';
+import type { BlankPlugin } from './plugins/blankPlugin';
 interface params {
     editor: Ref<ace.Editor>;
     editorValue: Ref<string>;

@@ -1,7 +1,7 @@
 import { Ref } from "vue";
 import ace from 'brace';
-import { Plugins } from "./pluginsRef";
-import { Props } from "./types/props";
+import type { Plugins } from "./pluginsRef";
+import type { Props } from "./types/props";
 declare namespace editorRef {
     interface params {
         getValue: (notJudge?: boolean) => string;

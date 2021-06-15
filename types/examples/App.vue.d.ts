@@ -1,6 +1,6 @@
 import type { Annotation, Range } from 'brace';
 import type { marker } from '../package/types/props';
-import type { DefineComponent, Ref, ComponentInternalInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps, Slot, ComponentPublicInstance, ComponentOptionsBase, WritableComputedRef, ComponentOptionsMixin, ReactiveEffect, nextTick, WatchOptions, WatchStopHandle, ShallowUnwrapRef, ComponentCustomProperties, PropType, EmitsOptions } from 'vue';
+import type { DefineComponent, Ref, ComponentInternalInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps, Slot, ComponentPublicInstance, ComponentOptionsBase, WritableComputedRef, ComponentOptionsMixin, DebuggerEvent, ReactiveEffect, nextTick, WatchOptions, WatchStopHandle, ShallowUnwrapRef, ComponentCustomProperties, PropType, EmitsOptions } from 'vue';
 /// <reference types="brace" />
 declare const _default: DefineComponent<{}, {
     handleInsert: () => void;
@@ -34,7 +34,7 @@ declare const _default: DefineComponent<{}, {
             cursorStart: number;
             editorProps: Record<string, any>;
             setOptions: Record<string, any>;
-            scrollMargin: unknown[];
+            scrollMargin: number[];
             wrapEnabled: boolean;
             navigateToFileEnd: boolean;
             placeholder: string;
@@ -61,7 +61,7 @@ declare const _default: DefineComponent<{}, {
             cursorStart: number;
             editorProps: Record<string, any>;
             setOptions: Record<string, any>;
-            scrollMargin: unknown[];
+            scrollMargin: number[];
             wrapEnabled: boolean;
             navigateToFileEnd: boolean;
             placeholder: string;
@@ -108,7 +108,7 @@ declare const _default: DefineComponent<{}, {
             cursorStart: number;
             editorProps: Record<string, any>;
             setOptions: Record<string, any>;
-            scrollMargin: unknown[];
+            scrollMargin: number[];
             wrapEnabled: boolean;
             navigateToFileEnd: boolean;
             placeholder: string;
@@ -174,12 +174,28 @@ declare const _default: DefineComponent<{}, {
             cursorStart: number;
             editorProps: Record<string, any>;
             setOptions: Record<string, any>;
-            scrollMargin: unknown[];
+            scrollMargin: number[];
             wrapEnabled: boolean;
             navigateToFileEnd: boolean;
             placeholder: string;
             preventPasteOther: boolean;
-        }>;
+        }> & {
+            beforeCreate?: ((() => void) | (() => void)[]) | undefined;
+            created?: ((() => void) | (() => void)[]) | undefined;
+            beforeMount?: ((() => void) | (() => void)[]) | undefined;
+            mounted?: ((() => void) | (() => void)[]) | undefined;
+            beforeUpdate?: ((() => void) | (() => void)[]) | undefined;
+            updated?: ((() => void) | (() => void)[]) | undefined;
+            activated?: ((() => void) | (() => void)[]) | undefined;
+            deactivated?: ((() => void) | (() => void)[]) | undefined;
+            beforeDestroy?: ((() => void) | (() => void)[]) | undefined;
+            beforeUnmount?: ((() => void) | (() => void)[]) | undefined;
+            destroyed?: ((() => void) | (() => void)[]) | undefined;
+            unmounted?: ((() => void) | (() => void)[]) | undefined;
+            renderTracked?: (((e: DebuggerEvent) => void) | ((e: DebuggerEvent) => void)[]) | undefined;
+            renderTriggered?: (((e: DebuggerEvent) => void) | ((e: DebuggerEvent) => void)[]) | undefined;
+            errorCaptured?: (((err: unknown, instance: ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}>> | null, info: string) => boolean | void) | ((err: unknown, instance: ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}>> | null, info: string) => boolean | void)[]) | undefined;
+        };
         $forceUpdate: ReactiveEffect<any>;
         $nextTick: typeof nextTick;
         $watch(source: string | Function, cb: Function, options?: WatchOptions<boolean> | undefined): WatchStopHandle;
@@ -205,7 +221,7 @@ declare const _default: DefineComponent<{}, {
         cursorStart: number;
         editorProps: Record<string, any>;
         setOptions: Record<string, any>;
-        scrollMargin: unknown[];
+        scrollMargin: number[];
         wrapEnabled: boolean;
         navigateToFileEnd: boolean;
         placeholder: string;
@@ -341,15 +357,15 @@ declare const _default: DefineComponent<{}, {
         };
         editorProps: {
             type: ObjectConstructor;
-            default(): {};
+            default: () => {};
         };
         setOptions: {
             type: ObjectConstructor;
-            default(): {};
+            default: () => {};
         };
         scrollMargin: {
-            type: ArrayConstructor;
-            default(): number[];
+            type: PropType<number[]>;
+            default: () => number[];
         };
         annotations: {
             type: PropType<Annotation[]>;
@@ -442,7 +458,7 @@ declare const _default: DefineComponent<{}, {
         cursorStart: number;
         editorProps: Record<string, any>;
         setOptions: Record<string, any>;
-        scrollMargin: unknown[];
+        scrollMargin: number[];
         wrapEnabled: boolean;
         navigateToFileEnd: boolean;
         placeholder: string;
@@ -475,7 +491,7 @@ declare const _default: DefineComponent<{}, {
         cursorStart: number;
         editorProps: Record<string, any>;
         setOptions: Record<string, any>;
-        scrollMargin: unknown[];
+        scrollMargin: number[];
         wrapEnabled: boolean;
         navigateToFileEnd: boolean;
         placeholder: string;
