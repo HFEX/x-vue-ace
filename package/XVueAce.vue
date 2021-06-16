@@ -192,7 +192,7 @@ export default defineComponent({
       editorValue: editorValue,
       isReadOnly
     });
-    const { isShowLock } = plugins;
+    const {isShowLock} = plugins;
     const { getValue } = getValueFunction({
       ...plugins,
       getEditorValue
@@ -255,7 +255,7 @@ export default defineComponent({
     watchMarkers(editor,props);
     watchAnnotations(editor,props);
     onMounted(() => {
-      // this.parseMarkup();
+      parseMarkup();
       // @ts-ignore
       if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
       editor.value.getSession().selection.on('changeSelection', (event: any)=>{
@@ -332,7 +332,8 @@ export default defineComponent({
       isReadOnly,
       getValue,
       refEditor,
-      ...plugins
+      isShowLock
+      // ...plugins
     };
   }
 })

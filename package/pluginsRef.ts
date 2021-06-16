@@ -8,7 +8,7 @@ import type {HideCodePlugin} from './plugins/hidePlugin';
 import {useBlankPlugin} from './plugins/blankPlugin';
 import type {BlankPlugin} from './plugins/blankPlugin';
 interface params {
-  editor: Ref<ace.Editor>,
+  editor: {value: ace.Editor},
   editorValue: Ref<string>
   isReadOnly: Ref<boolean>
 }

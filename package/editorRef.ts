@@ -34,7 +34,7 @@ export default function getEditorRef(
   emit: (evt: 'beforeLoad' | 'change' | 'focus' | 'blur' | 'copy' | 'paste' | 'input', ...args: any[]) => void,
   sid: Ref<string>,
   props: Props) {
-  const editor = ref<Editor>() as unknown as Ref<ace.Editor>;
+  const editor = {} as unknown as {value: Editor};
   const copyrightText = computed(() => {
     return `\n小猴编程（${sid.value}）`;
   })
@@ -55,7 +55,7 @@ export default function getEditorRef(
     event.preventDefault();
   }
   function handleChange(event: any) {
-    if (silent.value) {
+    if (!silent.value) {
       emit('change', getEditorValue(), event, editor.value);
     }
   }
@@ -85,6 +85,9 @@ export default function getEditorRef(
     .getSession()
     // @ts-ignore
     .setValue(editorValue.value, props.cursorStart);
+    if (props.focus) {
+      editor.value.focus();
+    }
   })
   onUnmounted(() => {
     editor.value.destroy();

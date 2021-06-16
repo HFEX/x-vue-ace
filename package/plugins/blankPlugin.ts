@@ -4,7 +4,7 @@ import { produceAnchors } from "../utils/Anchors";
 const Range: typeof ace.Range = ace.acequire('ace/range').Range;
 
 interface params {
-  editor: Ref<ace.Editor>
+  editor: {value:ace.Editor}
   editorValue: Ref<string>
   plugins: Ref<Array<string>>
   isReadOnly: Ref<boolean>
@@ -80,7 +80,7 @@ export function useBlankPlugin({editor,editorValue,plugins,isReadOnly,showLock}:
       blankAnchors.value[0].start.row + 1,
       blankAnchors.value[0].start.column + 1,
     );
-    editor.value.getSession().selection.on('changeCursor', protectExternal);
+    // editor.value.getSession().selection.on('changeCursor', protectExternal);
   }
   function protectBlankBoundary(evt: KeyboardEvent) {
     if (evt.keyCode === 13) {

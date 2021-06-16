@@ -2,7 +2,7 @@ import { Editor, Range } from 'brace';
 import { Ref, ref } from 'vue'
 import { produceAnchors } from "../utils/Anchors";
 interface params {
-  editor: Ref<Editor>,
+  editor: {value:Editor},
   editorValue: Ref<string>,
   plugins: Ref<Array<string>>,
   isReadOnly: Ref<boolean>
