@@ -1,10 +1,11 @@
+// eslint-disable-next-line simple-import-sort/imports
+import ace from "brace";
 import "brace/theme/chrome";
 import "brace/ext/language_tools";
 import "brace/ext/searchbox";
 import "brace/mode/python";
 
 import type { Editor } from "brace";
-import ace from "brace";
 import debounce from "lodash/debounce";
 import { computed, onMounted, onUnmounted, Ref, toRef, watch } from "vue";
 
@@ -275,8 +276,7 @@ export default function getEditorRef(
               // editor.value.setReadOnly(isReadOnly.value);
             }, 0);
           }
-        },
-        { immediate: true }
+        }
       );
       watch(toRef(props, "removeMark"), (newVal) => {
         // if (this.getValue() !== newVal) {

@@ -23,6 +23,7 @@ export function produceAnchors(type: string, arr: string[], editor: ace.Editor) 
     } else {
       rate = 0;
     }
+    console.log(ranges);
     if (item.start.row === item.end.row) {
       range = new Range(
         item.start.row,
