@@ -22,18 +22,17 @@ export type Props = Readonly<{
   debounceChangePeriod?: number,
   editorProps: Record<string, any>,
   setOptions: Record<string, any>,
-  scrollMargin: unknown[],
+  scrollMargin: number[],
   annotations?: AceAjax.Annotation[],
   markers?: marker[],
   keyboardHandler?: string,
   wrapEnabled: boolean,
-  enableBasicAutocompletion: unknown[]|boolean,
-  enableLiveAutocompletion: unknown[]|boolean,
+  enableBasicAutocompletion: boolean,
+  enableLiveAutocompletion: boolean,
   navigateToFileEnd: boolean,
   commands?: unknown[],
   placeholder: string,
   preventPasteOther: boolean,
-  [key: string]: any,
 }>
 
 export interface marker {

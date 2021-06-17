@@ -3,8 +3,8 @@ import {Ref} from 'vue'
 
 const Range: typeof ace.Range = ace.acequire('ace/range').Range;
 
-export function produceAnchors(type:string,arr:Ref<Array<any>>,editor: ace.Editor) {
-  const ranges = arr.value.map(item => editor.find(item) as unknown as ace.Range);
+export function produceAnchors(type:string,arr:Array<any>,editor: ace.Editor) {
+  const ranges = arr.map(item => editor.find(item) as unknown as ace.Range);
   ranges.sort((a, b) => {
     const arow = a.start.row;
     const brow = b.start.row;
@@ -38,15 +38,16 @@ export function produceAnchors(type:string,arr:Ref<Array<any>>,editor: ace.Edito
         item.end.column - 15,
       );
     }
-    editor.getSession().addMarker(range, `${type}-highlight`,'',false);
+    // @ts-ignore
+    editor.getSession().addMarker(range, `${type}-highlight`);
 
     let tempStr = '';
     switch (type) {
       case 'preserved':
-        tempStr = arr.value[index].replace(/<\/?xiaohou-lock>/img, '');
+        tempStr = arr[index].replace(/<\/?xiaohou-lock>/img, '');
         break;
       case 'blank':
-        tempStr = arr.value[index].replace(/<\/?xiaohou-blank>/img, ' ');
+        tempStr = arr[index].replace(/<\/?xiaohou-blank>/img, ' ');
         break;
       default:
     }

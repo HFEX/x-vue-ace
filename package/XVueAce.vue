@@ -103,15 +103,15 @@ export default defineComponent({
     },
     editorProps: {
       type: Object,
-      default:() => ({}),
+      default: () => ({})
     },
     setOptions: {
       type: Object,
-      default: () => ({}),
+      default:() => ({})
     },
     scrollMargin: {
       type: Array as PropType<number[]>,
-      default: () =>  [0, 0, 0, 0],
+      default:() => [0, 0, 0, 0],
     },
     annotations: {
       type: Array as PropType<AceAjax.Annotation[]>
@@ -127,11 +127,11 @@ export default defineComponent({
       default: false
     },
     enableBasicAutocompletion: {
-      type: [Array, Boolean],
+      type: Boolean,
       default: false
     },
     enableLiveAutocompletion: {
-      type: [Array, Boolean],
+      type: Boolean,
       default: false
     },
     navigateToFileEnd: {
@@ -163,7 +163,7 @@ export default defineComponent({
     'scroll',
     'handle-options'
   ],
-  setup(props,{emit}) {
+  setup:(props,{emit}) => {
     const silent = ref(false);
     const selectedText = ref("");
     const { sid } = getSidRef();
@@ -185,7 +185,6 @@ export default defineComponent({
       sid,
       props
     );
-
     const { lisReadOnly, isReadOnly } = getReadOnlyRef(props);
     const plugins = usePluginsRef({
       editor: editor,

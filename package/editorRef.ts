@@ -7,7 +7,7 @@ import "brace/theme/chrome";
 import "brace/ext/language_tools";
 import "brace/ext/searchbox";
 import "brace/mode/python";
-import type { Props } from "./types/props";
+import { Props } from "./types/props";
 namespace editorRef{
   export interface params {
     getValue: (notJudge?: boolean) => string,
@@ -117,9 +117,11 @@ export default function getEditorRef(
       for (let i = 0; i < editorOptions.length; i += 1) {
         const option = editorOptions[i];
         if (Object.prototype.hasOwnProperty.call(availableOptions, option)) {
-          watch(toRef(props as any, option), (newVal) => {
-            editor.value.setOption(option, newVal);
-          },{immediate:true});
+          watch(toRef(props, option), (newVal) => {
+              if (newVal!==null&&newVal!==undefined) {
+                editor.value.setOption(option, newVal);
+              }
+            },{immediate:true});
         } else if (props[option]) {
           /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
           console.warn(

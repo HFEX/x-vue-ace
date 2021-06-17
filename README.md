@@ -68,7 +68,7 @@ getOptions()
 | 选项名 | 值类型 | 默认值 | 可选值 | 备注 |
 | -|-|-|-|-|
 selectionStyle | String | text | line&#124;text | 选中样式 |
-highlightActiveLine | Boolean | true | - | 高亮当前行 |
+highlightActiveLine | Boolean | true | - | 高亮当前行(如果为false会导致挖空出现更新问题) |
 highlightSelectedWord | Boolean | true | - | 高亮选中文本 |
 readOnly | Boolean | false | - | 是否只读 |
 cursorStyle | String | ace | ace&#124;slim&#124;smooth&#124;wide | 光标样式 |

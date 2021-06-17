@@ -1,7 +1,7 @@
 import { Ref } from "vue";
-import ace from 'brace';
+import type { Editor } from 'brace';
 import type { Plugins } from "./pluginsRef";
-import type { Props } from "./types/props";
+import { Props } from "./types/props";
 declare namespace editorRef {
     interface params {
         getValue: (notJudge?: boolean) => string;
@@ -21,7 +21,9 @@ declare namespace editorRef {
  * @returns
  */
 export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: 'beforeLoad' | 'change' | 'focus' | 'blur' | 'copy' | 'paste' | 'input', ...args: any[]) => void, sid: Ref<string>, props: Props): {
-    editor: Ref<ace.Editor>;
+    editor: {
+        value: Editor;
+    };
     /**
      * 获取编辑器的值，如果编辑器为空，返回内存中的值
      * @returns string

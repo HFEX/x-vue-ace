@@ -4,7 +4,9 @@ import type { LockPlugin } from './plugins/lockPlugin';
 import type { HideCodePlugin } from './plugins/hidePlugin';
 import type { BlankPlugin } from './plugins/blankPlugin';
 interface params {
-    editor: Ref<ace.Editor>;
+    editor: {
+        value: ace.Editor;
+    };
     editorValue: Ref<string>;
     isReadOnly: Ref<boolean>;
 }

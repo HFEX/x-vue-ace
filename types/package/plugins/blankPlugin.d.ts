@@ -1,7 +1,9 @@
 import { Ref } from "vue";
 import * as ace from 'brace';
 interface params {
-    editor: Ref<ace.Editor>;
+    editor: {
+        value: ace.Editor;
+    };
     editorValue: Ref<string>;
     plugins: Ref<Array<string>>;
     isReadOnly: Ref<boolean>;

@@ -1,4 +1,4 @@
-declare const editorOptions: string[];
+declare const editorOptions: readonly ["minLines", "maxLines", "readOnly", "highlightActiveLine", "tabSize", "enableBasicAutocompletion", "enableLiveAutocompletion"];
 declare const editorEvents: string[];
 /**
  * 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行

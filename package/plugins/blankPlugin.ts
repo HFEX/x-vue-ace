@@ -75,7 +75,7 @@ export function useBlankPlugin({editor,editorValue,plugins,isReadOnly,showLock}:
     }, 0);
   }
   function affectBlank() {
-    blankAnchors.value = produceAnchors('blank',blanks,editor.value);
+    blankAnchors.value = produceAnchors('blank',blanks.value,editor.value);
     editor.value.gotoLine(
       blankAnchors.value[0].start.row + 1,
       blankAnchors.value[0].start.column + 1,

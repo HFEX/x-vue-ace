@@ -18,7 +18,6 @@
           :value="source"
           :annotations="annotations"
           :markers="markers"
-          :highlightActiveLine="false"
           @change="handleEditorChange"
         />
       </div>

@@ -123,7 +123,7 @@ export function useLockPlugin({editor,editorValue,plugins,isReadOnly}:params):Lo
     }, 0);
   }
   const affectPreserved = () => {
-    preservedAnchors.value = produceAnchors('preserved',preservedAnchors,editor.value);
+    preservedAnchors.value = produceAnchors('preserved',preservedAnchors.value,editor.value);
 
     editor.value.gotoLine(0);
 

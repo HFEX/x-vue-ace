@@ -1,4 +1,4 @@
-import type { Annotation, Range } from 'brace';
+import type { Annotation } from 'brace';
 import type { marker } from '../package/types/props';
 import type { DefineComponent, Ref, ComponentInternalInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps, Slot, ComponentPublicInstance, ComponentOptionsBase, WritableComputedRef, ComponentOptionsMixin, DebuggerEvent, ReactiveEffect, nextTick, WatchOptions, WatchStopHandle, ShallowUnwrapRef, ComponentCustomProperties, PropType, EmitsOptions } from 'vue';
 /// <reference types="brace" />
@@ -14,15 +14,15 @@ declare const _default: DefineComponent<{}, {
         $data: {};
         $props: Partial<{
             focus: boolean;
+            value: string;
+            mode: string;
             minLines: number;
             maxLines: number;
             readOnly: boolean;
             highlightActiveLine: boolean;
             tabSize: number;
-            enableBasicAutocompletion: boolean | unknown[];
-            enableLiveAutocompletion: boolean | unknown[];
-            value: string;
-            mode: string;
+            enableBasicAutocompletion: boolean;
+            enableLiveAutocompletion: boolean;
             theme: string;
             width: string;
             height: string;
@@ -41,15 +41,15 @@ declare const _default: DefineComponent<{}, {
             preventPasteOther: boolean;
         }> & Omit<Readonly<{
             focus: boolean;
+            value: string;
+            mode: string;
             minLines: number;
             maxLines: number;
             readOnly: boolean;
             highlightActiveLine: boolean;
             tabSize: number;
-            enableBasicAutocompletion: boolean | unknown[];
-            enableLiveAutocompletion: boolean | unknown[];
-            value: string;
-            mode: string;
+            enableBasicAutocompletion: boolean;
+            enableLiveAutocompletion: boolean;
             theme: string;
             width: string;
             height: string;
@@ -72,7 +72,7 @@ declare const _default: DefineComponent<{}, {
             annotations?: Annotation[] | undefined;
             keyboardHandler?: string | undefined;
             commands?: unknown[] | undefined;
-        }> & VNodeProps & AllowedComponentProps & ComponentCustomProps, "focus" | "minLines" | "maxLines" | "readOnly" | "highlightActiveLine" | "tabSize" | "enableBasicAutocompletion" | "enableLiveAutocompletion" | "value" | "mode" | "theme" | "width" | "height" | "fontSize" | "showGutter" | "markup" | "removeMark" | "showPrintMargin" | "cursorStart" | "editorProps" | "setOptions" | "scrollMargin" | "wrapEnabled" | "navigateToFileEnd" | "placeholder" | "preventPasteOther">;
+        }> & VNodeProps & AllowedComponentProps & ComponentCustomProps, "focus" | "value" | "mode" | "minLines" | "maxLines" | "readOnly" | "highlightActiveLine" | "tabSize" | "enableBasicAutocompletion" | "enableLiveAutocompletion" | "theme" | "width" | "height" | "fontSize" | "showGutter" | "markup" | "removeMark" | "showPrintMargin" | "cursorStart" | "editorProps" | "setOptions" | "scrollMargin" | "wrapEnabled" | "navigateToFileEnd" | "placeholder" | "preventPasteOther">;
         $attrs: {
             [x: string]: unknown;
         };
@@ -88,15 +88,15 @@ declare const _default: DefineComponent<{}, {
         $el: any;
         $options: ComponentOptionsBase<Readonly<{
             focus: boolean;
+            value: string;
+            mode: string;
             minLines: number;
             maxLines: number;
             readOnly: boolean;
             highlightActiveLine: boolean;
             tabSize: number;
-            enableBasicAutocompletion: boolean | unknown[];
-            enableLiveAutocompletion: boolean | unknown[];
-            value: string;
-            mode: string;
+            enableBasicAutocompletion: boolean;
+            enableLiveAutocompletion: boolean;
             theme: string;
             width: string;
             height: string;
@@ -120,29 +120,6 @@ declare const _default: DefineComponent<{}, {
             keyboardHandler?: string | undefined;
             commands?: unknown[] | undefined;
         }>, {
-            blanks: Ref<any[]>;
-            blankGaps: Ref<any[]>;
-            blankAnchors: Ref<any[]>;
-            parseBlank: () => void;
-            affectBlank: () => void;
-            protectBlankBoundary: (evt: KeyboardEvent) => void;
-            spliceBlanks: () => string;
-            protectExternal: () => void;
-            startCode: Ref<string>;
-            endCode: Ref<string>;
-            clearHide: () => void;
-            parseHide: () => void;
-            isShowLock: Ref<boolean>;
-            preserveds: Ref<string[]>;
-            preservedAnchors: Ref<Range[]>;
-            parseLock: () => void;
-            showLock: () => void;
-            splicePreserveds: () => string;
-            affectPreserved: () => void;
-            protectPreservedBoundary: (evt: KeyboardEvent) => void;
-            protectInternal: () => void;
-            plugins: Ref<("hide" | "blank" | "lock")[]>;
-            clearPlugins: () => void;
             protectBoundary: (evt: KeyboardEvent) => void;
             insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
             formatCode: () => void;
@@ -152,17 +129,18 @@ declare const _default: DefineComponent<{}, {
             isReadOnly: WritableComputedRef<boolean>;
             getValue: (notJudge?: boolean) => string;
             refEditor: Ref<HTMLElement | undefined>;
+            isShowLock: Ref<boolean>;
         }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], string, {
             focus: boolean;
+            value: string;
+            mode: string;
             minLines: number;
             maxLines: number;
             readOnly: boolean;
             highlightActiveLine: boolean;
             tabSize: number;
-            enableBasicAutocompletion: boolean | unknown[];
-            enableLiveAutocompletion: boolean | unknown[];
-            value: string;
-            mode: string;
+            enableBasicAutocompletion: boolean;
+            enableLiveAutocompletion: boolean;
             theme: string;
             width: string;
             height: string;
@@ -201,15 +179,15 @@ declare const _default: DefineComponent<{}, {
         $watch(source: string | Function, cb: Function, options?: WatchOptions<boolean> | undefined): WatchStopHandle;
     } & Readonly<{
         focus: boolean;
+        value: string;
+        mode: string;
         minLines: number;
         maxLines: number;
         readOnly: boolean;
         highlightActiveLine: boolean;
         tabSize: number;
-        enableBasicAutocompletion: boolean | unknown[];
-        enableLiveAutocompletion: boolean | unknown[];
-        value: string;
-        mode: string;
+        enableBasicAutocompletion: boolean;
+        enableLiveAutocompletion: boolean;
         theme: string;
         width: string;
         height: string;
@@ -233,29 +211,6 @@ declare const _default: DefineComponent<{}, {
         keyboardHandler?: string | undefined;
         commands?: unknown[] | undefined;
     }> & ShallowUnwrapRef<{
-        blanks: Ref<any[]>;
-        blankGaps: Ref<any[]>;
-        blankAnchors: Ref<any[]>;
-        parseBlank: () => void;
-        affectBlank: () => void;
-        protectBlankBoundary: (evt: KeyboardEvent) => void;
-        spliceBlanks: () => string;
-        protectExternal: () => void;
-        startCode: Ref<string>;
-        endCode: Ref<string>;
-        clearHide: () => void;
-        parseHide: () => void;
-        isShowLock: Ref<boolean>;
-        preserveds: Ref<string[]>;
-        preservedAnchors: Ref<Range[]>;
-        parseLock: () => void;
-        showLock: () => void;
-        splicePreserveds: () => string;
-        affectPreserved: () => void;
-        protectPreservedBoundary: (evt: KeyboardEvent) => void;
-        protectInternal: () => void;
-        plugins: Ref<("hide" | "blank" | "lock")[]>;
-        clearPlugins: () => void;
         protectBoundary: (evt: KeyboardEvent) => void;
         insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
         formatCode: () => void;
@@ -265,6 +220,7 @@ declare const _default: DefineComponent<{}, {
         isReadOnly: WritableComputedRef<boolean>;
         getValue: (notJudge?: boolean) => string;
         refEditor: Ref<HTMLElement | undefined>;
+        isShowLock: Ref<boolean>;
     }> & {} & {} & ComponentCustomProperties) | undefined>;
     source: Ref<string>;
     annotations: {
@@ -381,11 +337,11 @@ declare const _default: DefineComponent<{}, {
             default: boolean;
         };
         enableBasicAutocompletion: {
-            type: (BooleanConstructor | ArrayConstructor)[];
+            type: BooleanConstructor;
             default: boolean;
         };
         enableLiveAutocompletion: {
-            type: (BooleanConstructor | ArrayConstructor)[];
+            type: BooleanConstructor;
             default: boolean;
         };
         navigateToFileEnd: {
@@ -404,29 +360,6 @@ declare const _default: DefineComponent<{}, {
             default: boolean;
         };
     }, {
-        blanks: Ref<any[]>;
-        blankGaps: Ref<any[]>;
-        blankAnchors: Ref<any[]>;
-        parseBlank: () => void;
-        affectBlank: () => void;
-        protectBlankBoundary: (evt: KeyboardEvent) => void;
-        spliceBlanks: () => string;
-        protectExternal: () => void;
-        startCode: Ref<string>;
-        endCode: Ref<string>;
-        clearHide: () => void;
-        parseHide: () => void;
-        isShowLock: Ref<boolean>;
-        preserveds: Ref<string[]>;
-        preservedAnchors: Ref<Range[]>;
-        parseLock: () => void;
-        showLock: () => void;
-        splicePreserveds: () => string;
-        affectPreserved: () => void;
-        protectPreservedBoundary: (evt: KeyboardEvent) => void;
-        protectInternal: () => void;
-        plugins: Ref<("hide" | "blank" | "lock")[]>;
-        clearPlugins: () => void;
         protectBoundary: (evt: KeyboardEvent) => void;
         insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
         formatCode: () => void;
@@ -436,17 +369,18 @@ declare const _default: DefineComponent<{}, {
         isReadOnly: WritableComputedRef<boolean>;
         getValue: (notJudge?: boolean) => string;
         refEditor: Ref<HTMLElement | undefined>;
+        isShowLock: Ref<boolean>;
     }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
         focus: boolean;
+        value: string;
+        mode: string;
         minLines: number;
         maxLines: number;
         readOnly: boolean;
         highlightActiveLine: boolean;
         tabSize: number;
-        enableBasicAutocompletion: boolean | unknown[];
-        enableLiveAutocompletion: boolean | unknown[];
-        value: string;
-        mode: string;
+        enableBasicAutocompletion: boolean;
+        enableLiveAutocompletion: boolean;
         theme: string;
         width: string;
         height: string;
@@ -471,15 +405,15 @@ declare const _default: DefineComponent<{}, {
         commands?: unknown[] | undefined;
     }>, {
         focus: boolean;
+        value: string;
+        mode: string;
         minLines: number;
         maxLines: number;
         readOnly: boolean;
         highlightActiveLine: boolean;
         tabSize: number;
-        enableBasicAutocompletion: boolean | unknown[];
-        enableLiveAutocompletion: boolean | unknown[];
-        value: string;
-        mode: string;
+        enableBasicAutocompletion: boolean;
+        enableLiveAutocompletion: boolean;
         theme: string;
         width: string;
         height: string;

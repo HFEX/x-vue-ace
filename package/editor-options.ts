@@ -1,4 +1,7 @@
-const editorOptions = [
+import { readonly } from "vue";
+
+
+const editorOptions =readonly<[
   'minLines',
   'maxLines',
   'readOnly',
@@ -6,8 +9,17 @@ const editorOptions = [
   'tabSize',
   'enableBasicAutocompletion',
   'enableLiveAutocompletion',
-  'enableSnippets',
-];
+  // 'enableSnippets',
+]>([
+  'minLines',
+  'maxLines',
+  'readOnly',
+  'highlightActiveLine',
+  'tabSize',
+  'enableBasicAutocompletion',
+  'enableLiveAutocompletion',
+  // 'enableSnippets',
+]);
 
 const editorEvents = [
   'change',
