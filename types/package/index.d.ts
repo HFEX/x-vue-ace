@@ -1,2 +1,2 @@
-import XVueAce from './XVueAce.vue';
+import XVueAce from "./XVueAce.vue";
 export default XVueAce;

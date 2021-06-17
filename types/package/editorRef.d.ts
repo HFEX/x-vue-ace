@@ -1,5 +1,5 @@
+import type { Editor } from "brace";
 import { Ref } from "vue";
-import type { Editor } from 'brace';
 import type { Plugins } from "./pluginsRef";
 import { Props } from "./types/props";
 declare namespace editorRef {
@@ -20,16 +20,16 @@ declare namespace editorRef {
  * @param props 组件props
  * @returns
  */
-export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: 'beforeLoad' | 'change' | 'focus' | 'blur' | 'copy' | 'paste' | 'input', ...args: any[]) => void, sid: Ref<string>, props: Props): {
+export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: "beforeLoad" | "change" | "focus" | "blur" | "copy" | "paste" | "input", ...args: any[]) => void, sid: Ref<string>, props: Props): {
     editor: {
         value: Editor;
     };
     /**
      * 获取编辑器的值，如果编辑器为空，返回内存中的值
      * @returns string
-    */
+     */
     getEditorValue: () => string;
-    watchEditorValue: ({ getValue, isVaryCurrValue, currValue, isReadOnly, removeMarkup, parseMarkup, formatCode }: editorRef.params, { plugins, clearPlugins, }: Plugins) => void;
+    watchEditorValue: ({ getValue, isVaryCurrValue, currValue, isReadOnly, removeMarkup, parseMarkup, formatCode, }: editorRef.params, { plugins, clearPlugins }: Plugins) => void;
 };
 export declare function removeMarkup(editorValue: Ref<string>): void;
 export {};

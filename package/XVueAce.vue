@@ -8,162 +8,161 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import AceAjax from "brace";
-import { onMounted, ref, defineComponent } from "vue";
-import type { PropType } from 'vue';
+import styleInject from "style-inject";
+import type { PropType } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
+
 import getEditorRef from "./editorRef";
 import getEditorValueRef from "./editorValueRef";
+import css from "./index.less";
 import { usePluginsRef } from "./pluginsRef";
 import getReadOnlyRef from "./readOnlyRef";
 import getSidRef from "./sidRef";
-import type { marker, Props } from "./types/props";
+import type { marker } from "./types/props";
 import getFormatfunction from "./utils/formatCode";
 import beforeParse from "./utils/prase";
 import watchAnnotations from "./watchAnnotations";
 import watchMarkers from "./watchMarkers";
-// @ts-ignore
-import styleInject from 'style-inject';
-import css from './index.less'
 styleInject(css);
 
 export default defineComponent({
   props: {
     mode: {
       type: String,
-      default: ""
+      default: "",
     },
     focus: {
       type: Boolean,
-      default: false
+      default: false,
     },
     theme: {
       type: String,
-      default: ""
+      default: "",
     },
     width: {
       type: String,
-      default: "600px"
+      default: "600px",
     },
     height: {
       type: String,
-      default: "500px"
+      default: "500px",
     },
     fontSize: {
       type: [Number, String],
-      default: 12
+      default: 12,
     },
     showGutter: {
       type: Boolean,
-      default: true
+      default: true,
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     // defaultValue: PropTypes.string,
     minLines: {
       type: Number,
-      default: null
+      default: null,
     },
     maxLines: {
       type: Number,
-      default: null
+      default: null,
     },
     readOnly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     markup: {
       type: Boolean,
-      default: true
+      default: true,
     },
     removeMark: {
       type: Boolean,
-      default: false
+      default: false,
     },
     highlightActiveLine: {
       type: Boolean,
-      default: true
+      default: true,
     },
     tabSize: {
       type: Number,
-      default: 4
+      default: 4,
     },
     showPrintMargin: {
       type: Boolean,
-      default: false
+      default: false,
     },
     cursorStart: {
       type: Number,
-      default: 1
+      default: 1,
     },
     debounceChangePeriod: {
-      type: Number
+      type: Number,
     },
     editorProps: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     setOptions: {
       type: Object,
-      default:() => ({})
+      default: () => ({}),
     },
     scrollMargin: {
       type: Array as PropType<number[]>,
-      default:() => [0, 0, 0, 0],
+      default: () => [0, 0, 0, 0],
     },
     annotations: {
-      type: Array as PropType<AceAjax.Annotation[]>
+      type: Array as PropType<AceAjax.Annotation[]>,
     },
     markers: {
-      type: Array as PropType<marker[]>
+      type: Array as PropType<marker[]>,
     },
     keyboardHandler: {
-      type: String
+      type: String,
     },
     wrapEnabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     enableBasicAutocompletion: {
       type: Boolean,
-      default: false
+      default: false,
     },
     enableLiveAutocompletion: {
       type: Boolean,
-      default: false
+      default: false,
     },
     navigateToFileEnd: {
       type: Boolean,
-      default: false
+      default: false,
     },
     commands: {
-      type: Array
+      type: Array,
     },
     placeholder: {
       type: String,
-      default: ""
+      default: "",
     },
     preventPasteOther: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   emits: [
     "beforeLoad",
-    'change',
-    'focus',
-    'input',
-    'blur',
-    'copy',
-    'paste',
-    'selection-change',
-    'cursor-change',
-    'scroll',
-    'handle-options'
+    "change",
+    "focus",
+    "input",
+    "blur",
+    "copy",
+    "paste",
+    "selection-change",
+    "cursor-change",
+    "scroll",
+    "handle-options",
   ],
-  setup:(props,{emit}) => {
+  setup: (props, { emit }) => {
     const silent = ref(false);
     const selectedText = ref("");
     const { sid } = getSidRef();
@@ -172,7 +171,6 @@ export default defineComponent({
     //     return `\n小猴编程（${this.sid}）`;
     //   },
     // },
-    // @ts-ignore
     // 初始化编辑器
     const refEditor = ref<HTMLElement | undefined>(undefined);
     const { editorValue, getValueFunction, currValue, isVaryCurrValue } = getEditorValueRef(props);
@@ -185,16 +183,16 @@ export default defineComponent({
       sid,
       props
     );
-    const { lisReadOnly, isReadOnly } = getReadOnlyRef(props);
+    const { isReadOnly } = getReadOnlyRef(props);
     const plugins = usePluginsRef({
       editor: editor,
       editorValue: editorValue,
-      isReadOnly
+      isReadOnly,
     });
-    const {isShowLock} = plugins;
+    const { isShowLock } = plugins;
     const { getValue } = getValueFunction({
       ...plugins,
-      getEditorValue
+      getEditorValue,
     });
 
     const addMarkup = () => {
@@ -223,7 +221,7 @@ export default defineComponent({
 
     function protectBoundary(evt: KeyboardEvent) {
       // 边界保护
-      plugins.plugins.value.forEach(plugin => {
+      plugins.plugins.value.forEach((plugin) => {
         switch (plugin) {
           case "blank":
             plugins.protectBlankBoundary(evt);
@@ -247,37 +245,36 @@ export default defineComponent({
         isReadOnly,
         parseMarkup,
         removeMarkup,
-        formatCode
+        formatCode,
       },
       plugins
     );
-    watchMarkers(editor,props);
-    watchAnnotations(editor,props);
+    watchMarkers(editor, props);
+    watchAnnotations(editor, props);
     onMounted(() => {
       parseMarkup();
       // @ts-ignore
       if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
-      editor.value.getSession().selection.on('changeSelection', (event: any)=>{
+      editor.value.getSession().selection.on("changeSelection", (event: unknown) => {
         const value = editor.value.getSelection();
         if (props.preventPasteOther) {
           // @ts-ignore
           selectedText.value = editor.value.getSelectedText() || selectedText;
         }
 
-        emit('selection-change', value, event);
+        emit("selection-change", value, event);
       });
-      editor.value.getSession().selection.on('changeCursor', (event: any)=>{
+      editor.value.getSession().selection.on("changeCursor", (event: any) => {
         const value = editor.value.getSelection();
-        emit('cursor-change', value, event);
+        emit("cursor-change", value, event);
       });
-      editor.value.session.on('changeScrollTop', (...args) => emit('scroll', ...args, editor.value));
+      editor.value.session.on("changeScrollTop", (...args) =>
+        emit("scroll", ...args, editor.value)
+      );
     });
     const insertAndSelect = (txt: string, pos = "", focus = true) => {
       const { start } = editor.value.getSelection().getRange();
-      const currLine = editor.value
-        .getSession()
-        .getDocument()
-        .getLine(start.row);
+      const currLine = editor.value.getSession().getDocument().getLine(start.row);
       const m = currLine.match(/^\s*\t*/);
 
       let text = txt;
@@ -290,7 +287,7 @@ export default defineComponent({
         });
       }
       if (pos) {
-        const posArr = pos.split(/,|，/).map(v => parseInt(v, 10));
+        const posArr = pos.split(/,|，/).map((v) => parseInt(v, 10));
 
         insert(text, focus);
         const p1 = posArr[0] - 1 || 0;
@@ -331,9 +328,8 @@ export default defineComponent({
       isReadOnly,
       getValue,
       refEditor,
-      isShowLock
-      // ...plugins
+      isShowLock,
     };
-  }
-})
+  },
+});
 </script>

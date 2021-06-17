@@ -9,5 +9,5 @@ interface Params {
     };
     plugins: Ref<string[]>;
 }
-export default function getFormatfunction({ affectPreserved, affectBlank, editor, plugins, showLock }: Params): () => void;
+export default function getFormatfunction({ affectPreserved, affectBlank, editor, plugins, showLock, }: Params): () => void;
 export {};

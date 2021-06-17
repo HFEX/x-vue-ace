@@ -1,5 +1,5 @@
-import { Ref } from 'vue';
-import type { Props } from './types/props';
+import { Ref } from "vue";
+import type { Props } from "./types/props";
 interface params {
     getEditorValue: () => string;
     plugins: Ref<string[]>;

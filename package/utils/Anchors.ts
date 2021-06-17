@@ -1,10 +1,10 @@
-import * as ace from 'brace';
-import {Ref} from 'vue'
+import * as ace from "brace";
+import { Ref } from "vue";
 
-const Range: typeof ace.Range = ace.acequire('ace/range').Range;
+const Range: typeof ace.Range = ace.acequire("ace/range").Range;
 
-export function produceAnchors(type:string,arr:Array<any>,editor: ace.Editor) {
-  const ranges = arr.map(item => editor.find(item) as unknown as ace.Range);
+export function produceAnchors(type: string, arr: string[], editor: ace.Editor) {
+  const ranges = arr.map((item) => editor.find(item) as unknown as ace.Range);
   ranges.sort((a, b) => {
     const arow = a.start.row;
     const brow = b.start.row;
@@ -28,49 +28,48 @@ export function produceAnchors(type:string,arr:Array<any>,editor: ace.Editor) {
         item.start.row,
         item.start.column - rate * 29,
         item.end.row,
-        item.end.column - (rate + 1) * 29,
+        item.end.column - (rate + 1) * 29
       );
     } else {
       range = new Range(
         item.start.row,
         item.start.column - rate * 29,
         item.end.row,
-        item.end.column - 15,
+        item.end.column - 15
       );
     }
     // @ts-ignore
     editor.getSession().addMarker(range, `${type}-highlight`);
 
-    let tempStr = '';
+    let tempStr = "";
     switch (type) {
-      case 'preserved':
-        tempStr = arr[index].replace(/<\/?xiaohou-lock>/img, '');
+      case "preserved":
+        tempStr = arr[index].replace(/<\/?xiaohou-lock>/gim, "");
         break;
-      case 'blank':
-        tempStr = arr[index].replace(/<\/?xiaohou-blank>/img, ' ');
+      case "blank":
+        tempStr = arr[index].replace(/<\/?xiaohou-blank>/gim, " ");
         break;
       default:
     }
     if (item.start.row === item.end.row) {
-      editor.getSession().replace(
-        new Range(
-          item.start.row,
-          item.start.column - rate * 29,
-          item.end.row,
-          item.end.column - rate * 29,
-        ),
-        tempStr,
-      );
+      editor
+        .getSession()
+        .replace(
+          new Range(
+            item.start.row,
+            item.start.column - rate * 29,
+            item.end.row,
+            item.end.column - rate * 29
+          ),
+          tempStr
+        );
     } else {
-      editor.getSession().replace(
-        new Range(
-          item.start.row,
-          item.start.column - rate * 29,
-          item.end.row,
-          item.end.column,
-        ),
-        tempStr,
-      );
+      editor
+        .getSession()
+        .replace(
+          new Range(item.start.row, item.start.column - rate * 29, item.end.row, item.end.column),
+          tempStr
+        );
     }
     // @ts-ignore
     range.start = editor.getSession().doc.createAnchor(range.start);
@@ -81,7 +80,11 @@ export function produceAnchors(type:string,arr:Array<any>,editor: ace.Editor) {
     return range;
   });
 }
-export function clearAnchors(type:string,editor:ace.Editor,...arrs:Array<Ref<Array<any>>>) {
+export function clearAnchors(
+  type: string,
+  editor: ace.Editor,
+  ...arrs: Array<Ref<Array<unknown>>>
+) {
   const markers = editor.getSession().getMarkers(false);
   Object.keys(markers).forEach((id) => {
     // @ts-ignore
@@ -91,7 +94,7 @@ export function clearAnchors(type:string,editor:ace.Editor,...arrs:Array<Ref<Arr
     }
   });
 
-  arrs.forEach((arr)=>{
+  arrs.forEach((arr) => {
     arr.value = [];
-  })
+  });
 }

@@ -1,48 +1,45 @@
-import ace,{Editor} from 'brace'
-import { Ref, watch, toRef, onMounted } from 'vue';
-import type { Props } from './types/props';
-const Range = ace.acequire('ace/range').Range;
-export default function watchMarkers(editor:{value:Editor},props:Props) {
+import ace, { Editor } from "brace";
+import { onMounted, toRef, watch } from "vue";
+
+import type { Props } from "./types/props";
+const Range = ace.acequire("ace/range").Range;
+export default function watchMarkers(editor: { value: Editor }, props: Props) {
   // remove foreground markers
   onMounted(() => {
-    watch(toRef(props, 'markers'), (markers) => {
-      let currentMarkers = editor.value.getSession().getMarkers(true);
-      for (const markerkey in currentMarkers) {
-        if (Object.prototype.hasOwnProperty.call(currentMarkers, markerkey)) {
-          editor.value.getSession().removeMarker(currentMarkers[markerkey].id);
-        }
-      }
-
-      currentMarkers = editor.value.getSession().getMarkers(false);
-      for (const markerkey in currentMarkers) {
-        if (Object.prototype.hasOwnProperty.call(currentMarkers, markerkey)) {
-          const currentMarker = currentMarkers[markerkey]
-          const { clazz } = currentMarker;
-          if (
-            clazz !== 'ace_active-line'
-            && clazz !== 'ace_selected-word'
-            && clazz !== 'preserved-highlight'
-            && clazz !== 'blank-highlight'
-          ) {
-            editor.value.getSession().removeMarker(currentMarker.id);
+    watch(
+      toRef(props, "markers"),
+      (markers) => {
+        let currentMarkers = editor.value.getSession().getMarkers(true);
+        for (const markerkey in currentMarkers) {
+          if (Object.prototype.hasOwnProperty.call(currentMarkers, markerkey)) {
+            editor.value.getSession().removeMarker(currentMarkers[markerkey].id);
           }
         }
-      };
 
-      markers?.forEach(
-        ({
-          startRow,
-          startCol,
-          endRow,
-          endCol,
-          className,
-          type,
-          inFront = false,
-        }) => {
-          const range = new Range(startRow, startCol, endRow, endCol);
-          editor.value.getSession().addMarker(range, className, type, inFront);
-        },
-      );
-    }, { immediate: true })
-  })
+        currentMarkers = editor.value.getSession().getMarkers(false);
+        for (const markerkey in currentMarkers) {
+          if (Object.prototype.hasOwnProperty.call(currentMarkers, markerkey)) {
+            const currentMarker = currentMarkers[markerkey];
+            const { clazz } = currentMarker;
+            if (
+              clazz !== "ace_active-line" &&
+              clazz !== "ace_selected-word" &&
+              clazz !== "preserved-highlight" &&
+              clazz !== "blank-highlight"
+            ) {
+              editor.value.getSession().removeMarker(currentMarker.id);
+            }
+          }
+        }
+
+        markers?.forEach(
+          ({ startRow, startCol, endRow, endCol, className, type, inFront = false }) => {
+            const range = new Range(startRow, startCol, endRow, endCol);
+            editor.value.getSession().addMarker(range, className, type, inFront);
+          }
+        );
+      },
+      { immediate: true }
+    );
+  });
 }

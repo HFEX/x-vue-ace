@@ -1,5 +1,5 @@
-import { Editor, Range } from 'brace';
-import { Ref } from 'vue';
+import { Editor, Range } from "brace";
+import { Ref } from "vue";
 interface params {
     editor: {
         value: Editor;

@@ -2,33 +2,33 @@ import { Editor } from "brace";
 import { Ref } from "vue";
 
 interface Params {
-  affectPreserved: () => void,
-  affectBlank: () => void,
-  showLock: () => void,
-  editor: {value: Editor},
-  plugins: Ref<string[]>,
+  affectPreserved: () => void;
+  affectBlank: () => void;
+  showLock: () => void;
+  editor: { value: Editor };
+  plugins: Ref<string[]>;
 }
 export default function getFormatfunction({
   affectPreserved,
   affectBlank,
   editor,
   plugins,
-  showLock
+  showLock,
 }: Params) {
   return function format() {
     if (plugins.value.length > 0) {
       for (let idx = plugins.value.length - 1; idx >= 0; idx -= 1) {
         switch (plugins.value[idx]) {
-          case 'lock':
+          case "lock":
             affectPreserved();
             break;
-          case 'blank':
+          case "blank":
             affectBlank();
             break;
           default:
         }
       }
     }
-    editor.value.getSession().selection.on('changeCursor', showLock);
-  }
+    editor.value.getSession().selection.on("changeCursor", showLock);
+  };
 }

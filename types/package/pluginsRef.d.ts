@@ -1,8 +1,8 @@
-import ace from 'brace';
+import ace from "brace";
 import { Ref } from "vue";
-import type { LockPlugin } from './plugins/lockPlugin';
-import type { HideCodePlugin } from './plugins/hidePlugin';
-import type { BlankPlugin } from './plugins/blankPlugin';
+import type { BlankPlugin } from "./plugins/blankPlugin";
+import type { HideCodePlugin } from "./plugins/hidePlugin";
+import type { LockPlugin } from "./plugins/lockPlugin";
 interface params {
     editor: {
         value: ace.Editor;
@@ -36,7 +36,7 @@ export declare function usePluginsRef({ editor, editorValue, isReadOnly }: param
     clearPlugins: () => void;
 };
 export interface Plugins extends LockPlugin, HideCodePlugin, BlankPlugin {
-    plugins: Ref<Array<'lock' | 'blank' | 'hide'>>;
+    plugins: Ref<Array<"lock" | "blank" | "hide">>;
     clearPlugins: () => void;
 }
 export {};
