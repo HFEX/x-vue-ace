@@ -1,3 +1,4 @@
+import type { DebouncedFunc } from 'lodash';
 import AceAjax from "brace";
 import type { DefineComponent, Ref, WritableComputedRef, ComponentOptionsMixin, VNodeProps, AllowedComponentProps, ComponentCustomProps, PropType } from 'vue';
 import type { marker } from "./types/props";
@@ -157,6 +158,7 @@ declare const _default: DefineComponent<{
     editor: {
         value: AceAjax.Editor;
     };
+    resize: DebouncedFunc<(force?: boolean | undefined) => void>;
 }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
     focus: boolean;
     value: string;

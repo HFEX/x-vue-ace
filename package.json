@@ -24,7 +24,7 @@
       "require": "./dist/x-vue-ace.umd.js"
     }
   },
-  "types": "./types/index.d.ts",
+  "types": "./types/package/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

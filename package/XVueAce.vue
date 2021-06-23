@@ -9,8 +9,9 @@
 
 <script lang="ts">
 import AceAjax from "brace";
+import debounce from "lodash/debounce";
 import styleInject from "style-inject";
-import type { PropType } from "vue";
+import { PropType, toRef, watch } from "vue";
 import { defineComponent, onMounted, ref } from "vue";
 
 import getEditorRef from "./editorRef";
@@ -317,6 +318,13 @@ export default defineComponent({
       if (length) editor.value.getSelection().selectTo(row, col + length);
       if (focus) editor.value.focus();
     };
+    editor.value.resize();
+    const resize = debounce(editor.value.resize.bind(editor.value), 100, {
+      leading: true,
+      trailing: true,
+    });
+    watch(toRef(props, "height"), () => resize());
+    watch(toRef(props, "width"), () => resize());
     return {
       protectBoundary,
       insertAndSelect,
@@ -328,6 +336,7 @@ export default defineComponent({
       getValue,
       refEditor,
       editor,
+      resize,
       ...plugins,
       isShowLock,
     };
