@@ -252,7 +252,6 @@ export default defineComponent({
     watchMarkers(editor, props);
     watchAnnotations(editor, props);
     onMounted(() => {
-      parseMarkup();
       // @ts-ignore
       if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
       editor.value.getSession().selection.on("changeSelection", (event: unknown) => {
@@ -328,6 +327,8 @@ export default defineComponent({
       isReadOnly,
       getValue,
       refEditor,
+      editor,
+      ...plugins,
       isShowLock,
     };
   },

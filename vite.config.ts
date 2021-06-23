@@ -13,6 +13,8 @@ export default defineConfig({
     dts({
       outputDir: "types",
       staticImport: true,
+      insertTypesEntry: true,
+      exclude: ["examples"],
     }),
     eslintPlugin({
       fix: true,

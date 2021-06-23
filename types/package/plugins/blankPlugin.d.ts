@@ -1,5 +1,5 @@
+import * as ace from "brace";
 import { Ref } from "vue";
-import * as ace from 'brace';
 interface params {
     editor: {
         value: ace.Editor;
@@ -9,7 +9,7 @@ interface params {
     isReadOnly: Ref<boolean>;
     showLock: () => void;
 }
-export declare function useBlankPlugin({ editor, editorValue, plugins, isReadOnly, showLock }: params): BlankPlugin;
+export declare function useBlankPlugin({ editor, editorValue, plugins, isReadOnly, showLock, }: params): BlankPlugin;
 export interface BlankPlugin {
     blanks: Ref<Array<any>>;
     blankGaps: Ref<Array<any>>;

@@ -1,4 +1,4 @@
-import type { Annotation } from 'brace';
+import type { Annotation, Range, Editor } from 'brace';
 import type { marker } from '../package/types/props';
 import type { DefineComponent, Ref, ComponentInternalInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps, Slot, ComponentPublicInstance, ComponentOptionsBase, WritableComputedRef, ComponentOptionsMixin, DebuggerEvent, ReactiveEffect, nextTick, WatchOptions, WatchStopHandle, ShallowUnwrapRef, ComponentCustomProperties, PropType, EmitsOptions } from 'vue';
 /// <reference types="brace" />
@@ -120,6 +120,29 @@ declare const _default: DefineComponent<{}, {
             keyboardHandler?: string | undefined;
             commands?: unknown[] | undefined;
         }>, {
+            isShowLock: Ref<boolean>;
+            blanks: Ref<any[]>;
+            blankGaps: Ref<any[]>;
+            blankAnchors: Ref<any[]>;
+            parseBlank: () => void;
+            affectBlank: () => void;
+            protectBlankBoundary: (evt: KeyboardEvent) => void;
+            spliceBlanks: () => string;
+            protectExternal: () => void;
+            startCode: Ref<string>;
+            endCode: Ref<string>;
+            clearHide: () => void;
+            parseHide: () => void;
+            preserveds: Ref<string[]>;
+            preservedAnchors: Ref<Range[]>;
+            parseLock: () => void;
+            showLock: () => void;
+            splicePreserveds: () => string;
+            affectPreserved: () => void;
+            protectPreservedBoundary: (evt: KeyboardEvent) => void;
+            protectInternal: () => void;
+            plugins: Ref<("hide" | "blank" | "lock")[]>;
+            clearPlugins: () => void;
             protectBoundary: (evt: KeyboardEvent) => void;
             insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
             formatCode: () => void;
@@ -129,7 +152,9 @@ declare const _default: DefineComponent<{}, {
             isReadOnly: WritableComputedRef<boolean>;
             getValue: (notJudge?: boolean) => string;
             refEditor: Ref<HTMLElement | undefined>;
-            isShowLock: Ref<boolean>;
+            editor: {
+                value: Editor;
+            };
         }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], string, {
             focus: boolean;
             value: string;
@@ -211,6 +236,29 @@ declare const _default: DefineComponent<{}, {
         keyboardHandler?: string | undefined;
         commands?: unknown[] | undefined;
     }> & ShallowUnwrapRef<{
+        isShowLock: Ref<boolean>;
+        blanks: Ref<any[]>;
+        blankGaps: Ref<any[]>;
+        blankAnchors: Ref<any[]>;
+        parseBlank: () => void;
+        affectBlank: () => void;
+        protectBlankBoundary: (evt: KeyboardEvent) => void;
+        spliceBlanks: () => string;
+        protectExternal: () => void;
+        startCode: Ref<string>;
+        endCode: Ref<string>;
+        clearHide: () => void;
+        parseHide: () => void;
+        preserveds: Ref<string[]>;
+        preservedAnchors: Ref<Range[]>;
+        parseLock: () => void;
+        showLock: () => void;
+        splicePreserveds: () => string;
+        affectPreserved: () => void;
+        protectPreservedBoundary: (evt: KeyboardEvent) => void;
+        protectInternal: () => void;
+        plugins: Ref<("hide" | "blank" | "lock")[]>;
+        clearPlugins: () => void;
         protectBoundary: (evt: KeyboardEvent) => void;
         insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
         formatCode: () => void;
@@ -220,7 +268,9 @@ declare const _default: DefineComponent<{}, {
         isReadOnly: WritableComputedRef<boolean>;
         getValue: (notJudge?: boolean) => string;
         refEditor: Ref<HTMLElement | undefined>;
-        isShowLock: Ref<boolean>;
+        editor: {
+            value: Editor;
+        };
     }> & {} & {} & ComponentCustomProperties) | undefined>;
     source: Ref<string>;
     annotations: {
@@ -360,6 +410,29 @@ declare const _default: DefineComponent<{}, {
             default: boolean;
         };
     }, {
+        isShowLock: Ref<boolean>;
+        blanks: Ref<any[]>;
+        blankGaps: Ref<any[]>;
+        blankAnchors: Ref<any[]>;
+        parseBlank: () => void;
+        affectBlank: () => void;
+        protectBlankBoundary: (evt: KeyboardEvent) => void;
+        spliceBlanks: () => string;
+        protectExternal: () => void;
+        startCode: Ref<string>;
+        endCode: Ref<string>;
+        clearHide: () => void;
+        parseHide: () => void;
+        preserveds: Ref<string[]>;
+        preservedAnchors: Ref<Range[]>;
+        parseLock: () => void;
+        showLock: () => void;
+        splicePreserveds: () => string;
+        affectPreserved: () => void;
+        protectPreservedBoundary: (evt: KeyboardEvent) => void;
+        protectInternal: () => void;
+        plugins: Ref<("hide" | "blank" | "lock")[]>;
+        clearPlugins: () => void;
         protectBoundary: (evt: KeyboardEvent) => void;
         insertAndSelect: (txt: string, pos?: string, focus?: boolean) => void;
         formatCode: () => void;
@@ -369,7 +442,9 @@ declare const _default: DefineComponent<{}, {
         isReadOnly: WritableComputedRef<boolean>;
         getValue: (notJudge?: boolean) => string;
         refEditor: Ref<HTMLElement | undefined>;
-        isShowLock: Ref<boolean>;
+        editor: {
+            value: Editor;
+        };
     }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
         focus: boolean;
         value: string;

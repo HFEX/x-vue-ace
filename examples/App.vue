@@ -9,12 +9,12 @@
           class="editor"
           mode="python"
           theme="chrome"
-          enableLiveAutocompletion
-          preventPasteOther
+          enable-live-autocompletion
+          prevent-paste-other
           focus
           :markup="enableMarkup"
-          :removeMark="removeMark"
-          :fontSize="fontSize"
+          :remove-mark="removeMark"
+          :font-size="fontSize"
           :value="source"
           :annotations="annotations"
           :markers="markers"
@@ -38,14 +38,15 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, reactive, ref } from "vue";
+
 import Editor from "../package/index";
-import { ref, reactive, defineComponent } from "vue";
 export default defineComponent({
   components: {
-    Editor
+    Editor,
   },
-  setup:() => {
-  const source = ref(`# 输入
+  setup: () => {
+    const source = ref(`# 输入
 num = int(input("共有多少只乌龟："))
 # 第一次数1只
 step =  <xiaohou-blank></xiaohou-blank>
@@ -63,85 +64,86 @@ for i in range(num):
       step*=2
 print("赢家是 %d 号乌龟！" % turtles[0])`);
 
-  const annotations = reactive([
-    {
-      row: 0,
-      column: 2,
-      type: "error",
-      text: "Some error."
-    }
-  ]);
-  const fontSize = ref(20);
-  const markers = reactive([
-    {
-      startRow: 0,
-      startCol: 0,
-      endRow: 0,
-      endCol: 5,
-      className: "error-marker",
-      type: "background"
-    }
-  ]);
-  const blockText = ref("");
-  const pos = ref("1,3,5");
-  const enableMarkup = ref(true);
-  const removeMark = ref(false);
-  const editorRef = ref<InstanceType<typeof Editor>>();
+    const annotations = reactive([
+      {
+        row: 0,
+        column: 2,
+        type: "error",
+        text: "Some error.",
+      },
+    ]);
+    const fontSize = ref(20);
+    const markers = reactive([
+      {
+        startRow: 0,
+        startCol: 0,
+        endRow: 0,
+        endCol: 5,
+        className: "error-marker",
+        type: "background",
+      },
+    ]);
+    const blockText = ref("");
+    const pos = ref("1,3,5");
+    const enableMarkup = ref(true);
+    const removeMark = ref(false);
+    const editorRef = ref<InstanceType<typeof Editor>>();
 
-  const handleInsert = () => {
-    editorRef.value?.insertAndSelect(blockText.value, pos.value);
-    // this.blockText = '';
-  };
+    const handleInsert = () => {
+      editorRef.value?.insertAndSelect(blockText.value, pos.value);
+      // this.blockText = '';
+    };
 
-  const toggleMarkup = () => {
-    enableMarkup.value = !enableMarkup.value;
-    console.log(enableMarkup.value);
-  };
-  const fontSizeA = () => {
-    fontSize.value += 1;
-  };
-  const fontSizeM = () => {
-    fontSize.value -= 1;
-  };
+    const toggleMarkup = () => {
+      enableMarkup.value = !enableMarkup.value;
+      console.log(enableMarkup.value);
+    };
+    const fontSizeA = () => {
+      fontSize.value += 1;
+    };
+    const fontSizeM = () => {
+      fontSize.value -= 1;
+    };
 
-  const handleRemoveMark = () => {
-    removeMark.value = !removeMark.value;
-    console.log(removeMark.value);
-  };
+    const handleRemoveMark = () => {
+      removeMark.value = !removeMark.value;
+      console.log(removeMark.value);
+    };
 
-  const handleEditorChange = (val: string) => {
-    // this.source = val;
-    console.log(val);
-  };
+    const handleEditorChange = (val: string) => {
+      // this.source = val;
+      console.log(val);
+    };
 
-  const getValue = () => {
-    console.log(editorRef.value?.getValue());
-  };
+    const getValue = () => {
+      console.log(editorRef.value?.getValue());
+    };
 
-  const resetValue = () => {
-    source.value = "";
-  };
-  return {
-    handleInsert,
-    handleRemoveMark,
-    toggleMarkup,
-    fontSize,
-    enableMarkup,
-    removeMark,
-    editorRef,
-    source,
-    annotations,
-    markers,
-    blockText,
-    pos,
-    Editor,
-    fontSizeA,
-    fontSizeM,
-    handleEditorChange,
-    getValue,
-    resetValue
-  };
-}});
+    const resetValue = () => {
+      source.value = "";
+    };
+    return {
+      handleInsert,
+      handleRemoveMark,
+      toggleMarkup,
+      fontSize,
+      enableMarkup,
+      removeMark,
+      editorRef,
+      source,
+      annotations,
+      markers,
+      blockText,
+      pos,
+      Editor,
+      fontSizeA,
+      fontSizeM,
+      handleEditorChange,
+      getValue,
+      resetValue,
+    };
+  },
+});
 </script>
 
 <style lang="less">

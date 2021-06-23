@@ -11,7 +11,7 @@ import { computed, onMounted, onUnmounted, Ref, toRef, watch } from "vue";
 
 import { editorOptions } from "./editor-options";
 import type { Plugins } from "./pluginsRef";
-import { Props } from "./types/props";
+import type { Props } from "./types/props";
 
 declare namespace editorRef {
   export interface params {
@@ -127,7 +127,7 @@ export default function getEditorRef(
       parseMarkup,
       formatCode,
     }: editorRef.params,
-    { plugins, clearPlugins }: Plugins
+    { clearPlugins }: Plugins
   ) {
     onMounted(() => {
       // @ts-ignore
@@ -155,7 +155,7 @@ export default function getEditorRef(
       for (let y = 0; y < setOptions.length; y += 1) {
         editor.value.setOption(setOptions[y], props.setOptions[setOptions[y]]);
       }
-
+      parseMarkup();
       formatCode();
       if (props.navigateToFileEnd) {
         editor.value.navigateFileEnd();
@@ -257,27 +257,24 @@ export default function getEditorRef(
           silent.value = false;
         }
       });
-      watch(
-        toRef(props, "markup"),
-        (newVal) => {
-          if (newVal) {
-            clearPlugins();
-            editorValue.value = getEditorValue();
-            parseMarkup();
-            editor.value.setValue(editorValue.value, props.cursorStart);
-            setTimeout(() => {
-              formatCode();
-            });
-          } else {
-            editor.value.setValue(getValue(true), props.cursorStart);
-            clearPlugins();
-            setTimeout(() => {
-              isReadOnly.value = false;
-              // editor.value.setReadOnly(isReadOnly.value);
-            }, 0);
-          }
+      watch(toRef(props, "markup"), (newVal) => {
+        if (newVal) {
+          clearPlugins();
+          editorValue.value = getEditorValue();
+          parseMarkup();
+          editor.value.setValue(editorValue.value, props.cursorStart);
+          setTimeout(() => {
+            formatCode();
+          });
+        } else {
+          editor.value.setValue(getValue(true), props.cursorStart);
+          clearPlugins();
+          setTimeout(() => {
+            isReadOnly.value = false;
+            // editor.value.setReadOnly(isReadOnly.value);
+          }, 0);
         }
-      );
+      });
       watch(toRef(props, "removeMark"), (newVal) => {
         // if (this.getValue() !== newVal) {
         silent.value = true;

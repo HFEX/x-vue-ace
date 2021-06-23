@@ -7883,10 +7883,10 @@ vfile@^4.0.0, vfile@^4.0.1:
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
 
-vite-plugin-dts@^0.4.1:
-  version "0.4.3"
-  resolved "https://registry.nlark.com/vite-plugin-dts/download/vite-plugin-dts-0.4.3.tgz#4c9589b65d9f7815fa8dc074ba03909b7fc32bec"
-  integrity sha1-TJWJtl2feBX6jcB0ugOQm3/DK+w=
+vite-plugin-dts@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.nlark.com/vite-plugin-dts/download/vite-plugin-dts-0.5.1.tgz#eb6d5519aff0603bcea3a2343925d9afbc7fd2bf"
+  integrity sha1-621VGa/wYDvOo6I0OSXZr7x/0r8=
   dependencies:
     fast-glob "^3.2.5"
     fs-extra "^10.0.0"

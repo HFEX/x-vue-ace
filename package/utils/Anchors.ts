@@ -4,7 +4,9 @@ import { Ref } from "vue";
 const Range: typeof ace.Range = ace.acequire("ace/range").Range;
 
 export function produceAnchors(type: string, arr: string[], editor: ace.Editor) {
-  const ranges = arr.map((item) => editor.find(item) as unknown as ace.Range);
+  const ranges = arr
+    .map((item) => editor.find(item) as unknown as ace.Range)
+    .filter((item) => !!item);
   ranges.sort((a, b) => {
     const arow = a.start.row;
     const brow = b.start.row;
@@ -23,7 +25,6 @@ export function produceAnchors(type: string, arr: string[], editor: ace.Editor) 
     } else {
       rate = 0;
     }
-    console.log(ranges);
     if (item.start.row === item.end.row) {
       range = new Range(
         item.start.row,

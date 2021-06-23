@@ -1,7 +1,7 @@
 import type { Editor } from "brace";
 import { Ref } from "vue";
 import type { Plugins } from "./pluginsRef";
-import { Props } from "./types/props";
+import type { Props } from "./types/props";
 declare namespace editorRef {
     interface params {
         getValue: (notJudge?: boolean) => string;
@@ -29,7 +29,7 @@ export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorVal
      * @returns string
      */
     getEditorValue: () => string;
-    watchEditorValue: ({ getValue, isVaryCurrValue, currValue, isReadOnly, removeMarkup, parseMarkup, formatCode, }: editorRef.params, { plugins, clearPlugins }: Plugins) => void;
+    watchEditorValue: ({ getValue, isVaryCurrValue, currValue, isReadOnly, removeMarkup, parseMarkup, formatCode, }: editorRef.params, { clearPlugins }: Plugins) => void;
 };
 export declare function removeMarkup(editorValue: Ref<string>): void;
 export {};
