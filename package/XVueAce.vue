@@ -336,6 +336,7 @@ export default {
 
     this.$watch('value', (newVal) => {
       if (this.getValue() !== newVal) {
+        this.editor.navigateFileStart();
         this.silent = true;
         this.isVaryCurrValue = true;
 
