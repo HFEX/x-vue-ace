@@ -87,7 +87,7 @@ export function useBlankPlugin({
       blankAnchors.value[0].start.row + 1,
       blankAnchors.value[0].start.column + 1
     );
-    // editor.value.getSession().selection.on('changeCursor', protectExternal);
+    editor.value.getSession().selection.on("changeCursor", protectExternal);
   }
   function protectBlankBoundary(evt: KeyboardEvent) {
     if (evt.keyCode === 13) {

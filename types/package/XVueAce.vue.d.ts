@@ -158,7 +158,7 @@ declare const _default: DefineComponent<{
     editor: {
         value: AceAjax.Editor;
     };
-    resize: DebouncedFunc<(force?: boolean | undefined) => void>;
+    resize: DebouncedFunc<() => void>;
 }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
     focus: boolean;
     value: string;

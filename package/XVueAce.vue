@@ -271,6 +271,7 @@ export default defineComponent({
       editor.value.session.on("changeScrollTop", (...args) =>
         emit("scroll", ...args, editor.value)
       );
+      editor.value.resize();
     });
     const insertAndSelect = (txt: string, pos = "", focus = true) => {
       const { start } = editor.value.getSelection().getRange();
@@ -318,8 +319,7 @@ export default defineComponent({
       if (length) editor.value.getSelection().selectTo(row, col + length);
       if (focus) editor.value.focus();
     };
-    editor.value.resize();
-    const resize = debounce(editor.value.resize.bind(editor.value), 100, {
+    const resize = debounce(() => editor.value.resize(), 100, {
       leading: true,
       trailing: true,
     });

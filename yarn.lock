@@ -2753,10 +2753,10 @@ es6-promisify@^5.0.0:
   dependencies:
     es6-promise "^4.0.3"
 
-esbuild@^0.12.5:
-  version "0.12.8"
-  resolved "https://registry.nlark.com/esbuild/download/esbuild-0.12.8.tgz#ac90da77cb3bfbf49ab815200bcef7ffe1a3348f"
-  integrity sha1-rJDad8s7+/SauBUgC873/+GjNI8=
+esbuild@^0.12.8:
+  version "0.12.10"
+  resolved "https://registry.nlark.com/esbuild/download/esbuild-0.12.10.tgz#bd65c229862a3330128ea06836894dfa6f7471bf"
+  integrity sha1-vWXCKYYqMzASjqBoNolN+m90cb8=
 
 esbuild@^0.9.6:
   version "0.9.7"
@@ -3327,7 +3327,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npm.taobao.org/fs.realpath/download/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
-fsevents@^2.1.2, fsevents@~2.3.1:
+fsevents@^2.1.2, fsevents@~2.3.1, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.npm.taobao.org/fsevents/download/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro=
@@ -6116,6 +6116,15 @@ postcss@^8.1.10, postcss@^8.3.0:
     nanoid "^3.1.23"
     source-map-js "^0.6.2"
 
+postcss@^8.3.4:
+  version "8.3.5"
+  resolved "https://registry.nlark.com/postcss/download/postcss-8.3.5.tgz#982216b113412bc20a86289e91eb994952a5b709"
+  integrity sha1-mCIWsRNBK8IKhiiekeuZSVKltwk=
+  dependencies:
+    colorette "^1.2.2"
+    nanoid "^3.1.23"
+    source-map-js "^0.6.2"
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/prelude-ls/download/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -7911,17 +7920,17 @@ vite-plugin-singlefile@^0.5.1:
     rollup "^2.42.1"
     rollup-plugin-esbuild "^3.0.2"
 
-vite@^2.3.6:
-  version "2.3.7"
-  resolved "https://registry.nlark.com/vite/download/vite-2.3.7.tgz#3023892419367465e1af1739578f8663d04243b2"
-  integrity sha1-MCOJJBk2dGXhrxc5V4+GY9BCQ7I=
+vite@^2.3.8:
+  version "2.3.8"
+  resolved "https://registry.nlark.com/vite/download/vite-2.3.8.tgz#42e3e03953859fd410e4e6ab3d1cca0aab2adc3c"
+  integrity sha1-QuPgOVOFn9QQ5OarPRzKCqsq3Dw=
   dependencies:
-    esbuild "^0.12.5"
-    postcss "^8.3.0"
-    resolve "^1.19.0"
+    esbuild "^0.12.8"
+    postcss "^8.3.4"
+    resolve "^1.20.0"
     rollup "^2.38.5"
   optionalDependencies:
-    fsevents "~2.3.1"
+    fsevents "~2.3.2"
 
 vm-browserify@^1.0.1:
   version "1.1.2"

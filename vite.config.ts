@@ -25,7 +25,9 @@ export default defineConfig({
       name: "x-vue-ace",
     },
     cssCodeSplit: true,
-    // sourcemap: true,
+    sourcemap: true,
+    chunkSizeWarningLimit: 1000,
+    // target: "esnext",
     rollupOptions: {
       // 请确保外部化那些你的库中不需要的依赖
       external: ["vue"],
@@ -36,5 +38,6 @@ export default defineConfig({
         },
       },
     },
+    watch: {},
   },
 });
