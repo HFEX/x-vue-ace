@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./types/ace.ts" />
+
 // eslint-disable-next-line simple-import-sort/imports
 import ace from "brace";
 import "brace/theme/chrome";

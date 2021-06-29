@@ -14,6 +14,9 @@ export default defineConfig({
       outputDir: "types",
       staticImport: true,
       exclude: ["examples"],
+      compilerOptions: {
+        allowSyntheticDefaultImports: true,
+      },
     }),
     eslintPlugin({
       fix: true,

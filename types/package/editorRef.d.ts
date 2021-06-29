@@ -1,3 +1,4 @@
+/// <reference path="types/ace.d.ts" />
 import type { Editor } from "brace";
 import { Ref } from "vue";
 import type { Plugins } from "./pluginsRef";
