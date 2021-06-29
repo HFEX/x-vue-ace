@@ -91,1913 +91,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "112a");
+/******/ 	return __webpack_require__(__webpack_require__.s = "fb15");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "112a":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// CONCATENATED MODULE: ./node_modules/_@vue_cli-service@3.12.1@@vue/cli-service/lib/commands/build/setPublicPath.js
-// This file is imported into lib/wc client bundles.
-
-if (typeof window !== 'undefined') {
-  if (true) {
-    __webpack_require__("e67d")
-  }
-
-  var setPublicPath_i
-  if ((setPublicPath_i = window.document.currentScript) && (setPublicPath_i = setPublicPath_i.src.match(/(.+\/)[^/]+\.js(\?.*)?$/))) {
-    __webpack_require__.p = setPublicPath_i[1] // eslint-disable-line
-  }
-}
-
-// Indicate to webpack that this file can be concatenated
-/* harmony default export */ var setPublicPath = (null);
-
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"19f5a59b-vue-loader-template"}!./node_modules/_vue-loader@15.9.2@vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=227e38b5&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),_c('transition',{attrs:{"name":"fade"}},[_c('i',{directives:[{name:"show",rawName:"v-show",value:(_vm.isReadOnly && _vm.isShowLock),expression:"isReadOnly && isShowLock"}],staticClass:"element-lock"})])],1)}
-var staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=227e38b5&
-
-// EXTERNAL MODULE: ./node_modules/_brace@0.11.1@brace/index.js
-var _brace_0_11_1_brace = __webpack_require__("8d9d");
-
-// CONCATENATED MODULE: ./package/editor-options.js
-const editorOptions = [
-  'minLines',
-  'maxLines',
-  'readOnly',
-  'highlightActiveLine',
-  'tabSize',
-  'enableBasicAutocompletion',
-  'enableLiveAutocompletion',
-  'enableSnippets',
-];
-
-const editorEvents = [
-  'change',
-  'focus',
-  'input',
-  'blur',
-  'copy',
-  'paste',
-  'selection-change',
-  'cursor-change',
-  'scroll',
-  'handle-options',
-];
-
-/**
- * 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行
- *
- * @param  {function} func        回调函数
- * @param  {number}   wait        表示时间窗口的间隔
- * @param  {boolean}  immediate   设置为ture时，是否立即调用函数
- * @return {function}             返回客户调用函数
- */
-function debounce(func, wait = 0, immediate = true) {
-  let timer;
-  let context;
-  let args;
-
-  // 延迟执行函数
-  const later = () => setTimeout(() => {
-    // 延迟函数执行完毕，清空缓存的定时器序号
-    timer = null;
-    // 延迟执行的情况下，函数会在延迟函数中执行
-    // 使用到之前缓存的参数和上下文
-    if (!immediate) {
-      func.apply(context, args);
-      context = null;
-      args = null;
-    }
-  }, wait);
-
-  // 这里返回的函数是每次实际调用的函数
-  return function fn(...params) {
-    // 如果没有创建延迟执行函数（later），就创建一个
-    if (!timer) {
-      timer = later();
-      // 如果是立即执行，调用函数
-      // 否则缓存参数和调用上下文
-      if (immediate) {
-        func.apply(this, params);
-      } else {
-        context = this;
-        args = params;
-      }
-    // 如果已有延迟执行函数（later），调用的时候清除原来的并重新设定一个
-    // 这样做延迟函数会重新计时
-    } else {
-      clearTimeout(timer);
-      timer = later();
-    }
-  };
-}
-
-
-// CONCATENATED MODULE: ./node_modules/_cache-loader@2.0.1@cache-loader/dist/cjs.js??ref--0-0!./node_modules/_vue-loader@15.9.2@vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-const { Range } = _brace_0_11_1_brace["acequire"]('ace/range');
-
-/* harmony default export */ var XVueAcevue_type_script_lang_js_ = ({
-  props: {
-    mode: {
-      type: String,
-      default: '',
-    },
-    focus: {
-      type: Boolean,
-      default: false,
-    },
-    theme: {
-      type: String,
-      default: '',
-    },
-    width: {
-      type: String,
-      default: '600px',
-    },
-    height: {
-      type: String,
-      default: '500px',
-    },
-    fontSize: {
-      type: [Number, String],
-      default: 12,
-    },
-    showGutter: {
-      type: Boolean,
-      default: true,
-    },
-    value: {
-      type: String,
-      default: '',
-    },
-    // defaultValue: PropTypes.string,
-    minLines: {
-      type: Number,
-      default: null,
-    },
-    maxLines: {
-      type: Number,
-      default: null,
-    },
-    readOnly: {
-      type: Boolean,
-      default: false,
-    },
-    markup: {
-      type: Boolean,
-      default: true,
-    },
-    removeMark: {
-      type: Boolean,
-      default: false,
-    },
-    highlightActiveLine: {
-      type: Boolean,
-      default: true,
-    },
-    tabSize: {
-      type: Number,
-      default: 4,
-    },
-    showPrintMargin: {
-      type: Boolean,
-      default: false,
-    },
-    cursorStart: {
-      type: Number,
-      default: 1,
-    },
-    debounceChangePeriod: {
-      type: Number,
-    },
-    editorProps: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-    setOptions: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-    scrollMargin: {
-      type: Array,
-      default() {
-        return [0, 0, 0, 0];
-      },
-    },
-    annotations: {
-      type: Array,
-    },
-    markers: {
-      type: Array,
-    },
-    keyboardHandler: {
-      type: String,
-    },
-    wrapEnabled: {
-      type: Boolean,
-      default: false,
-    },
-    enableBasicAutocompletion: {
-      type: [Array, Boolean],
-      default: false,
-    },
-    enableLiveAutocompletion: {
-      type: [Array, Boolean],
-      default: false,
-    },
-    navigateToFileEnd: {
-      type: Boolean,
-      default: false,
-    },
-    commands: {
-      type: Array,
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    preventPasteOther: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  computed: {
-    copyrightText() {
-      return `\n小猴编程（${this.sid}）`;
-    },
-
-    isReadOnly: {
-      get() {
-        return this.readOnly || this.lisReadOnly;
-      },
-      set(newValue) {
-        this.lisReadOnly = newValue;
-      },
-    },
-  },
-
-  data() {
-    return {
-      sid: '',
-      currValue: '', // 当前全量代码
-      editorValue: '', // 文本 编辑器代码
-      execValue: '', // 计算代码
-
-      plugins: [], // 插件
-      isVaryCurrValue: true, // 是否变更过当前全量代码
-      startCode: '', // 开头隐藏代码
-      endCode: '', // 结尾隐藏代码
-      blanks: [], // 空白处初始内容
-      blankGaps: [], // 空白与空白之间内容
-      blankAnchors: [], // 空白范围
-      preserveds: [], // 只读处初始内容
-      preservedAnchors: [], // 只读范围
-      lisReadOnly: false, // 编辑器是否只读
-      isShowLock: false, // 是否展示锁 🔒
-    };
-  },
-
-  mounted() {
-    this.editorValue = this.value;
-    this.parseMarkup();
-
-    this.editor = _brace_0_11_1_brace["edit"](this.$refs.refEditor);
-    this.genSid();
-
-    if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
-
-    this.$emit('before-load', _brace_0_11_1_brace);
-
-    this.editor.$blockScrolling = Infinity;
-
-    const editorProps = Object.keys(this.editorProps);
-    for (let i = 0; i < editorProps.length; i += 1) {
-      this.editor[editorProps[i]] = this.editorProps[editorProps[i]];
-    }
-    this.editor.renderer.setScrollMargin(
-      ...this.scrollMargin,
-    );
-    this.editor.getSession().setMode(`ace/mode/${this.mode}`);
-    if (this.theme) this.editor.setTheme(`ace/theme/${this.theme}`);
-    this.editor.setFontSize(this.fontSize);
-    this.editor
-      .getSession()
-      .setValue(this.editorValue, this.cursorStart);
-
-    if (this.plugins.length > 0) {
-      for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-        switch (this.plugins[idx]) {
-          case 'lock':
-            this.affectPreserved();
-            break;
-          case 'blank':
-            this.affectBlank();
-            break;
-          default:
-        }
-      }
-      this.editor.getSession().selection.on('changeCursor', this.showLock);
-    }
-
-    if (this.navigateToFileEnd) {
-      this.editor.navigateFileEnd();
-    }
-    this.editor.renderer.setShowGutter(this.showGutter);
-    this.editor.getSession().setUseWrapMode(this.wrapEnabled);
-    this.editor.getSession().setUseSoftTabs(false); // 禁空格转为tab
-    this.editor.setShowPrintMargin(this.showPrintMargin);
-    // const events = ['focus', 'blur', 'copy', 'paste', 'change', 'input'];
-    this.editor.on('focus', (...args) => this.$emit('focus', ...args, this.editor));
-    this.editor.on('blur', (...args) => this.$emit('blur', ...args, this.editor));
-    this.editor.on('copy', (...args) => this.$emit('copy', ...args, this.editor));
-    this.editor.on('paste', (event) => {
-      const reg = /\n小猴编程（(\d+)）/g;
-      let { text } = event;
-      if (reg.test(event.text)) {
-        if (RegExp.$1 === this.sid) {
-          text = event.text.replace(reg, '');
-        } else {
-          text = '';
-        }
-        // eslint-disable-next-line no-param-reassign
-        event.text = text;
-      }
-      this.$emit('paste', event, this.editor);
-    });
-
-    this.$el.addEventListener('copy', this.handleCopy);
-    this.$el.addEventListener('cut', this.handleCut);
-
-    if (this.debounceChangePeriod) {
-      this.editor.on('change', debounce(this.handleChange.bind(this), this.debounceChangePeriod));
-    } else {
-      this.editor.on('change', this.handleChange.bind(this));
-    }
-    this.editor.on('input', (...args) => {
-      this.$emit('input', ...args, this.editor);
-      if (this.placeholder) this.updatePlaceholder();
-    });
-
-    if (this.placeholder) {
-      this.updatePlaceholder(this.editor, this.placeholder);
-    }
-
-    this.editor
-      .getSession()
-      .selection.on('changeSelection', this.handleSelectionChange);
-    this.editor
-      .getSession()
-      .selection.on('changeCursor', this.handleCursorChange);
-    this.editor
-      .getSession()
-      .on('changeAnnotation', this.handleValidate);
-    this.editor
-      .session
-      .on('changeScrollTop', (...args) => this.$emit('scroll', ...args, this.editor));
-    this.editor
-      .getSession()
-      .setAnnotations(this.annotations || []);
-    if (this.markers && this.markers.length > 0) {
-      this.handleMarkers(this.markers);
-    }
-
-    const availableOptions = this.editor.$options;
-    for (let i = 0; i < editorOptions.length; i += 1) {
-      const option = editorOptions[i];
-      if (Object.prototype.hasOwnProperty.call(availableOptions, option)) {
-        this.editor.setOption(option, this[option]);
-      } else if (this[option]) {
-        /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-        console.warn(
-          `ace: editor option ${option} was activated but not found. Did you need to import a related tool or did you possibly mispell the option?`,
-        );
-      }
-    }
-    this.handleOptions(this.$props || {});
-
-    if (Array.isArray(this.commands)) {
-      this.commands.forEach((command) => {
-        if (typeof command.exec === 'string') {
-          this.editor.commands.bindKey(command.bindKey, command.exec);
-        } else {
-          this.editor.commands.addCommand(command);
-        }
-      });
-    }
-
-    if (this.keyboardHandler) {
-      this.editor.setKeyboardHandler(`ace/keyboard/${this.keyboardHandler}`);
-    }
-
-    this.$emit('load', this.editor);
-
-    this.editor.resize();
-    this.resize = debounce(this.editor.resize.bind(this.editor), 100, true);
-
-    if (this.focus) {
-      this.editor.focus();
-    }
-
-    // watch
-    for (let i = 0, len = editorOptions.length; i < len; i += 1) {
-      const option = editorOptions[i];
-      this.$watch(option, (newVal) => {
-        this.editor.setOption(option, newVal);
-      });
-    }
-
-    this.$watch('value', (newVal) => {
-      if (this.getValue() !== newVal) {
-        this.silent = true;
-        this.isVaryCurrValue = true;
-
-        this.editorValue = newVal;
-        if (this.currValue !== newVal) {
-          this.clearPlugins();
-          this.isReadOnly = false;
-          this.editor.setReadOnly(this.isReadOnly);
-          if (this.markup) {
-            this.parseMarkup();
-          } else if (this.removeMark) {
-            this.removeMarkup();
-          }
-        }
-
-        const pos = this.editor.session.selection.toJSON();
-        this.editor.setValue(this.editorValue, this.cursorStart);
-        this.editor.session.selection.fromJSON(pos);
-
-        if (this.currValue !== newVal && this.markup) {
-          if (this.plugins.length > 0) {
-            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-              switch (this.plugins[idx]) {
-                case 'lock':
-                  this.affectPreserved();
-                  break;
-                case 'blank':
-                  this.affectBlank();
-                  break;
-                default:
-              }
-            }
-          }
-          this.editor.getSession().selection.on('changeCursor', this.showLock);
-        }
-
-        this.silent = false;
-      }
-    });
-
-    this.$watch('placeholder', () => this.updatePlaceholder());
-
-    this.$watch('mode', (newVal) => {
-      this.editor.getSession().setMode(`ace/mode/${newVal}`);
-    });
-
-    this.$watch('theme', (newVal) => {
-      this.editor.setTheme(`ace/theme/${newVal}`);
-    });
-
-    this.$watch('keyboardHandler', (newVal) => {
-      const keyboardHandler = newVal
-        ? `ace/keyboard/${newVal}`
-        : null;
-
-      this.editor.setKeyboardHandler(keyboardHandler);
-    });
-
-    this.$watch('fontSize', (newVal) => {
-      this.editor.setFontSize(newVal);
-    });
-
-    this.$watch('wrapEnabled', (newVal) => {
-      this.editor.getSession().setUseWrapMode(newVal);
-    });
-
-    this.$watch('showPrintMargin', (newVal) => {
-      this.editor.setShowPrintMargin(newVal);
-    });
-
-    this.$watch('showGutter', (newVal) => {
-      this.editor.renderer.setShowGutter(newVal);
-    });
-
-    this.$watch('annotations', (annotations) => {
-      this.editor.getSession().setAnnotations(annotations || []);
-    });
-
-    this.$watch('markers', (markers) => {
-      this.handleMarkers(markers);
-    });
-
-    this.$watch('height', () => this.editor.resize());
-    this.$watch('width', () => this.editor.resize());
-    this.$watch('focus', () => this.editor.focus());
-
-    this.$watch('markup', this.watchMarkup);
-
-    this.$watch('removeMark', (newVal) => {
-      // if (this.getValue() !== newVal) {
-      this.silent = true;
-      this.isVaryCurrValue = true;
-
-      this.editorValue = this.value;
-      // if (this.currValue !== newVal) {
-      this.clearPlugins();
-      this.isReadOnly = false;
-      this.editor.setReadOnly(this.isReadOnly);
-      if (this.markup && !newVal) {
-        this.parseMarkup();
-      } else if (newVal) {
-        this.removeMarkup();
-      }
-
-      const pos = this.editor.session.selection.toJSON();
-      this.editor.setValue(this.editorValue, this.cursorStart);
-      this.editor.session.selection.fromJSON(pos);
-
-      if (!newVal && this.markup) {
-        if (this.plugins.length > 0) {
-          for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-            switch (this.plugins[idx]) {
-              case 'lock':
-                this.affectPreserved();
-                break;
-              case 'blank':
-                this.affectBlank();
-                break;
-              default:
-            }
-          }
-        }
-        this.editor.getSession().selection.on('changeCursor', this.showLock);
-      }
-
-      this.silent = false;
-    });
-  },
-
-  methods: {
-    parseMarkup() {
-      if (this.markup) {
-        // 某些插件在功能上可能是相互冲突的，此处对此做处理
-        this.beforeParse();
-
-        // xiaohou-hide
-        this.parseHide();
-
-        // xiaohou-blank or xiaohou-lock
-        this.parseLock();
-        this.parseBlank();
-      } else if (this.removeMark) { // 过滤掉所有的 xiaohou 标签
-        this.removeMarkup();
-      }
-    },
-    watchMarkup(newVal) {
-      if (newVal) {
-        this.clearPlugins();
-        this.editorValue = this.getEditorValue();
-        this.parseMarkup();
-        this.editor.setValue(this.editorValue, this.cursorStart);
-        setTimeout(() => {
-          if (this.plugins.length > 0) {
-            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-              switch (this.plugins[idx]) {
-                case 'lock':
-                  this.affectPreserved();
-                  break;
-                case 'blank':
-                  this.affectBlank();
-                  break;
-                default:
-              }
-            }
-            this.editor.getSession().selection.on('changeCursor', this.showLock);
-          }
-        });
-      } else {
-        this.editor.setValue(this.getValue(true), this.cursorStart);
-        this.clearPlugins();
-
-        setTimeout(() => {
-          this.isReadOnly = false;
-          this.editor.setReadOnly(this.isReadOnly);
-        }, 0);
-      }
-    },
-    addMarkup() {
-      this.editorValue = this.value;
-    },
-    removeMarkup() {
-      this.editorValue = (this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '')).trim();
-    },
-    // content 整段文本
-    // splitCode 分隔字段
-    // mode 换行模式，分隔字段前添加 before,分隔字段后添加 after
-    wrapParse(content, splitCode, mode) {
-      const arr = content.split(splitCode);
-      if (arr) {
-        const len = arr.length;
-        const regBefore = new RegExp(/[\f\n\r]$/);
-        const regAfter = new RegExp(/^[\f\n\r]/);
-        if (mode === 'before') {
-          arr.forEach((item, index) => {
-            if (index === 0) {
-              if (arr[0].match(/^\s+$/)) {
-                arr[0] = '';
-              }
-            } else if (arr[index - 1] && !arr[index - 1].match(regBefore)) {
-              arr[index - 1] += '\n';
-            }
-          });
-        }
-        if (mode === 'after') {
-          arr.forEach((item, index) => {
-            if (index === len - 1) {
-              if (arr[len - 1].match(/^\s+$/)) {
-                arr[len - 1] = '';
-              }
-            } else if (arr[index + 1] && !arr[index + 1].match(regAfter)) {
-              arr[index + 1] = `\n${arr[index + 1]}`;
-            }
-          });
-        }
-        return arr.join(splitCode);
-      }
-      return content;
-    },
-    // blank lock 同时存在时，处理blank,删掉 lock
-    // hide , lock 只存在于首尾，中间位置的为非法格式，处理掉
-    beforeParse() {
-      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
-        this.editorValue = this.editorValue.replace(/<\/?xiaohou-lock>/igm, '');
-      }
-      // this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
-      // this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
-      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-lock>', 'before');
-      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-lock>', 'after');
-    },
-    // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
-    parseHide() {
-      const args = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
-      const len = args.length;
-      const fragment0 = args[0];
-      const fragment1 = len > 1 ? args[len - 1] : undefined;
-      if (fragment0 || fragment1) {
-        if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
-          this.endCode = fragment0;
-        } else {
-          this.startCode = fragment0 || '';
-          this.endCode = fragment1 || '';
-        }
-        this.editorValue = this.editorValue.replace(this.startCode, '');
-        this.editorValue = this.editorValue.replace(this.endCode, '');
-        this.plugins.push('hide');
-      }
-    },
-    parseBlank() {
-      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
-        this.blanks = this.editorValue.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
-        this.blankGaps = this.editorValue.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
-        this.plugins.push('blank');
-      }
-    },
-    parseLock() {
-      if (this.editorValue.indexOf('<xiaohou-lock>') > -1) {
-        this.preserveds = this.editorValue.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
-        this.preservedGaps = this.editorValue.split(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
-        this.plugins.push('lock');
-      }
-    },
-
-    affectBlank() {
-      this.blankAnchors = this.produceAnchors('blank');
-      this.editor.gotoLine(
-        this.blankAnchors[0].start.row + 1,
-        this.blankAnchors[0].start.column + 1,
-      );
-
-      this.editor.getSession().selection.on('changeCursor', this.protectExternal);
-    },
-    affectPreserved() {
-      this.preservedAnchors = this.produceAnchors('preserved');
-
-      this.editor.gotoLine(0);
-
-      this.editor.getSession().selection.on('changeCursor', this.protectInternal);
-    },
-    produceAnchors(type) {
-      const ranges = this[`${type}s`].map(item => this.editor.find(item));
-      ranges.sort((a, b) => {
-        const arow = a.start.row;
-        const brow = b.start.row;
-        const acolumn = a.start.column;
-        const bcolumn = b.start.column;
-        if (arow > brow || (arow === brow && acolumn > bcolumn)) {
-          return 1;
-        }
-        return -1;
-      });
-      let rate = 0;
-      return ranges.map((item, index) => {
-        let range;
-        if (index > 0 && item.start.row === ranges[index - 1].start.row) {
-          rate += 1;
-        } else {
-          rate = 0;
-        }
-        if (item.start.row === item.end.row) {
-          range = new Range(
-            item.start.row,
-            item.start.column - rate * 29,
-            item.end.row,
-            item.end.column - (rate + 1) * 29,
-          );
-        } else {
-          range = new Range(
-            item.start.row,
-            item.start.column - rate * 29,
-            item.end.row,
-            item.end.column - 15,
-          );
-        }
-
-        this.editor.getSession().addMarker(range, `${type}-highlight`);
-
-        let tempStr = '';
-        switch (type) {
-          case 'preserved':
-            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/img, '');
-            break;
-          case 'blank':
-            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/img, ' ');
-            break;
-          default:
-        }
-        if (item.start.row === item.end.row) {
-          this.editor.getSession().replace(
-            new Range(
-              item.start.row,
-              item.start.column - rate * 29,
-              item.end.row,
-              item.end.column - rate * 29,
-            ),
-            tempStr,
-          );
-        } else {
-          this.editor.getSession().replace(
-            new Range(
-              item.start.row,
-              item.start.column - rate * 29,
-              item.end.row,
-              item.end.column,
-            ),
-            tempStr,
-          );
-        }
-        range.start = this.editor.getSession().doc.createAnchor(range.start);
-        range.end = this.editor.getSession().doc.createAnchor(range.end);
-        range.end.$insertRight = true;
-        return range;
-      });
-    },
-    clearAnchors(type) {
-      const markers = this.editor.getSession().getMarkers();
-      Object.keys(markers).forEach((id) => {
-        if (markers[id].clazz === `${type}-highlight`) {
-          this.editor.getSession().removeMarker(id);
-        }
-      });
-
-      switch (type) {
-        case 'blank':
-          this.blanks = [];
-          this.blankGaps = [];
-          this.blankAnchors = [];
-          break;
-        case 'preserved':
-          this.preserveds = [];
-          this.preservedAnchors = [];
-          break;
-        default:
-      }
-    },
-    clearHide() {
-      this.startCode = '';
-      this.endCode = '';
-    },
-    clearPlugins() {
-      if (this.plugins.length > 0) {
-        for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
-          switch (this.plugins[idx]) {
-            case 'blank':
-              this.clearAnchors('blank');
-              this.editor.getSession().selection.off('changeCursor', this.protectExternal);
-              break;
-            case 'lock':
-              this.clearAnchors('preserved');
-              this.editor.getSession().selection.off('changeCursor', this.protectInternal);
-              break;
-            case 'hide':
-              this.clearHide();
-              break;
-            default:
-          }
-        }
-        this.editor.getSession().selection.off('changeCursor', this.showLock);
-      }
-      this.plugins = [];
-    },
-    protectInternal() {
-      setTimeout(() => {
-        const selection = this.editor.getSession().selection.getRange();
-        if (this.preservedAnchors.some((anchor) => {
-          if (
-            // 1.仅只读范围起点在选取范围中
-            ((anchor.start.row > selection.start.row
-            && anchor.start.row < selection.end.row)
-            || (anchor.start.row === selection.start.row
-            && anchor.start.column >= selection.start.column
-            && anchor.start.row === selection.end.row
-            && anchor.start.column < selection.end.column)
-            || (anchor.start.row === selection.start.row
-            && anchor.start.column >= selection.start.column
-            && anchor.start.row < selection.end.row)
-            || (anchor.start.row > selection.start.row
-            && anchor.start.row === selection.end.row
-            && anchor.start.column < selection.end.column))
-            // 2.仅只读范围终点在选取范围中
-            || ((anchor.end.row > selection.start.row
-            && anchor.end.row < selection.end.row)
-            || (anchor.end.row === selection.start.row
-            && anchor.end.column > selection.start.column
-            && anchor.end.row === selection.end.row
-            && anchor.end.column <= selection.end.column)
-            || (anchor.end.row === selection.start.row
-            && anchor.end.column > selection.start.column
-            && anchor.end.row < selection.end.row)
-            || (anchor.end.row > selection.start.row
-            && anchor.end.row === selection.end.row
-            && anchor.end.column <= selection.end.column))
-            // 3.只读范围涵盖选取范围
-            // 3.1.起止不在同一行
-            || (anchor.start.row < selection.start.row
-            && anchor.end.row > selection.end.row)
-            // 3.2.起在同一行 止可能在同一行
-            || (anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column
-            && (anchor.end.row > selection.end.row
-            || (anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column)))
-            // 3.3.止在同一行 起可能在同一行
-            || (anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column
-            && (anchor.start.row < selection.start.row
-            || (anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column)))
-          ) {
-            return true;
-          }
-          return false;
-        })) {
-          this.isReadOnly = true;
-        } else {
-          this.isReadOnly = false;
-        }
-        this.editor.setReadOnly(this.isReadOnly);
-      }, 0);
-    },
-    protectExternal() {
-      setTimeout(() => {
-        const selection = this.editor.getSession().selection.getRange();
-        if (this.blankAnchors.some((anchor) => {
-          if (
-            // 0.单行 选取在填空中
-            (anchor.start.row === anchor.end.row
-            && anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column
-            && anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column)
-            // 1.多行 选取填空中间某行
-            || (anchor.start.row < anchor.end.row
-            && anchor.start.row < selection.start.row
-            && anchor.end.row > selection.end.row)
-            // 2.起在第一行 止可能在填空中
-            || (anchor.start.row < anchor.end.row
-            && anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column
-            // 2.1.止在第一行
-            && ((anchor.start.row === selection.end.row
-            && anchor.start.column < selection.end.column)
-            // 2.2.止在中间行
-            || (anchor.start.row < selection.end.row
-            && anchor.end.row > selection.end.row)
-            // 2.3.止在最后一行
-            || (anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column)))
-            // 3.多行 止在最后一行 起可能在填空中
-            || (anchor.start.row < anchor.end.row
-            && anchor.end.row === selection.end.row
-            && anchor.end.column > selection.end.column
-            // 3.1.起在第一行
-            && ((anchor.start.row === selection.start.row
-            && anchor.start.column < selection.start.column)
-            // 3.2.起在中间行
-            || (anchor.start.row < selection.start.row
-            && anchor.end.row > selection.start.row)
-            // 3.3.起在最后一行
-            || (anchor.end.row === selection.start.row
-            && anchor.end.column > selection.start.column)))
-          ) {
-            return true;
-          }
-          return false;
-        })) {
-          this.isReadOnly = false;
-        } else {
-          this.isReadOnly = true;
-        }
-        this.editor.setReadOnly(this.isReadOnly);
-      }, 0);
-    },
-
-    protectBoundary(evt) {
-      // 边界保护
-      this.plugins.forEach((plugin) => {
-        switch (plugin) {
-          case 'blank':
-            this.protectBlankBoundary(evt);
-            break;
-          case 'lock':
-            this.protectPreservedBoundary(evt);
-            break;
-          default:
-        }
-      });
-
-      if (!this.isReadOnly) {
-        this.isVaryCurrValue = true;
-      }
-    },
-    protectBlankBoundary(evt) {
-      if (evt.keyCode === 13) {
-        evt.preventDefault();
-      }
-      // 开头禁backspace键 结尾禁del键
-      const selection = this.editor.getSession().selection.getRange();
-      if (this.blankAnchors.some((anchor) => {
-        if ((evt.keyCode === 46 // del键
-        && anchor.end.row === selection.start.row // 并且 挖空的最后一行 等于 选中区域的第一行
-        && anchor.end.column - 1 === selection.start.column // 并且 挖空的最后一行的倒数第二格 等于 选中区域的第一行的第一格
-        && selection.end.row === selection.start.row // 并且 选中区域只有一行
-        && selection.end.column === selection.start.column) // 并且 选中区域就一格
-        // 以上逻辑是代表 光标停在了 挖空的 倒数第二格，用户按了 del 键
-        || (evt.keyCode === 8 // backspace 键
-        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
-        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
-        && selection.end.row === selection.start.row // 并且 选中区域只有一行
-        && selection.end.column === selection.start.column)) { // 并且选中区域只有一格
-        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 backspace 键
-          return true;
-        }
-        return false;
-      })) {
-        this.isReadOnly = true;
-      }
-      if (this.blankAnchors.some((anchor) => {
-        if (evt.keyCode !== 8 && evt.keyCode !== 46 // 非 backspace 和 非 del 键
-        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
-        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
-        && selection.end.row === selection.start.row // 并且 选中区域只有一行
-        && selection.end.column === selection.start.column) { // 并且选中区域只有一格
-        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 非 backspace 和 非 del 键
-          return true;
-        }
-        return false;
-      })) {
-        this.isReadOnly = false;
-      }
-      this.editor.setReadOnly(this.isReadOnly);
-
-      this.showLock();
-    },
-    protectPreservedBoundary(evt) {
-      // 被锁定行的下一行开头禁backspace键 被锁定行的上一行结尾禁del键
-      const selection = this.editor.getSession().selection.getRange();
-      const startA = selection.start.row;
-      const endA = selection.end.row;
-      const len = this.editor.session.getLine(endA).length;
-      if (this.preservedAnchors.some((anchor) => {
-        const startB = anchor.start.row;
-        const endB = anchor.end.row;
-        if (Math.max(startA, startB) <= Math.min(endA, endB)) {
-          return true;
-        }
-        if (evt.keyCode === 8) {
-          if (Math.max(startA - 1, startB) <= Math.min(endA - 1, endB)
-              && selection.start.column === 0) {
-            return true;
-          }
-        }
-        if (evt.keyCode === 46) {
-          if (Math.max(startA + 1, startB) <= Math.min(endA + 1, endB)
-              && selection.end.column === len) {
-            return true;
-          }
-        }
-        return false;
-      })) {
-        this.isReadOnly = true;
-      } else {
-        this.isReadOnly = false;
-      }
-      this.editor.setReadOnly(this.isReadOnly);
-      this.showLock();
-    },
-
-    getEditorValue() {
-      return this.editor ? this.editor.getValue() : this.editorValue;
-    },
-
-    getExecValue() {
-      return this.getValue().replace(/<\/?xiaohou-\w*>/ig, '');
-    },
-
-    getValue(notJudge) {
-      if (this.isVaryCurrValue) {
-        this.currValue = this.splitCode(notJudge);
-        this.isVaryCurrValue = false;
-      }
-      const code = this.currValue;
-      return code;
-    },
-
-    splitCode(notJudge) {
-      let code = this.getEditorValue();
-
-      if (this.markup || notJudge) {
-        this.plugins.forEach((plugin) => {
-          switch (plugin) {
-            case 'lock':
-              code = this.splicePreserveds();
-              break;
-            case 'blank':
-              code = this.spliceBlanks();
-              break;
-            default:
-          }
-        });
-        // if (this.startCode && !code.match(/^[\n\f\r]/)) {
-        //   code = `\n${code}`;
-        // }
-        // if (this.endCode && !code.match(/[\n\f\r]$/)) {
-        //   code += '\n';
-        // }
-
-        code = `${this.startCode}${code}${this.endCode}`;
-      }
-
-      return code;
-    },
-    spliceBlanks() {
-      let code = '';
-
-      for (let i = 0, len = this.blankAnchors.length; i < len; i += 1) {
-        code = `${code}${this.blankGaps[2 * i]}<xiaohou-blank>${this.editor.getSession().doc.getTextRange(
-          new Range(
-            this.blankAnchors[i].start.row,
-            this.blankAnchors[i].start.column + 1,
-            this.blankAnchors[i].end.row,
-            this.blankAnchors[i].end.column - 1,
-          ),
-        )}</xiaohou-blank>`;
-
-        if (i === len - 1) {
-          code += this.blankGaps[2 * (i + 1)];
-        }
-      }
-
-      return code;
-    },
-    splicePreserveds() {
-      let code = '';
-
-      const start = {
-        row: 0,
-        column: 0,
-      };
-      for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
-        code = `${code}${this.editor.getSession().doc.getTextRange(
-          new Range(
-            start.row,
-            start.column,
-            this.preservedAnchors[i].start.row,
-            this.preservedAnchors[i].start.column,
-          ),
-        )}${this.preserveds[i]}`;
-
-        start.row = this.preservedAnchors[i].end.row;
-        start.column = this.preservedAnchors[i].end.column;
-
-        if (i === len - 1) {
-          const lastRow = this.editor.getSession().getLength() - 1;
-          const lastColumn = this.editor.getSession().getLine(lastRow).length;
-
-          code = `${code}${this.editor.getSession().doc.getTextRange(
-            new Range(
-              start.row,
-              start.column,
-              lastRow,
-              lastColumn,
-            ),
-          )}`;
-        }
-      }
-
-      return code;
-    },
-    checkMarkup() {
-      return this.markup && this.plugins.length !== 0;
-    },
-
-    showLock() {
-      this.isShowLock = true;
-      setTimeout(() => {
-        this.isShowLock = false;
-      }, 500);
-    },
-
-    insert(text, focus = true) {
-      if (this.isReadOnly || this.readOnly) {
-        return;
-      }
-
-      this.editor.insert(text);
-      this.isVaryCurrValue = true;
-      if (focus) this.editor.focus();
-    },
-
-    insertAndSelect(txt, pos = '', focus = true) {
-      const { start } = this.editor.getSelection().getRange();
-      const currLine = this.editor.getSession().getDocument().getLine(start.row);
-      const m = currLine.match(/^\s*\t*/);
-
-      let text = txt;
-      // 如果当前行存在缩进，则在要插入的代码第二行及之后都加上缩进
-      if (m) {
-        const indent = m[0];
-        text = text.replace(/^/gm, (match, p) => {
-          if (p > 0) return `${indent}${match}`;
-          return match;
-        });
-      }
-      if (pos) {
-        const posArr = pos
-          .split(/,|，/)
-          .map(v => parseInt(v, 10));
-
-        this.insert(text, focus);
-        const p1 = posArr[0] - 1 || 0;
-        const r = start.row + p1;
-        let c = (
-          posArr[0] > 1
-            ? (posArr[1] || 0)
-            : (posArr[1] || 0) + start.column
-        );
-        // 如果存在缩进&&要选中的是第二行及之后，则加上缩进的位移
-        if (
-          m
-          && p1 > 0
-        ) {
-          c += m[0].length;
-        }
-
-        this.select(
-          r,
-          c,
-          posArr[2],
-          focus,
-        );
-        return;
-      }
-
-      this.insert(text, focus);
-    },
-
-    select(
-      row,
-      col,
-      length,
-      focus = true,
-    ) {
-      this.editor.navigateTo(row, col);
-      if (length) this.editor.getSelection().selectTo(row, col + length);
-      if (focus) this.editor.focus();
-    },
-
-    handleChange(event) {
-      if (!this.silent) {
-        this.$emit('change', this.getEditorValue(), event, this.editor);
-      }
-    },
-
-    handleScrollMargins(margins = [0, 0, 0, 0]) {
-      this.editor.renderer.setScrollMargins(
-        margins[0],
-        margins[1],
-        margins[2],
-        margins[3],
-      );
-    },
-
-    handleSelectionChange(event) {
-      const value = this.editor.getSelection();
-      if (this.preventPasteOther) {
-        this.selectedText = this.editor.getSelectedText() || this.selectedText;
-      }
-
-      this.$emit('selection-change', value, event);
-    },
-
-    handleCursorChange(event) {
-      const value = this.editor.getSelection();
-      this.$emit('cursor-change', value, event);
-    },
-
-    handleValidate() {
-      const annotations = this.editor.getSession().getAnnotations();
-      this.$emit('validate', annotations);
-    },
-
-    handleOptions(props) {
-      const setOptions = Object.keys(props.setOptions);
-      for (let y = 0; y < setOptions.length; y += 1) {
-        this.editor.setOption(setOptions[y], props.setOptions[setOptions[y]]);
-      }
-    },
-
-    handleMarkers(markers) {
-      // remove foreground markers
-      let currentMarkers = this.editor.getSession().getMarkers(true);
-      Object.keys(currentMarkers)
-        .forEach((i) => {
-          this.editor.getSession().removeMarker(currentMarkers[i].id);
-        });
-
-      currentMarkers = this.editor.getSession().getMarkers(false);
-      Object.keys(currentMarkers)
-        .forEach((i) => {
-          const { clazz } = currentMarkers[i];
-          if (
-            clazz !== 'ace_active-line'
-            && clazz !== 'ace_selected-word'
-            && clazz !== 'preserved-highlight'
-            && clazz !== 'blank-highlight'
-          ) {
-            this.editor.getSession().removeMarker(currentMarkers[i].id);
-          }
-        });
-
-      markers.forEach(
-        ({
-          startRow,
-          startCol,
-          endRow,
-          endCol,
-          className,
-          type,
-          inFront = false,
-        }) => {
-          const range = new Range(startRow, startCol, endRow, endCol);
-          this.editor.getSession().addMarker(range, className, type, inFront);
-        },
-      );
-    },
-
-    updatePlaceholder() {
-      const { editor } = this;
-      const { placeholder } = this;
-
-      const showPlaceholder = !editor.session.getValue().length;
-      let node = editor.renderer.placeholderNode;
-      if (!showPlaceholder && node) {
-        editor.renderer.scroller.removeChild(editor.renderer.placeholderNode);
-        editor.renderer.placeholderNode = null;
-      } else if (showPlaceholder && !node) {
-        node = document.createElement('div');
-        editor.renderer.placeholderNode = node;
-        node.textContent = placeholder || '';
-        node.className = 'ace_comment ace_placeholder';
-        node.style.padding = '0 9px';
-        node.style.position = 'absolute';
-        node.style.zIndex = '3';
-        editor.renderer.scroller.appendChild(node);
-      } else if (showPlaceholder && node) {
-        node.textContent = placeholder;
-      }
-    },
-
-    resize() {
-      this.editor.resize();
-    },
-
-    handleCopy(event) {
-      if (!this.preventPasteOther) return;
-      event.clipboardData.setData(
-        'text/plain',
-        `${this.editor.getCopyText()}${this.copyrightText}`,
-      );
-      event.preventDefault();
-    },
-
-    handleCut(event) {
-      if (!this.preventPasteOther) return;
-      event.clipboardData.setData(
-        'text/plain',
-        `${this.selectedText}${this.copyrightText}`,
-      );
-      event.preventDefault();
-    },
-
-    genSid() {
-      this.sid = Math.random().toString().slice(2);
-    },
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener('copy', this.handleCopy);
-    this.$el.removeEventListener('cut', this.handleCut);
-  },
-
-  destroyed() {
-    this.editor.destroy();
-    this.editor = null;
-  },
-});
-
-// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=script&lang=js&
- /* harmony default export */ var package_XVueAcevue_type_script_lang_js_ = (XVueAcevue_type_script_lang_js_); 
-// EXTERNAL MODULE: ./package/XVueAce.vue?vue&type=style&index=0&lang=less&
-var XVueAcevue_type_style_index_0_lang_less_ = __webpack_require__("5ec1");
-
-// CONCATENATED MODULE: ./node_modules/_vue-loader@15.9.2@vue-loader/lib/runtime/componentNormalizer.js
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () {
-        injectStyles.call(
-          this,
-          (options.functional ? this.parent : this).$root.$options.shadowRoot
-        )
-      }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functional component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-// CONCATENATED MODULE: ./package/XVueAce.vue
-
-
-
-
-
-
-/* normalize component */
-
-var component = normalizeComponent(
-  package_XVueAcevue_type_script_lang_js_,
-  render,
-  staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var XVueAce = (component.exports);
-// CONCATENATED MODULE: ./package/index.js
-
-
-/* harmony default export */ var package_0 = (XVueAce);
-
-// CONCATENATED MODULE: ./node_modules/_@vue_cli-service@3.12.1@@vue/cli-service/lib/commands/build/entry-lib.js
-
-
-/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (package_0);
-
-
-
-/***/ }),
-
-/***/ "5454":
-/***/ (function(module, exports) {
-
-module.exports = function escape(url) {
-    if (typeof url !== 'string') {
-        return url
-    }
-    // If url is already wrapped in quotes, remove them
-    if (/^['"].*['"]$/.test(url)) {
-        url = url.slice(1, -1);
-    }
-    // Should url be wrapped?
-    // See https://drafts.csswg.org/css-values-3/#urls
-    if (/["'() \t\n]/.test(url)) {
-        return '"' + url.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"'
-    }
-
-    return url
-}
-
-
-/***/ }),
-
-/***/ "5ec1":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var _node_modules_vue_style_loader_4_1_2_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_1_0_1_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_15_9_2_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_4_1_0_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_2_0_1_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_15_9_2_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a7a7");
-/* harmony import */ var _node_modules_vue_style_loader_4_1_2_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_1_0_1_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_15_9_2_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_4_1_0_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_2_0_1_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_15_9_2_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_4_1_2_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_1_0_1_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_15_9_2_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_4_1_0_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_2_0_1_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_15_9_2_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__);
-/* unused harmony reexport * */
- /* unused harmony default export */ var _unused_webpack_default_export = (_node_modules_vue_style_loader_4_1_2_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_1_0_1_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_15_9_2_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_3_0_0_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_4_1_0_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_2_0_1_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_15_9_2_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "690e":
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-
-/***/ "7bba":
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,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"
-
-/***/ }),
-
-/***/ "85cb":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "default", function() { return /* binding */ addStylesClient; });
-
-// CONCATENATED MODULE: ./node_modules/_vue-style-loader@4.1.2@vue-style-loader/lib/listToStyles.js
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
-}
-
-// CONCATENATED MODULE: ./node_modules/_vue-style-loader@4.1.2@vue-style-loader/lib/addStylesClient.js
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-function addStylesClient (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-
-/***/ "8d9d":
+/***/ "061c":
 /***/ (function(module, exports, __webpack_require__) {
 
 /* ***** BEGIN LICENSE BLOCK *****
@@ -6180,7 +4279,7 @@ init(true);function init(packaged) {
     if (!global || !global.document)
         return;
     
-    options.packaged = packaged || acequire.packaged || module.packaged || (global.define && __webpack_require__("a07e").packaged);
+    options.packaged = packaged || acequire.packaged || module.packaged || (global.define && __webpack_require__("07d6").packaged);
 
     var scriptOptions = {};
     var scriptUrl = "";
@@ -22207,7 +20306,7 @@ exports.config = acequire("./config");
 exports.acequire = acequire;
 
 if (true)
-    exports.define = __webpack_require__("a07e");
+    exports.define = __webpack_require__("07d6");
 exports.edit = function(el) {
     if (typeof el == "string") {
         var _id = el;
@@ -22275,11 +20374,21 @@ module.exports = window.ace.acequire("ace/ace");
 
 /***/ }),
 
-/***/ "963e":
+/***/ "07d6":
+/***/ (function(module, exports) {
+
+module.exports = function() {
+	throw new Error("define cannot be used indirect");
+};
+
+
+/***/ }),
+
+/***/ "2165":
 /***/ (function(module, exports, __webpack_require__) {
 
-var escape = __webpack_require__("5454");
-exports = module.exports = __webpack_require__("690e")(false);
+var escape = __webpack_require__("b041");
+exports = module.exports = __webpack_require__("2350")(false);
 // imports
 
 
@@ -22291,32 +20400,409 @@ exports.push([module.i, ".fade-enter-active,.fade-leave-active{-webkit-transitio
 
 /***/ }),
 
-/***/ "a07e":
+/***/ "2350":
 /***/ (function(module, exports) {
 
-module.exports = function() {
-	throw new Error("define cannot be used indirect");
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
 };
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
 
 
 /***/ }),
 
-/***/ "a7a7":
+/***/ "499e":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+// CONCATENATED MODULE: ./node_modules/vue-style-loader/lib/listToStyles.js
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+// CONCATENATED MODULE: ./node_modules/vue-style-loader/lib/addStylesClient.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return addStylesClient; });
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+function addStylesClient (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+
+/***/ "5ec1":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a691");
+/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony reexport * */
+ /* unused harmony default export */ var _unused_webpack_default_export = (_node_modules_vue_style_loader_index_js_ref_10_oneOf_1_0_node_modules_css_loader_index_js_ref_10_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_10_oneOf_1_3_node_modules_less_loader_dist_cjs_js_ref_10_oneOf_1_4_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_XVueAce_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "7bba":
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+
+/***/ "a691":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__("963e");
+var content = __webpack_require__("2165");
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var add = __webpack_require__("85cb").default
-var update = add("005fc498", content, true, {"sourceMap":false,"shadowMode":false});
+var add = __webpack_require__("499e").default
+var update = add("8fbae342", content, true, {"sourceMap":false,"shadowMode":false});
 
 /***/ }),
 
-/***/ "e67d":
+/***/ "b041":
+/***/ (function(module, exports) {
+
+module.exports = function escape(url) {
+    if (typeof url !== 'string') {
+        return url
+    }
+    // If url is already wrapped in quotes, remove them
+    if (/^['"].*['"]$/.test(url)) {
+        url = url.slice(1, -1);
+    }
+    // Should url be wrapped?
+    // See https://drafts.csswg.org/css-values-3/#urls
+    if (/["'() \t\n]/.test(url)) {
+        return '"' + url.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"'
+    }
+
+    return url
+}
+
+
+/***/ }),
+
+/***/ "f6fd":
 /***/ (function(module, exports) {
 
 // document.currentScript polyfill by Adam Miller
@@ -22355,6 +20841,1512 @@ var update = add("005fc498", content, true, {"sourceMap":false,"shadowMode":fals
     });
   }
 })(document);
+
+
+/***/ }),
+
+/***/ "fb15":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+// CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
+// This file is imported into lib/wc client bundles.
+
+if (typeof window !== 'undefined') {
+  if (true) {
+    __webpack_require__("f6fd")
+  }
+
+  var setPublicPath_i
+  if ((setPublicPath_i = window.document.currentScript) && (setPublicPath_i = setPublicPath_i.src.match(/(.+\/)[^/]+\.js(\?.*)?$/))) {
+    __webpack_require__.p = setPublicPath_i[1] // eslint-disable-line
+  }
+}
+
+// Indicate to webpack that this file can be concatenated
+/* harmony default export */ var setPublicPath = (null);
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"45c9bcad-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=template&id=e8eac086&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"!keydown":function($event){return _vm.protectBoundary($event)}}},[_c('div',{ref:"refEditor",staticClass:"element-editor"}),_c('transition',{attrs:{"name":"fade"}},[_c('i',{directives:[{name:"show",rawName:"v-show",value:(_vm.isReadOnly && _vm.isShowLock),expression:"isReadOnly && isShowLock"}],staticClass:"element-lock"})])],1)}
+var staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=template&id=e8eac086&
+
+// EXTERNAL MODULE: ./node_modules/brace/index.js
+var brace = __webpack_require__("061c");
+
+// CONCATENATED MODULE: ./package/editor-options.js
+const editorOptions = [
+  'minLines',
+  'maxLines',
+  'readOnly',
+  'highlightActiveLine',
+  'tabSize',
+  'enableBasicAutocompletion',
+  'enableLiveAutocompletion',
+  'enableSnippets',
+];
+
+const editorEvents = [
+  'change',
+  'focus',
+  'input',
+  'blur',
+  'copy',
+  'paste',
+  'selection-change',
+  'cursor-change',
+  'scroll',
+  'handle-options',
+];
+
+/**
+ * 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行
+ *
+ * @param  {function} func        回调函数
+ * @param  {number}   wait        表示时间窗口的间隔
+ * @param  {boolean}  immediate   设置为ture时，是否立即调用函数
+ * @return {function}             返回客户调用函数
+ */
+function debounce(func, wait = 0, immediate = true) {
+  let timer;
+  let context;
+  let args;
+
+  // 延迟执行函数
+  const later = () => setTimeout(() => {
+    // 延迟函数执行完毕，清空缓存的定时器序号
+    timer = null;
+    // 延迟执行的情况下，函数会在延迟函数中执行
+    // 使用到之前缓存的参数和上下文
+    if (!immediate) {
+      func.apply(context, args);
+      context = null;
+      args = null;
+    }
+  }, wait);
+
+  // 这里返回的函数是每次实际调用的函数
+  return function fn(...params) {
+    // 如果没有创建延迟执行函数（later），就创建一个
+    if (!timer) {
+      timer = later();
+      // 如果是立即执行，调用函数
+      // 否则缓存参数和调用上下文
+      if (immediate) {
+        func.apply(this, params);
+      } else {
+        context = this;
+        args = params;
+      }
+    // 如果已有延迟执行函数（later），调用的时候清除原来的并重新设定一个
+    // 这样做延迟函数会重新计时
+    } else {
+      clearTimeout(timer);
+      timer = later();
+    }
+  };
+}
+
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./package/XVueAce.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+const { Range } = brace["acequire"]('ace/range');
+
+/* harmony default export */ var XVueAcevue_type_script_lang_js_ = ({
+  props: {
+    mode: {
+      type: String,
+      default: '',
+    },
+    focus: {
+      type: Boolean,
+      default: false,
+    },
+    theme: {
+      type: String,
+      default: '',
+    },
+    width: {
+      type: String,
+      default: '600px',
+    },
+    height: {
+      type: String,
+      default: '500px',
+    },
+    fontSize: {
+      type: [Number, String],
+      default: 12,
+    },
+    showGutter: {
+      type: Boolean,
+      default: true,
+    },
+    value: {
+      type: String,
+      default: '',
+    },
+    // defaultValue: PropTypes.string,
+    minLines: {
+      type: Number,
+      default: null,
+    },
+    maxLines: {
+      type: Number,
+      default: null,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    markup: {
+      type: Boolean,
+      default: true,
+    },
+    removeMark: {
+      type: Boolean,
+      default: false,
+    },
+    highlightActiveLine: {
+      type: Boolean,
+      default: true,
+    },
+    tabSize: {
+      type: Number,
+      default: 4,
+    },
+    showPrintMargin: {
+      type: Boolean,
+      default: false,
+    },
+    cursorStart: {
+      type: Number,
+      default: 1,
+    },
+    debounceChangePeriod: {
+      type: Number,
+    },
+    editorProps: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+    setOptions: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+    scrollMargin: {
+      type: Array,
+      default() {
+        return [0, 0, 0, 0];
+      },
+    },
+    annotations: {
+      type: Array,
+    },
+    markers: {
+      type: Array,
+    },
+    keyboardHandler: {
+      type: String,
+    },
+    wrapEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    enableBasicAutocompletion: {
+      type: [Array, Boolean],
+      default: false,
+    },
+    enableLiveAutocompletion: {
+      type: [Array, Boolean],
+      default: false,
+    },
+    navigateToFileEnd: {
+      type: Boolean,
+      default: false,
+    },
+    commands: {
+      type: Array,
+    },
+    placeholder: {
+      type: String,
+      default: '',
+    },
+    preventPasteOther: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    copyrightText() {
+      return `\n小猴编程（${this.sid}）`;
+    },
+
+    isReadOnly: {
+      get() {
+        return this.readOnly || this.lisReadOnly;
+      },
+      set(newValue) {
+        this.lisReadOnly = newValue;
+      },
+    },
+  },
+
+  data() {
+    return {
+      sid: '',
+      currValue: '', // 当前全量代码
+      editorValue: '', // 文本 编辑器代码
+      execValue: '', // 计算代码
+
+      plugins: [], // 插件
+      isVaryCurrValue: true, // 是否变更过当前全量代码
+      startCode: '', // 开头隐藏代码
+      endCode: '', // 结尾隐藏代码
+      blanks: [], // 空白处初始内容
+      blankGaps: [], // 空白与空白之间内容
+      blankAnchors: [], // 空白范围
+      preserveds: [], // 只读处初始内容
+      preservedAnchors: [], // 只读范围
+      lisReadOnly: false, // 编辑器是否只读
+      isShowLock: false, // 是否展示锁 🔒
+    };
+  },
+
+  mounted() {
+    this.editorValue = this.value;
+    this.parseMarkup();
+
+    this.editor = brace["edit"](this.$refs.refEditor);
+    this.genSid();
+
+    if (this.preventPasteOther) this.selectedText = this.editor.getSelectedText();
+
+    this.$emit('before-load', brace);
+
+    this.editor.$blockScrolling = Infinity;
+
+    const editorProps = Object.keys(this.editorProps);
+    for (let i = 0; i < editorProps.length; i += 1) {
+      this.editor[editorProps[i]] = this.editorProps[editorProps[i]];
+    }
+    this.editor.renderer.setScrollMargin(
+      ...this.scrollMargin,
+    );
+    this.editor.getSession().setMode(`ace/mode/${this.mode}`);
+    if (this.theme) this.editor.setTheme(`ace/theme/${this.theme}`);
+    this.editor.setFontSize(this.fontSize);
+    this.editor
+      .getSession()
+      .setValue(this.editorValue, this.cursorStart);
+
+    if (this.plugins.length > 0) {
+      for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+        switch (this.plugins[idx]) {
+          case 'lock':
+            this.affectPreserved();
+            break;
+          case 'blank':
+            this.affectBlank();
+            break;
+          default:
+        }
+      }
+      this.editor.getSession().selection.on('changeCursor', this.showLock);
+    }
+
+    if (this.navigateToFileEnd) {
+      this.editor.navigateFileEnd();
+    }
+    this.editor.renderer.setShowGutter(this.showGutter);
+    this.editor.getSession().setUseWrapMode(this.wrapEnabled);
+    this.editor.getSession().setUseSoftTabs(false); // 禁空格转为tab
+    this.editor.setShowPrintMargin(this.showPrintMargin);
+    // const events = ['focus', 'blur', 'copy', 'paste', 'change', 'input'];
+    this.editor.on('focus', (...args) => this.$emit('focus', ...args, this.editor));
+    this.editor.on('blur', (...args) => this.$emit('blur', ...args, this.editor));
+    this.editor.on('copy', (...args) => this.$emit('copy', ...args, this.editor));
+    this.editor.on('paste', (event) => {
+      const reg = /\n小猴编程（(\d+)）/g;
+      let { text } = event;
+      if (reg.test(event.text)) {
+        if (RegExp.$1 === this.sid) {
+          text = event.text.replace(reg, '');
+        } else {
+          text = '';
+        }
+        // eslint-disable-next-line no-param-reassign
+        event.text = text;
+      }
+      this.$emit('paste', event, this.editor);
+    });
+
+    this.$el.addEventListener('copy', this.handleCopy);
+    this.$el.addEventListener('cut', this.handleCut);
+
+    if (this.debounceChangePeriod) {
+      this.editor.on('change', debounce(this.handleChange.bind(this), this.debounceChangePeriod));
+    } else {
+      this.editor.on('change', this.handleChange.bind(this));
+    }
+    this.editor.on('input', (...args) => {
+      this.$emit('input', ...args, this.editor);
+      if (this.placeholder) this.updatePlaceholder();
+    });
+
+    if (this.placeholder) {
+      this.updatePlaceholder(this.editor, this.placeholder);
+    }
+
+    this.editor
+      .getSession()
+      .selection.on('changeSelection', this.handleSelectionChange);
+    this.editor
+      .getSession()
+      .selection.on('changeCursor', this.handleCursorChange);
+    this.editor
+      .getSession()
+      .on('changeAnnotation', this.handleValidate);
+    this.editor
+      .session
+      .on('changeScrollTop', (...args) => this.$emit('scroll', ...args, this.editor));
+    this.editor
+      .getSession()
+      .setAnnotations(this.annotations || []);
+    if (this.markers && this.markers.length > 0) {
+      this.handleMarkers(this.markers);
+    }
+
+    const availableOptions = this.editor.$options;
+    for (let i = 0; i < editorOptions.length; i += 1) {
+      const option = editorOptions[i];
+      if (Object.prototype.hasOwnProperty.call(availableOptions, option)) {
+        this.editor.setOption(option, this[option]);
+      } else if (this[option]) {
+        /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+        console.warn(
+          `ace: editor option ${option} was activated but not found. Did you need to import a related tool or did you possibly mispell the option?`,
+        );
+      }
+    }
+    this.handleOptions(this.$props || {});
+
+    if (Array.isArray(this.commands)) {
+      this.commands.forEach((command) => {
+        if (typeof command.exec === 'string') {
+          this.editor.commands.bindKey(command.bindKey, command.exec);
+        } else {
+          this.editor.commands.addCommand(command);
+        }
+      });
+    }
+
+    if (this.keyboardHandler) {
+      this.editor.setKeyboardHandler(`ace/keyboard/${this.keyboardHandler}`);
+    }
+
+    this.$emit('load', this.editor);
+
+    this.editor.resize();
+    this.resize = debounce(this.editor.resize.bind(this.editor), 100, true);
+
+    if (this.focus) {
+      this.editor.focus();
+    }
+
+    // watch
+    for (let i = 0, len = editorOptions.length; i < len; i += 1) {
+      const option = editorOptions[i];
+      this.$watch(option, (newVal) => {
+        this.editor.setOption(option, newVal);
+      });
+    }
+
+    this.$watch('value', (newVal) => {
+      if (this.getValue() !== newVal) {
+        this.editor.navigateFileStart();
+        this.silent = true;
+        this.isVaryCurrValue = true;
+
+        this.editorValue = newVal;
+        if (this.currValue !== newVal) {
+          this.clearPlugins();
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
+          if (this.markup) {
+            this.parseMarkup();
+          } else if (this.removeMark) {
+            this.removeMarkup();
+          }
+        }
+
+        const pos = this.editor.session.selection.toJSON();
+        this.editor.setValue(this.editorValue, this.cursorStart);
+        this.editor.session.selection.fromJSON(pos);
+
+        if (this.currValue !== newVal && this.markup) {
+          if (this.plugins.length > 0) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+              switch (this.plugins[idx]) {
+                case 'lock':
+                  this.affectPreserved();
+                  break;
+                case 'blank':
+                  this.affectBlank();
+                  break;
+                default:
+              }
+            }
+          }
+          this.editor.getSession().selection.on('changeCursor', this.showLock);
+        }
+
+        this.silent = false;
+      }
+    });
+
+    this.$watch('placeholder', () => this.updatePlaceholder());
+
+    this.$watch('mode', (newVal) => {
+      this.editor.getSession().setMode(`ace/mode/${newVal}`);
+    });
+
+    this.$watch('theme', (newVal) => {
+      this.editor.setTheme(`ace/theme/${newVal}`);
+    });
+
+    this.$watch('keyboardHandler', (newVal) => {
+      const keyboardHandler = newVal
+        ? `ace/keyboard/${newVal}`
+        : null;
+
+      this.editor.setKeyboardHandler(keyboardHandler);
+    });
+
+    this.$watch('fontSize', (newVal) => {
+      this.editor.setFontSize(newVal);
+    });
+
+    this.$watch('wrapEnabled', (newVal) => {
+      this.editor.getSession().setUseWrapMode(newVal);
+    });
+
+    this.$watch('showPrintMargin', (newVal) => {
+      this.editor.setShowPrintMargin(newVal);
+    });
+
+    this.$watch('showGutter', (newVal) => {
+      this.editor.renderer.setShowGutter(newVal);
+    });
+
+    this.$watch('annotations', (annotations) => {
+      this.editor.getSession().setAnnotations(annotations || []);
+    });
+
+    this.$watch('markers', (markers) => {
+      this.handleMarkers(markers);
+    });
+
+    this.$watch('height', () => this.editor.resize());
+    this.$watch('width', () => this.editor.resize());
+    this.$watch('focus', () => this.editor.focus());
+
+    this.$watch('markup', this.watchMarkup);
+
+    this.$watch('removeMark', (newVal) => {
+      // if (this.getValue() !== newVal) {
+      this.silent = true;
+      this.isVaryCurrValue = true;
+
+      this.editorValue = this.value;
+      // if (this.currValue !== newVal) {
+      this.clearPlugins();
+      this.isReadOnly = false;
+      this.editor.setReadOnly(this.isReadOnly);
+      if (this.markup && !newVal) {
+        this.parseMarkup();
+      } else if (newVal) {
+        this.removeMarkup();
+      }
+
+      const pos = this.editor.session.selection.toJSON();
+      this.editor.setValue(this.editorValue, this.cursorStart);
+      this.editor.session.selection.fromJSON(pos);
+
+      if (!newVal && this.markup) {
+        if (this.plugins.length > 0) {
+          for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+            switch (this.plugins[idx]) {
+              case 'lock':
+                this.affectPreserved();
+                break;
+              case 'blank':
+                this.affectBlank();
+                break;
+              default:
+            }
+          }
+        }
+        this.editor.getSession().selection.on('changeCursor', this.showLock);
+      }
+
+      this.silent = false;
+    });
+  },
+
+  methods: {
+    parseMarkup() {
+      if (this.markup) {
+        // 某些插件在功能上可能是相互冲突的，此处对此做处理
+        this.beforeParse();
+
+        // xiaohou-hide
+        this.parseHide();
+
+        // xiaohou-blank or xiaohou-lock
+        this.parseLock();
+        this.parseBlank();
+      } else if (this.removeMark) { // 过滤掉所有的 xiaohou 标签
+        this.removeMarkup();
+      }
+    },
+    watchMarkup(newVal) {
+      if (newVal) {
+        this.clearPlugins();
+        this.editorValue = this.getEditorValue();
+        this.parseMarkup();
+        this.editor.setValue(this.editorValue, this.cursorStart);
+        setTimeout(() => {
+          if (this.plugins.length > 0) {
+            for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+              switch (this.plugins[idx]) {
+                case 'lock':
+                  this.affectPreserved();
+                  break;
+                case 'blank':
+                  this.affectBlank();
+                  break;
+                default:
+              }
+            }
+            this.editor.getSession().selection.on('changeCursor', this.showLock);
+          }
+        });
+      } else {
+        this.editor.setValue(this.getValue(true), this.cursorStart);
+        this.clearPlugins();
+
+        setTimeout(() => {
+          this.isReadOnly = false;
+          this.editor.setReadOnly(this.isReadOnly);
+        }, 0);
+      }
+    },
+    addMarkup() {
+      this.editorValue = this.value;
+    },
+    removeMarkup() {
+      this.editorValue = (this.editorValue.replace(/<\/?xiaohou-\w*>/igm, '')).trim();
+    },
+    // content 整段文本
+    // splitCode 分隔字段
+    // mode 换行模式，分隔字段前添加 before,分隔字段后添加 after
+    wrapParse(content, splitCode, mode) {
+      const arr = content.split(splitCode);
+      if (arr) {
+        const len = arr.length;
+        const regBefore = new RegExp(/[\f\n\r]$/);
+        const regAfter = new RegExp(/^[\f\n\r]/);
+        if (mode === 'before') {
+          arr.forEach((item, index) => {
+            if (index === 0) {
+              if (arr[0].match(/^\s+$/)) {
+                arr[0] = '';
+              }
+            } else if (arr[index - 1] && !arr[index - 1].match(regBefore)) {
+              arr[index - 1] += '\n';
+            }
+          });
+        }
+        if (mode === 'after') {
+          arr.forEach((item, index) => {
+            if (index === len - 1) {
+              if (arr[len - 1].match(/^\s+$/)) {
+                arr[len - 1] = '';
+              }
+            } else if (arr[index + 1] && !arr[index + 1].match(regAfter)) {
+              arr[index + 1] = `\n${arr[index + 1]}`;
+            }
+          });
+        }
+        return arr.join(splitCode);
+      }
+      return content;
+    },
+    // blank lock 同时存在时，处理blank,删掉 lock
+    // hide , lock 只存在于首尾，中间位置的为非法格式，处理掉
+    beforeParse() {
+      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
+        this.editorValue = this.editorValue.replace(/<\/?xiaohou-lock>/igm, '');
+      }
+      // this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-hide>', 'before');
+      // this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-hide>', 'after');
+      this.editorValue = this.wrapParse(this.editorValue, '<xiaohou-lock>', 'before');
+      this.editorValue = this.wrapParse(this.editorValue, '</xiaohou-lock>', 'after');
+    },
+    // 隐藏代码 -- 此处因需求只处理首尾代码隐藏需求
+    parseHide() {
+      const args = this.editorValue.match(/<xiaohou-hide>([^]+?)<\/xiaohou-hide>/igm) || [];
+      const len = args.length;
+      const fragment0 = args[0];
+      const fragment1 = len > 1 ? args[len - 1] : undefined;
+      if (fragment0 || fragment1) {
+        if (fragment0 && this.editorValue.indexOf(fragment0) !== 0 && !fragment1) {
+          this.endCode = fragment0;
+        } else {
+          this.startCode = fragment0 || '';
+          this.endCode = fragment1 || '';
+        }
+        this.editorValue = this.editorValue.replace(this.startCode, '');
+        this.editorValue = this.editorValue.replace(this.endCode, '');
+        this.plugins.push('hide');
+      }
+    },
+    parseBlank() {
+      if (this.editorValue.indexOf('<xiaohou-blank>') > -1) {
+        this.blanks = this.editorValue.match(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/igm) || [];
+        this.blankGaps = this.editorValue.split(/<xiaohou-blank>([^]*?)<\/xiaohou-blank>/im) || [];
+        this.plugins.push('blank');
+      }
+    },
+    parseLock() {
+      if (this.editorValue.indexOf('<xiaohou-lock>') > -1) {
+        this.preserveds = this.editorValue.match(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+        this.preservedGaps = this.editorValue.split(/<xiaohou-lock>([^]*?)<\/xiaohou-lock>/igm) || [];
+        this.plugins.push('lock');
+      }
+    },
+
+    affectBlank() {
+      this.blankAnchors = this.produceAnchors('blank');
+      this.editor.gotoLine(
+        this.blankAnchors[0].start.row + 1,
+        this.blankAnchors[0].start.column + 1,
+      );
+
+      this.editor.getSession().selection.on('changeCursor', this.protectExternal);
+    },
+    affectPreserved() {
+      this.preservedAnchors = this.produceAnchors('preserved');
+
+      this.editor.gotoLine(0);
+
+      this.editor.getSession().selection.on('changeCursor', this.protectInternal);
+    },
+    produceAnchors(type) {
+      const ranges = this[`${type}s`].map(item => this.editor.find(item));
+      ranges.sort((a, b) => {
+        const arow = a.start.row;
+        const brow = b.start.row;
+        const acolumn = a.start.column;
+        const bcolumn = b.start.column;
+        if (arow > brow || (arow === brow && acolumn > bcolumn)) {
+          return 1;
+        }
+        return -1;
+      });
+      let rate = 0;
+      return ranges.map((item, index) => {
+        let range;
+        if (index > 0 && item.start.row === ranges[index - 1].start.row) {
+          rate += 1;
+        } else {
+          rate = 0;
+        }
+        if (item.start.row === item.end.row) {
+          range = new Range(
+            item.start.row,
+            item.start.column - rate * 29,
+            item.end.row,
+            item.end.column - (rate + 1) * 29,
+          );
+        } else {
+          range = new Range(
+            item.start.row,
+            item.start.column - rate * 29,
+            item.end.row,
+            item.end.column - 15,
+          );
+        }
+
+        this.editor.getSession().addMarker(range, `${type}-highlight`);
+
+        let tempStr = '';
+        switch (type) {
+          case 'preserved':
+            tempStr = this.preserveds[index].replace(/<\/?xiaohou-lock>/img, '');
+            break;
+          case 'blank':
+            tempStr = this.blanks[index].replace(/<\/?xiaohou-blank>/img, ' ');
+            break;
+          default:
+        }
+        if (item.start.row === item.end.row) {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column - rate * 29,
+            ),
+            tempStr,
+          );
+        } else {
+          this.editor.getSession().replace(
+            new Range(
+              item.start.row,
+              item.start.column - rate * 29,
+              item.end.row,
+              item.end.column,
+            ),
+            tempStr,
+          );
+        }
+        range.start = this.editor.getSession().doc.createAnchor(range.start);
+        range.end = this.editor.getSession().doc.createAnchor(range.end);
+        range.end.$insertRight = true;
+        return range;
+      });
+    },
+    clearAnchors(type) {
+      const markers = this.editor.getSession().getMarkers();
+      Object.keys(markers).forEach((id) => {
+        if (markers[id].clazz === `${type}-highlight`) {
+          this.editor.getSession().removeMarker(id);
+        }
+      });
+
+      switch (type) {
+        case 'blank':
+          this.blanks = [];
+          this.blankGaps = [];
+          this.blankAnchors = [];
+          break;
+        case 'preserved':
+          this.preserveds = [];
+          this.preservedAnchors = [];
+          break;
+        default:
+      }
+    },
+    clearHide() {
+      this.startCode = '';
+      this.endCode = '';
+    },
+    clearPlugins() {
+      if (this.plugins.length > 0) {
+        for (let idx = this.plugins.length - 1; idx >= 0; idx -= 1) {
+          switch (this.plugins[idx]) {
+            case 'blank':
+              this.clearAnchors('blank');
+              this.editor.getSession().selection.off('changeCursor', this.protectExternal);
+              break;
+            case 'lock':
+              this.clearAnchors('preserved');
+              this.editor.getSession().selection.off('changeCursor', this.protectInternal);
+              break;
+            case 'hide':
+              this.clearHide();
+              break;
+            default:
+          }
+        }
+        this.editor.getSession().selection.off('changeCursor', this.showLock);
+      }
+      this.plugins = [];
+    },
+    protectInternal() {
+      setTimeout(() => {
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.preservedAnchors.some((anchor) => {
+          if (
+            // 1.仅只读范围起点在选取范围中
+            ((anchor.start.row > selection.start.row
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row === selection.end.row
+            && anchor.start.column < selection.end.column)
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column >= selection.start.column
+            && anchor.start.row < selection.end.row)
+            || (anchor.start.row > selection.start.row
+            && anchor.start.row === selection.end.row
+            && anchor.start.column < selection.end.column))
+            // 2.仅只读范围终点在选取范围中
+            || ((anchor.end.row > selection.start.row
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column > selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column)
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column > selection.start.column
+            && anchor.end.row < selection.end.row)
+            || (anchor.end.row > selection.start.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column <= selection.end.column))
+            // 3.只读范围涵盖选取范围
+            // 3.1.起止不在同一行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 3.2.起在同一行 止可能在同一行
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            && (anchor.end.row > selection.end.row
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)))
+            // 3.3.止在同一行 起可能在同一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column
+            && (anchor.start.row < selection.start.row
+            || (anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column)))
+          ) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = true;
+        } else {
+          this.isReadOnly = false;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
+    },
+    protectExternal() {
+      setTimeout(() => {
+        const selection = this.editor.getSession().selection.getRange();
+        if (this.blankAnchors.some((anchor) => {
+          if (
+            // 0.单行 选取在填空中
+            (anchor.start.row === anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)
+            // 1.多行 选取填空中间某行
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row < selection.start.row
+            && anchor.end.row > selection.end.row)
+            // 2.起在第一行 止可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column
+            // 2.1.止在第一行
+            && ((anchor.start.row === selection.end.row
+            && anchor.start.column < selection.end.column)
+            // 2.2.止在中间行
+            || (anchor.start.row < selection.end.row
+            && anchor.end.row > selection.end.row)
+            // 2.3.止在最后一行
+            || (anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column)))
+            // 3.多行 止在最后一行 起可能在填空中
+            || (anchor.start.row < anchor.end.row
+            && anchor.end.row === selection.end.row
+            && anchor.end.column > selection.end.column
+            // 3.1.起在第一行
+            && ((anchor.start.row === selection.start.row
+            && anchor.start.column < selection.start.column)
+            // 3.2.起在中间行
+            || (anchor.start.row < selection.start.row
+            && anchor.end.row > selection.start.row)
+            // 3.3.起在最后一行
+            || (anchor.end.row === selection.start.row
+            && anchor.end.column > selection.start.column)))
+          ) {
+            return true;
+          }
+          return false;
+        })) {
+          this.isReadOnly = false;
+        } else {
+          this.isReadOnly = true;
+        }
+        this.editor.setReadOnly(this.isReadOnly);
+      }, 0);
+    },
+
+    protectBoundary(evt) {
+      // 边界保护
+      this.plugins.forEach((plugin) => {
+        switch (plugin) {
+          case 'blank':
+            this.protectBlankBoundary(evt);
+            break;
+          case 'lock':
+            this.protectPreservedBoundary(evt);
+            break;
+          default:
+        }
+      });
+
+      if (!this.isReadOnly) {
+        this.isVaryCurrValue = true;
+      }
+    },
+    protectBlankBoundary(evt) {
+      if (evt.keyCode === 13) {
+        evt.preventDefault();
+      }
+      // 开头禁backspace键 结尾禁del键
+      const selection = this.editor.getSession().selection.getRange();
+      if (this.blankAnchors.some((anchor) => {
+        if ((evt.keyCode === 46 // del键
+        && anchor.end.row === selection.start.row // 并且 挖空的最后一行 等于 选中区域的第一行
+        && anchor.end.column - 1 === selection.start.column // 并且 挖空的最后一行的倒数第二格 等于 选中区域的第一行的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column) // 并且 选中区域就一格
+        // 以上逻辑是代表 光标停在了 挖空的 倒数第二格，用户按了 del 键
+        || (evt.keyCode === 8 // backspace 键
+        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
+        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column)) { // 并且选中区域只有一格
+        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 backspace 键
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = true;
+      }
+      if (this.blankAnchors.some((anchor) => {
+        if (evt.keyCode !== 8 && evt.keyCode !== 46 // 非 backspace 和 非 del 键
+        && anchor.start.row === selection.start.row // 并且 挖空的第一行 等于 选中区域的第一行
+        && anchor.start.column + 1 === selection.start.column // 并且 挖空的第二格 等于 选中区域的第一格
+        && selection.end.row === selection.start.row // 并且 选中区域只有一行
+        && selection.end.column === selection.start.column) { // 并且选中区域只有一格
+        // 以上逻辑是代表 光标停在了 挖空的 第二格，用户按了 非 backspace 和 非 del 键
+          return true;
+        }
+        return false;
+      })) {
+        this.isReadOnly = false;
+      }
+      this.editor.setReadOnly(this.isReadOnly);
+
+      this.showLock();
+    },
+    protectPreservedBoundary(evt) {
+      // 被锁定行的下一行开头禁backspace键 被锁定行的上一行结尾禁del键
+      const selection = this.editor.getSession().selection.getRange();
+      const startA = selection.start.row;
+      const endA = selection.end.row;
+      const len = this.editor.session.getLine(endA).length;
+      if (this.preservedAnchors.some((anchor) => {
+        const startB = anchor.start.row;
+        const endB = anchor.end.row;
+        if (Math.max(startA, startB) <= Math.min(endA, endB)) {
+          return true;
+        }
+        if (evt.keyCode === 8) {
+          if (Math.max(startA - 1, startB) <= Math.min(endA - 1, endB)
+              && selection.start.column === 0) {
+            return true;
+          }
+        }
+        if (evt.keyCode === 46) {
+          if (Math.max(startA + 1, startB) <= Math.min(endA + 1, endB)
+              && selection.end.column === len) {
+            return true;
+          }
+        }
+        return false;
+      })) {
+        this.isReadOnly = true;
+      } else {
+        this.isReadOnly = false;
+      }
+      this.editor.setReadOnly(this.isReadOnly);
+      this.showLock();
+    },
+
+    getEditorValue() {
+      return this.editor ? this.editor.getValue() : this.editorValue;
+    },
+
+    getExecValue() {
+      return this.getValue().replace(/<\/?xiaohou-\w*>/ig, '');
+    },
+
+    getValue(notJudge) {
+      if (this.isVaryCurrValue) {
+        this.currValue = this.splitCode(notJudge);
+        this.isVaryCurrValue = false;
+      }
+      const code = this.currValue;
+      return code;
+    },
+
+    splitCode(notJudge) {
+      let code = this.getEditorValue();
+
+      if (this.markup || notJudge) {
+        this.plugins.forEach((plugin) => {
+          switch (plugin) {
+            case 'lock':
+              code = this.splicePreserveds();
+              break;
+            case 'blank':
+              code = this.spliceBlanks();
+              break;
+            default:
+          }
+        });
+        // if (this.startCode && !code.match(/^[\n\f\r]/)) {
+        //   code = `\n${code}`;
+        // }
+        // if (this.endCode && !code.match(/[\n\f\r]$/)) {
+        //   code += '\n';
+        // }
+
+        code = `${this.startCode}${code}${this.endCode}`;
+      }
+
+      return code;
+    },
+    spliceBlanks() {
+      let code = '';
+
+      for (let i = 0, len = this.blankAnchors.length; i < len; i += 1) {
+        code = `${code}${this.blankGaps[2 * i]}<xiaohou-blank>${this.editor.getSession().doc.getTextRange(
+          new Range(
+            this.blankAnchors[i].start.row,
+            this.blankAnchors[i].start.column + 1,
+            this.blankAnchors[i].end.row,
+            this.blankAnchors[i].end.column - 1,
+          ),
+        )}</xiaohou-blank>`;
+
+        if (i === len - 1) {
+          code += this.blankGaps[2 * (i + 1)];
+        }
+      }
+
+      return code;
+    },
+    splicePreserveds() {
+      let code = '';
+
+      const start = {
+        row: 0,
+        column: 0,
+      };
+      for (let i = 0, len = this.preservedAnchors.length; i < len; i += 1) {
+        code = `${code}${this.editor.getSession().doc.getTextRange(
+          new Range(
+            start.row,
+            start.column,
+            this.preservedAnchors[i].start.row,
+            this.preservedAnchors[i].start.column,
+          ),
+        )}${this.preserveds[i]}`;
+
+        start.row = this.preservedAnchors[i].end.row;
+        start.column = this.preservedAnchors[i].end.column;
+
+        if (i === len - 1) {
+          const lastRow = this.editor.getSession().getLength() - 1;
+          const lastColumn = this.editor.getSession().getLine(lastRow).length;
+
+          code = `${code}${this.editor.getSession().doc.getTextRange(
+            new Range(
+              start.row,
+              start.column,
+              lastRow,
+              lastColumn,
+            ),
+          )}`;
+        }
+      }
+
+      return code;
+    },
+    checkMarkup() {
+      return this.markup && this.plugins.length !== 0;
+    },
+
+    showLock() {
+      this.isShowLock = true;
+      setTimeout(() => {
+        this.isShowLock = false;
+      }, 500);
+    },
+
+    insert(text, focus = true) {
+      if (this.isReadOnly || this.readOnly) {
+        return;
+      }
+
+      this.editor.insert(text);
+      this.isVaryCurrValue = true;
+      if (focus) this.editor.focus();
+    },
+
+    insertAndSelect(txt, pos = '', focus = true) {
+      const { start } = this.editor.getSelection().getRange();
+      const currLine = this.editor.getSession().getDocument().getLine(start.row);
+      const m = currLine.match(/^\s*\t*/);
+
+      let text = txt;
+      // 如果当前行存在缩进，则在要插入的代码第二行及之后都加上缩进
+      if (m) {
+        const indent = m[0];
+        text = text.replace(/^/gm, (match, p) => {
+          if (p > 0) return `${indent}${match}`;
+          return match;
+        });
+      }
+      if (pos) {
+        const posArr = pos
+          .split(/,|，/)
+          .map(v => parseInt(v, 10));
+
+        this.insert(text, focus);
+        const p1 = posArr[0] - 1 || 0;
+        const r = start.row + p1;
+        let c = (
+          posArr[0] > 1
+            ? (posArr[1] || 0)
+            : (posArr[1] || 0) + start.column
+        );
+        // 如果存在缩进&&要选中的是第二行及之后，则加上缩进的位移
+        if (
+          m
+          && p1 > 0
+        ) {
+          c += m[0].length;
+        }
+
+        this.select(
+          r,
+          c,
+          posArr[2],
+          focus,
+        );
+        return;
+      }
+
+      this.insert(text, focus);
+    },
+
+    select(
+      row,
+      col,
+      length,
+      focus = true,
+    ) {
+      this.editor.navigateTo(row, col);
+      if (length) this.editor.getSelection().selectTo(row, col + length);
+      if (focus) this.editor.focus();
+    },
+
+    handleChange(event) {
+      if (!this.silent) {
+        this.$emit('change', this.getEditorValue(), event, this.editor);
+      }
+    },
+
+    handleScrollMargins(margins = [0, 0, 0, 0]) {
+      this.editor.renderer.setScrollMargins(
+        margins[0],
+        margins[1],
+        margins[2],
+        margins[3],
+      );
+    },
+
+    handleSelectionChange(event) {
+      const value = this.editor.getSelection();
+      if (this.preventPasteOther) {
+        this.selectedText = this.editor.getSelectedText() || this.selectedText;
+      }
+
+      this.$emit('selection-change', value, event);
+    },
+
+    handleCursorChange(event) {
+      const value = this.editor.getSelection();
+      this.$emit('cursor-change', value, event);
+    },
+
+    handleValidate() {
+      const annotations = this.editor.getSession().getAnnotations();
+      this.$emit('validate', annotations);
+    },
+
+    handleOptions(props) {
+      const setOptions = Object.keys(props.setOptions);
+      for (let y = 0; y < setOptions.length; y += 1) {
+        this.editor.setOption(setOptions[y], props.setOptions[setOptions[y]]);
+      }
+    },
+
+    handleMarkers(markers) {
+      // remove foreground markers
+      let currentMarkers = this.editor.getSession().getMarkers(true);
+      Object.keys(currentMarkers)
+        .forEach((i) => {
+          this.editor.getSession().removeMarker(currentMarkers[i].id);
+        });
+
+      currentMarkers = this.editor.getSession().getMarkers(false);
+      Object.keys(currentMarkers)
+        .forEach((i) => {
+          const { clazz } = currentMarkers[i];
+          if (
+            clazz !== 'ace_active-line'
+            && clazz !== 'ace_selected-word'
+            && clazz !== 'preserved-highlight'
+            && clazz !== 'blank-highlight'
+          ) {
+            this.editor.getSession().removeMarker(currentMarkers[i].id);
+          }
+        });
+
+      markers.forEach(
+        ({
+          startRow,
+          startCol,
+          endRow,
+          endCol,
+          className,
+          type,
+          inFront = false,
+        }) => {
+          const range = new Range(startRow, startCol, endRow, endCol);
+          this.editor.getSession().addMarker(range, className, type, inFront);
+        },
+      );
+    },
+
+    updatePlaceholder() {
+      const { editor } = this;
+      const { placeholder } = this;
+
+      const showPlaceholder = !editor.session.getValue().length;
+      let node = editor.renderer.placeholderNode;
+      if (!showPlaceholder && node) {
+        editor.renderer.scroller.removeChild(editor.renderer.placeholderNode);
+        editor.renderer.placeholderNode = null;
+      } else if (showPlaceholder && !node) {
+        node = document.createElement('div');
+        editor.renderer.placeholderNode = node;
+        node.textContent = placeholder || '';
+        node.className = 'ace_comment ace_placeholder';
+        node.style.padding = '0 9px';
+        node.style.position = 'absolute';
+        node.style.zIndex = '3';
+        editor.renderer.scroller.appendChild(node);
+      } else if (showPlaceholder && node) {
+        node.textContent = placeholder;
+      }
+    },
+
+    resize() {
+      this.editor.resize();
+    },
+
+    handleCopy(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.editor.getCopyText()}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+
+    handleCut(event) {
+      if (!this.preventPasteOther) return;
+      event.clipboardData.setData(
+        'text/plain',
+        `${this.selectedText}${this.copyrightText}`,
+      );
+      event.preventDefault();
+    },
+
+    genSid() {
+      this.sid = Math.random().toString().slice(2);
+    },
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('copy', this.handleCopy);
+    this.$el.removeEventListener('cut', this.handleCut);
+  },
+
+  destroyed() {
+    this.editor.destroy();
+    this.editor = null;
+  },
+});
+
+// CONCATENATED MODULE: ./package/XVueAce.vue?vue&type=script&lang=js&
+ /* harmony default export */ var package_XVueAcevue_type_script_lang_js_ = (XVueAcevue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./package/XVueAce.vue?vue&type=style&index=0&lang=less&
+var XVueAcevue_type_style_index_0_lang_less_ = __webpack_require__("5ec1");
+
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+// CONCATENATED MODULE: ./package/XVueAce.vue
+
+
+
+
+
+
+/* normalize component */
+
+var component = normalizeComponent(
+  package_XVueAcevue_type_script_lang_js_,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var XVueAce = (component.exports);
+// CONCATENATED MODULE: ./package/index.js
+
+
+/* harmony default export */ var package_0 = (XVueAce);
+
+// CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
+
+
+/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (package_0);
+
 
 
 /***/ })
