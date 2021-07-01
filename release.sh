@@ -47,5 +47,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   git push origin refs/tags/v$VERSION
   git push
   npm config set registry http://registry.npmjs.org
-  npm publish
+  npm publish --tag=next
 fi

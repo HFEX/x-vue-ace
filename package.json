@@ -27,7 +27,7 @@
   "types": "./types/package/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build-lib": "vite build",
     "serve": "vite preview",
     "tsc": "vue-tsc --noEmit",
     "eslint": "eslint"
