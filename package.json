@@ -1,6 +1,6 @@
 {
   "name": "x-vue-ace",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": false,
   "description": "",
   "repository": {
@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/YuAoi/x-vue-ace#readme",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "main": "./dist/x-vue-ace.umd.js",
   "module": "./dist/x-vue-ace.es.js",
@@ -28,6 +29,7 @@
   "scripts": {
     "dev": "vite",
     "build-lib": "vite build",
+    "build-watch": "vite build --watch",
     "serve": "vite preview",
     "tsc": "vue-tsc --noEmit",
     "eslint": "eslint"

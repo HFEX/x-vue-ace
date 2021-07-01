@@ -4,7 +4,6 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 // import postcss from 'rollup-plugin-postcss'
 import eslintPlugin from "vite-plugin-eslint";
-import { viteSingleFile } from "vite-plugin-singlefile";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -41,6 +40,5 @@ export default defineConfig({
         },
       },
     },
-    watch: {},
   },
 });
