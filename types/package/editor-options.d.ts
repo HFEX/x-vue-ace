@@ -1,3 +1,5 @@
-declare const editorOptions: readonly ["minLines", "maxLines", "readOnly", "highlightActiveLine", "tabSize", "enableBasicAutocompletion", "enableLiveAutocompletion"];
+import { Ace } from "ace-builds";
+import { Props } from "./types/props";
+declare const editorOptions: Array<keyof (Props | Ace.EditorOptions)>;
 declare const editorEvents: string[];
 export { editorEvents, editorOptions };

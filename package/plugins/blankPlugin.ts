@@ -1,11 +1,11 @@
-import * as ace from "brace";
+import ace from "ace-builds";
 import { Ref, ref } from "vue";
 
 import { produceAnchors } from "../utils/Anchors";
-const Range: typeof ace.Range = ace.acequire("ace/range").Range;
+const Range: typeof ace.Range = ace.require("ace/range").Range;
 
 interface params {
-  editor: { value: ace.Editor };
+  editor: { value: ace.Ace.Editor };
   editorValue: Ref<string>;
   plugins: Ref<Array<string>>;
   isReadOnly: Ref<boolean>;
@@ -85,7 +85,8 @@ export function useBlankPlugin({
     blankAnchors.value = produceAnchors("blank", blanks.value, editor.value);
     editor.value.gotoLine(
       blankAnchors.value[0].start.row + 1,
-      blankAnchors.value[0].start.column + 1
+      blankAnchors.value[0].start.column + 1,
+      false
     );
     editor.value.getSession().selection.on("changeCursor", protectExternal);
   }

@@ -1,8 +1,8 @@
-import { Editor, Range } from "brace";
+import ace from "ace-builds";
 import { Ref } from "vue";
 interface params {
     editor: {
-        value: Editor;
+        value: ace.Ace.Editor;
     };
     editorValue: Ref<string>;
     plugins: Ref<Array<string>>;
@@ -12,7 +12,7 @@ export declare function useLockPlugin({ editor, editorValue, plugins, isReadOnly
 export interface LockPlugin {
     isShowLock: Ref<boolean>;
     preserveds: Ref<string[]>;
-    preservedAnchors: Ref<Range[]>;
+    preservedAnchors: Ref<ace.Ace.Range[]>;
     parseLock: () => void;
     showLock: () => void;
     splicePreserveds: () => string;

@@ -1,4 +1,4 @@
-import ace from "brace";
+import {Ace} from "ace-builds";
 import { Ref, ref } from "vue";
 
 import type { BlankPlugin } from "./plugins/blankPlugin";
@@ -9,7 +9,7 @@ import type { LockPlugin } from "./plugins/lockPlugin";
 import { useLockPlugin } from "./plugins/lockPlugin";
 import { clearAnchors } from "./utils/Anchors";
 interface params {
-  editor: { value: ace.Editor };
+  editor: { value: Ace.Editor };
   editorValue: Ref<string>;
   isReadOnly: Ref<boolean>;
 }

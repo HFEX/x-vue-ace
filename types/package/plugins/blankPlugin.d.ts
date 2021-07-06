@@ -1,8 +1,8 @@
-import * as ace from "brace";
+import ace from "ace-builds";
 import { Ref } from "vue";
 interface params {
     editor: {
-        value: ace.Editor;
+        value: ace.Ace.Editor;
     };
     editorValue: Ref<string>;
     plugins: Ref<Array<string>>;

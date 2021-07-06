@@ -1,5 +1,5 @@
 /// <reference path="types/ace.d.ts" />
-import type { Editor } from "brace";
+import ace from "ace-builds";
 import { Ref } from "vue";
 import type { Plugins } from "./pluginsRef";
 import type { Props } from "./types/props";
@@ -23,7 +23,7 @@ declare namespace editorRef {
  */
 export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: "beforeLoad" | "change" | "focus" | "blur" | "copy" | "paste" | "input", ...args: any[]) => void, sid: Ref<string>, props: Props): {
     editor: {
-        value: Editor;
+        value: ace.Ace.Editor;
     };
     /**
      * 获取编辑器的值，如果编辑器为空，返回内存中的值

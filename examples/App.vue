@@ -5,7 +5,7 @@
       <div class="app-wrapper-left"></div>
       <div class="app-wrapper-center">
         <Editor
-          ref="editor"
+          ref="editorRef"
           class="editor"
           mode="python"
           theme="chrome"
@@ -18,6 +18,7 @@
           :value="source"
           :annotations="annotations"
           :markers="markers"
+          placeholder="test"
           @change="handleEditorChange"
         />
       </div>
@@ -41,6 +42,7 @@
 import { defineComponent, reactive, ref } from "vue";
 
 import Editor from "../package/index";
+import { marker } from "../package/types/props";
 export default defineComponent({
   components: {
     Editor,
@@ -73,14 +75,14 @@ print("赢家是 %d 号乌龟！" % turtles[0])`);
       },
     ]);
     const fontSize = ref(20);
-    const markers = reactive([
+    const markers = reactive<marker[]>([
       {
         startRow: 0,
         startCol: 0,
         endRow: 0,
         endCol: 5,
         className: "error-marker",
-        type: "background",
+        type: "text",
       },
     ]);
     const blockText = ref("");
@@ -112,11 +114,11 @@ print("赢家是 %d 号乌龟！" % turtles[0])`);
 
     const handleEditorChange = (val: string) => {
       // this.source = val;
-      console.log(val);
+      // console.log(val);
     };
 
     const getValue = () => {
-      console.log(editorRef.value?.getValue());
+      console.log(editorRef.value?.getValue()??"123123");
     };
 
     const resetValue = () => {

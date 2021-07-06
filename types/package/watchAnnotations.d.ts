@@ -1,5 +1,5 @@
-import type { Editor } from "brace";
+import type { Ace } from "ace-builds";
 import type { Props } from "./types/props";
 export default function watchAnnotations(editor: {
-    value: Editor;
+    value: Ace.Editor;
 }, props: Props): void;

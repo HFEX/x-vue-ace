@@ -2,13 +2,12 @@
 /// <reference path="./types/ace.ts" />
 
 // eslint-disable-next-line simple-import-sort/imports
-import ace from "brace";
-import "brace/theme/chrome";
-import "brace/ext/language_tools";
-import "brace/ext/searchbox";
-import "brace/mode/python";
+import ace from "ace-builds";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict//ext-searchbox";
+import "ace-builds/src-noconflict/mode-python";
 
-import type { Editor } from "brace";
 import debounce from "lodash/debounce";
 import { computed, onMounted, onUnmounted, Ref, toRef, watch } from "vue";
 
@@ -46,7 +45,7 @@ export default function getEditorRef(
   sid: Ref<string>,
   props: Props
 ) {
-  const editor = {} as unknown as { value: Editor };
+  const editor = {} as unknown as { value: ace.Ace.Editor };
   const copyrightText = computed(() => {
     return `\n小猴编程（${sid.value}）`;
   });
@@ -138,15 +137,17 @@ export default function getEditorRef(
       for (let i = 0; i < editorOptions.length; i += 1) {
         const option = editorOptions[i];
         if (Object.prototype.hasOwnProperty.call(availableOptions, option)) {
-          watch(
-            toRef(props, option),
-            (newVal) => {
-              if (newVal !== null && newVal !== undefined) {
-                editor.value.setOption(option, newVal);
-              }
-            },
-            { immediate: true }
-          );
+          if (Object.prototype.hasOwnProperty.call(props, option)) {
+            watch(
+              toRef(props, option),
+              (newVal) => {
+                if (newVal !== null && newVal !== undefined) {
+                  editor.value.setOption(option, newVal);
+                }
+              },
+              { immediate: true }
+            );
+          }
         } else if (props[option]) {
           /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
           console.warn(
@@ -154,7 +155,7 @@ export default function getEditorRef(
           );
         }
       }
-      const setOptions = Object.keys(props.setOptions);
+      const setOptions = Object.keys(props.setOptions) as Array<keyof ace.Ace.EditorOptions>;
       for (let y = 0; y < setOptions.length; y += 1) {
         editor.value.setOption(setOptions[y], props.setOptions[setOptions[y]]);
       }
@@ -325,15 +326,12 @@ export function removeMarkup(editorValue: Ref<string>) {
   editorValue.value = editorValue.value.replace(/<\/?xiaohou-\w*>/gim, "").trim();
 }
 
-function updatePlaceholder(editor: ace.Editor, placeholder: string) {
+function updatePlaceholder(editor: ace.Ace.Editor, placeholder: string) {
   const showPlaceholder = !editor.session.getValue().length;
-  // @ts-ignore
   let node = editor.renderer.placeholderNode;
-  if (!showPlaceholder && node) {
-    // @ts-ignore
+  if (!showPlaceholder && editor.renderer.placeholderNode) {
     editor.renderer.scroller.removeChild(editor.renderer.placeholderNode);
-    // @ts-ignore
-    editor.renderer.placeholderNode = null;
+    editor.renderer.placeholderNode = undefined;
   } else if (showPlaceholder && !node) {
     // @ts-ignore
     node = document.createElement("div");

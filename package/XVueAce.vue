@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import AceAjax from "brace";
+import AceAjax from "ace-builds";
 import debounce from "lodash/debounce";
 import styleInject from "style-inject";
 import { PropType, toRef, watch } from "vue";
@@ -114,7 +114,7 @@ export default defineComponent({
       default: () => [0, 0, 0, 0],
     },
     annotations: {
-      type: Array as PropType<AceAjax.Annotation[]>,
+      type: Array as PropType<AceAjax.Ace.Annotation[]>,
     },
     markers: {
       type: Array as PropType<marker[]>,

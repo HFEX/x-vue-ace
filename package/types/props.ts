@@ -1,4 +1,4 @@
-import AceAjax from "brace";
+import AceAjax from "ace-builds";
 
 export type Props = Readonly<{
   mode: string;
@@ -21,9 +21,9 @@ export type Props = Readonly<{
   cursorStart: number;
   debounceChangePeriod?: number;
   editorProps: Record<string, any>;
-  setOptions: Record<string, any>;
+  setOptions: Record<keyof AceAjax.Ace.EditorOptions, any>;
   scrollMargin: number[];
-  annotations?: AceAjax.Annotation[];
+  annotations?: AceAjax.Ace.Annotation[];
   markers?: marker[];
   keyboardHandler?: string;
   wrapEnabled: boolean;
@@ -41,6 +41,6 @@ export interface marker {
   endRow: number;
   endCol: number;
   className: string;
-  type: string;
+  type: "fullLine" | "screenLine" | "text" | AceAjax.Ace.MarkerRenderer;
   inFront?: boolean;
 }

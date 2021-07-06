@@ -1,17 +1,8 @@
-import { readonly } from "vue";
+import { Ace } from "ace-builds";
 
-const editorOptions = readonly<
-  [
-    "minLines",
-    "maxLines",
-    "readOnly",
-    "highlightActiveLine",
-    "tabSize",
-    "enableBasicAutocompletion",
-    "enableLiveAutocompletion"
-    // 'enableSnippets',
-  ]
->([
+import { Props } from "./types/props";
+
+const editorOptions: Array<keyof (Props | Ace.EditorOptions)> = [
   "minLines",
   "maxLines",
   "readOnly",
@@ -20,7 +11,7 @@ const editorOptions = readonly<
   "enableBasicAutocompletion",
   "enableLiveAutocompletion",
   // 'enableSnippets',
-]);
+];
 
 const editorEvents = [
   "change",

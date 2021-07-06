@@ -1,11 +1,11 @@
-import ace from "brace";
+import { Ace } from "ace-builds";
 import { Ref } from "vue";
 import type { BlankPlugin } from "./plugins/blankPlugin";
 import type { HideCodePlugin } from "./plugins/hidePlugin";
 import type { LockPlugin } from "./plugins/lockPlugin";
 interface params {
     editor: {
-        value: ace.Editor;
+        value: Ace.Editor;
     };
     editorValue: Ref<string>;
     isReadOnly: Ref<boolean>;
@@ -25,7 +25,7 @@ export declare function usePluginsRef({ editor, editorValue, isReadOnly }: param
     parseHide: () => void;
     isShowLock: Ref<boolean>;
     preserveds: Ref<string[]>;
-    preservedAnchors: Ref<ace.Range[]>;
+    preservedAnchors: Ref<Ace.Range[]>;
     parseLock: () => void;
     showLock: () => void;
     splicePreserveds: () => string;

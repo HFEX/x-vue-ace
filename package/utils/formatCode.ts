@@ -1,11 +1,11 @@
-import { Editor } from "brace";
+import ace from "ace-builds";
 import { Ref } from "vue";
 
 interface Params {
   affectPreserved: () => void;
   affectBlank: () => void;
   showLock: () => void;
-  editor: { value: Editor };
+  editor: { value: ace.Ace.Editor };
   plugins: Ref<string[]>;
 }
 export default function getFormatfunction({

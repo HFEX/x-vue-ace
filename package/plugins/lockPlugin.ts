@@ -1,9 +1,10 @@
-import { Editor, Range } from "brace";
+import ace from "ace-builds";
 import { Ref, ref } from "vue";
 
 import { produceAnchors } from "../utils/Anchors";
+
 interface params {
-  editor: { value: Editor };
+  editor: { value: ace.Ace.Editor };
   editorValue: Ref<string>;
   plugins: Ref<Array<string>>;
   isReadOnly: Ref<boolean>;
@@ -19,7 +20,7 @@ export function useLockPlugin({ editor, editorValue, plugins, isReadOnly }: para
 
   const preserveds = ref([] as string[]); // 只读处初始内容
   const preservedGaps = ref([] as string[]);
-  const preservedAnchors = ref([] as Range[]); // 只读范围
+  const preservedAnchors = ref([] as ace.Ace.Range[]); // 只读范围
   const splicePreserveds = () => {
     let code = "";
 
@@ -31,7 +32,7 @@ export function useLockPlugin({ editor, editorValue, plugins, isReadOnly }: para
       code = `${code}${editor.value
         .getSession()
         .doc.getTextRange(
-          new Range(
+          new ace.Range(
             start.row,
             start.column,
             preservedAnchors.value[i].start.row,
@@ -48,7 +49,7 @@ export function useLockPlugin({ editor, editorValue, plugins, isReadOnly }: para
 
         code = `${code}${editor.value
           .getSession()
-          .doc.getTextRange(new Range(start.row, start.column, lastRow, lastColumn))}`;
+          .doc.getTextRange(new ace.Range(start.row, start.column, lastRow, lastColumn))}`;
       }
     }
 
@@ -123,7 +124,7 @@ export function useLockPlugin({ editor, editorValue, plugins, isReadOnly }: para
   const affectPreserved = () => {
     preservedAnchors.value = produceAnchors("preserved", preserveds.value, editor.value);
 
-    editor.value.gotoLine(0);
+    editor.value.gotoLine(0, 0, false);
 
     editor.value.getSession().selection.on("changeCursor", protectInternal);
   };
@@ -182,7 +183,7 @@ export function useLockPlugin({ editor, editorValue, plugins, isReadOnly }: para
 export interface LockPlugin {
   isShowLock: Ref<boolean>;
   preserveds: Ref<string[]>;
-  preservedAnchors: Ref<Range[]>;
+  preservedAnchors: Ref<ace.Ace.Range[]>;
   parseLock: () => void;
   showLock: () => void;
   splicePreserveds: () => string;

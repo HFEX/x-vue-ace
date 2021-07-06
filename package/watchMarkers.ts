@@ -1,9 +1,9 @@
-import ace, { Editor } from "brace";
+import ace from "ace-builds";
 import { onMounted, toRef, watch } from "vue";
 
 import type { Props } from "./types/props";
-const Range = ace.acequire("ace/range").Range;
-export default function watchMarkers(editor: { value: Editor }, props: Props) {
+const Range = ace.require("ace/range").Range;
+export default function watchMarkers(editor: { value: ace.Ace.Editor }, props: Props) {
   // remove foreground markers
   onMounted(() => {
     watch(

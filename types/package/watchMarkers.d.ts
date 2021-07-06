@@ -1,5 +1,5 @@
-import { Editor } from "brace";
+import ace from "ace-builds";
 import type { Props } from "./types/props";
 export default function watchMarkers(editor: {
-    value: Editor;
+    value: ace.Ace.Editor;
 }, props: Props): void;

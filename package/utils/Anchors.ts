@@ -1,11 +1,11 @@
-import * as ace from "brace";
+import ace from "ace-builds";
 import { Ref } from "vue";
 
-const Range: typeof ace.Range = ace.acequire("ace/range").Range;
+const Range: typeof ace.Range = ace.require("ace/range").Range;
 
-export function produceAnchors(type: string, arr: string[], editor: ace.Editor) {
+export function produceAnchors(type: string, arr: string[], editor: ace.Ace.Editor) {
   const ranges = arr
-    .map((item) => editor.find(item) as unknown as ace.Range)
+    .map((item) => editor.find(item) as unknown as ace.Ace.Range)
     .filter((item) => !!item);
   ranges.sort((a, b) => {
     const arow = a.start.row;
@@ -19,7 +19,7 @@ export function produceAnchors(type: string, arr: string[], editor: ace.Editor) 
   });
   let rate = 0;
   return ranges.map((item, index) => {
-    let range: ace.Range;
+    let range: ace.Ace.Range;
     if (index > 0 && item.start.row === ranges[index - 1].start.row) {
       rate += 1;
     } else {
@@ -84,7 +84,7 @@ export function produceAnchors(type: string, arr: string[], editor: ace.Editor) 
 }
 export function clearAnchors(
   type: string,
-  editor: ace.Editor,
+  editor: ace.Ace.Editor,
   ...arrs: Array<Ref<Array<unknown>>>
 ) {
   const markers = editor.getSession().getMarkers(false);
