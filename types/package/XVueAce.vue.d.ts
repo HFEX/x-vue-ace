@@ -2,7 +2,7 @@ import type { DebouncedFunc } from 'lodash';
 import AceAjax from "ace-builds";
 import type { DefineComponent, Ref, WritableComputedRef, ComponentOptionsMixin, VNodeProps, AllowedComponentProps, ComponentCustomProps, PropType } from 'vue';
 import type { marker } from "./types/props";
-import type { Completer } from "./utils/Completers";
+import { Completer } from "./utils/Completers";
 declare const _default: DefineComponent<{
     mode: {
         type: StringConstructor;

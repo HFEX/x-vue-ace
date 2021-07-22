@@ -1,4 +1,4 @@
-import * as ace from "ace-builds/";
+import * as ace from "ace-builds";
 import { Props } from "../types/props";
 export interface Completer {
     getCompletions: (_editor: unknown, _session: unknown, _pos: unknown, prefix: string, callback: (arg0: null, arg1: {
@@ -8,4 +8,6 @@ export interface Completer {
         score: number;
     }[]) => unknown) => unknown;
 }
-export declare function watchCompleters(editor: ace.Ace.Editor, props: Props): void;
+export declare function watchCompleters(editor: {
+    value: ace.Ace.Editor;
+}, props: Props): void;
