@@ -2,6 +2,7 @@ import type { DebouncedFunc } from 'lodash';
 import AceAjax from "ace-builds";
 import type { DefineComponent, Ref, WritableComputedRef, ComponentOptionsMixin, VNodeProps, AllowedComponentProps, ComponentCustomProps, PropType } from 'vue';
 import type { marker } from "./types/props";
+import type { Completer } from "./utils/Completers";
 declare const _default: DefineComponent<{
     mode: {
         type: StringConstructor;
@@ -122,6 +123,10 @@ declare const _default: DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
+    completer: {
+        type: PropType<Completer | undefined>;
+        default: () => undefined;
+    };
 }, {
     isShowLock: Ref<boolean>;
     blanks: Ref<any[]>;
@@ -159,6 +164,7 @@ declare const _default: DefineComponent<{
         value: AceAjax.Ace.Editor;
     };
     resize: DebouncedFunc<() => void>;
+    genSid: () => void;
 }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options" | "beforeLoad", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
     focus: boolean;
     tabSize: number;
@@ -188,10 +194,11 @@ declare const _default: DefineComponent<{
     preventPasteOther: boolean;
 } & {
     keyboardHandler?: string | undefined;
+    markers?: marker[] | undefined;
     debounceChangePeriod?: number | undefined;
     annotations?: AceAjax.Ace.Annotation[] | undefined;
-    markers?: marker[] | undefined;
     commands?: unknown[] | undefined;
+    completer?: Completer | undefined;
 }>, {
     focus: boolean;
     tabSize: number;
@@ -219,5 +226,6 @@ declare const _default: DefineComponent<{
     wrapEnabled: boolean;
     navigateToFileEnd: boolean;
     preventPasteOther: boolean;
+    completer: Completer | undefined;
 }>;
 export default _default;

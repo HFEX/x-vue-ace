@@ -1,5 +1,7 @@
 import AceAjax from "ace-builds";
 
+import type { Completer } from "../utils/Completers";
+
 export type Props = Readonly<{
   mode: string;
   focus: boolean;
@@ -33,6 +35,7 @@ export type Props = Readonly<{
   commands?: unknown[];
   placeholder: string;
   preventPasteOther: boolean;
+  completer?: Completer;
 }>;
 
 export interface marker {

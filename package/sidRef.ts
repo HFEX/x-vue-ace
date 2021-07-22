@@ -2,8 +2,9 @@ import { onMounted, ref } from "vue";
 
 export default function getSidRef() {
   const sid = ref("");
-  onMounted(() => {
+  const genSid = () => {
     sid.value = Math.random().toString().slice(2);
-  });
-  return { sid };
+  };
+  onMounted(genSid);
+  return { sid, genSid };
 }

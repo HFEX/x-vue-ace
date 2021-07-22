@@ -21,6 +21,7 @@ import { usePluginsRef } from "./pluginsRef";
 import getReadOnlyRef from "./readOnlyRef";
 import getSidRef from "./sidRef";
 import type { marker } from "./types/props";
+import { Completer, watchCompleters } from "./utils/Completers";
 import getFormatfunction from "./utils/formatCode";
 import beforeParse from "./utils/prase";
 import watchAnnotations from "./watchAnnotations";
@@ -28,6 +29,7 @@ import watchMarkers from "./watchMarkers";
 styleInject(css);
 
 export default defineComponent({
+  name: "XVueAce",
   props: {
     mode: {
       type: String,
@@ -149,6 +151,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    completer: {
+      type: [Object] as PropType<Completer | undefined>,
+      default: () => undefined,
+    },
   },
   emits: [
     "beforeLoad",
@@ -166,7 +172,7 @@ export default defineComponent({
   setup: (props, { emit }) => {
     const silent = ref(false);
     const selectedText = ref("");
-    const { sid } = getSidRef();
+    const { sid, genSid } = getSidRef();
     // computed: {
     //   copyrightText() {
     //     return `\n小猴编程（${this.sid}）`;
@@ -252,6 +258,7 @@ export default defineComponent({
     );
     watchMarkers(editor, props);
     watchAnnotations(editor, props);
+    watchCompleters(editor, props)
     onMounted(() => {
       // @ts-ignore
       if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
@@ -337,6 +344,7 @@ export default defineComponent({
       refEditor,
       editor,
       resize,
+      genSid,
       ...plugins,
       isShowLock,
     };
