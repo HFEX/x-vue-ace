@@ -1,5 +1,4 @@
-import * as ace from "ace-builds";
-import { Props } from "../types/props";
+/** 自动补全的类型声明 */
 export interface Completer {
     getCompletions: (_editor: unknown, _session: unknown, _pos: unknown, prefix: string, callback: (arg0: null, arg1: {
         caption: string;
@@ -8,6 +7,3 @@ export interface Completer {
         score: number;
     }[]) => unknown) => unknown;
 }
-export declare function watchCompleters(editor: {
-    value: ace.Ace.Editor;
-}, props: Props): void;

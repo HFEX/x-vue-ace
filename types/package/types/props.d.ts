@@ -27,12 +27,11 @@ export declare type Props = Readonly<{
     keyboardHandler?: string;
     wrapEnabled: boolean;
     enableBasicAutocompletion: boolean;
-    enableLiveAutocompletion: boolean;
+    enableLiveAutocompletion: Completer[] | boolean;
     navigateToFileEnd: boolean;
     commands?: unknown[];
     placeholder: string;
     preventPasteOther: boolean;
-    completer?: Completer;
 }>;
 export interface marker {
     startRow: number;

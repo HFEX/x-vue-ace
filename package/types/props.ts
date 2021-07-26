@@ -30,12 +30,12 @@ export type Props = Readonly<{
   keyboardHandler?: string;
   wrapEnabled: boolean;
   enableBasicAutocompletion: boolean;
-  enableLiveAutocompletion: boolean;
+  enableLiveAutocompletion: Completer[] | boolean;
   navigateToFileEnd: boolean;
   commands?: unknown[];
   placeholder: string;
   preventPasteOther: boolean;
-  completer?: Completer;
+  // completer?: Completer;
 }>;
 
 export interface marker {

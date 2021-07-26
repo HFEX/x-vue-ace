@@ -3,7 +3,7 @@ declare module "ace-builds" {
   namespace Ace {
     interface EditorOptions {
       enableBasicAutocompletion: boolean;
-      enableLiveAutocompletion: boolean;
+      enableLiveAutocompletion: Completer[] | boolean;
       enableSnippets: boolean;
     }
     interface Editor {

@@ -2,7 +2,7 @@ import type { DebouncedFunc } from 'lodash';
 import AceAjax from "ace-builds";
 import type { DefineComponent, Ref, WritableComputedRef, ComponentOptionsMixin, VNodeProps, AllowedComponentProps, ComponentCustomProps, PropType } from 'vue';
 import type { marker } from "./types/props";
-import { Completer } from "./utils/Completers";
+import type { Completer } from "./utils/Completers";
 declare const _default: DefineComponent<{
     mode: {
         type: StringConstructor;
@@ -105,7 +105,7 @@ declare const _default: DefineComponent<{
         default: boolean;
     };
     enableLiveAutocompletion: {
-        type: BooleanConstructor;
+        type: PropType<boolean | Completer[]>;
         default: boolean;
     };
     navigateToFileEnd: {
@@ -122,10 +122,6 @@ declare const _default: DefineComponent<{
     preventPasteOther: {
         type: BooleanConstructor;
         default: boolean;
-    };
-    completer: {
-        type: PropType<Completer | undefined>;
-        default: () => undefined;
     };
 }, {
     isShowLock: Ref<boolean>;
@@ -180,7 +176,7 @@ declare const _default: DefineComponent<{
     placeholder: string;
     value: string;
     enableBasicAutocompletion: boolean;
-    enableLiveAutocompletion: boolean;
+    enableLiveAutocompletion: boolean | Completer[];
     width: string;
     height: string;
     markup: boolean;
@@ -194,11 +190,10 @@ declare const _default: DefineComponent<{
     preventPasteOther: boolean;
 } & {
     keyboardHandler?: string | undefined;
-    markers?: marker[] | undefined;
     debounceChangePeriod?: number | undefined;
     annotations?: AceAjax.Ace.Annotation[] | undefined;
+    markers?: marker[] | undefined;
     commands?: unknown[] | undefined;
-    completer?: Completer | undefined;
 }>, {
     focus: boolean;
     tabSize: number;
@@ -214,7 +209,7 @@ declare const _default: DefineComponent<{
     placeholder: string;
     value: string;
     enableBasicAutocompletion: boolean;
-    enableLiveAutocompletion: boolean;
+    enableLiveAutocompletion: boolean | Completer[];
     width: string;
     height: string;
     markup: boolean;
@@ -226,6 +221,5 @@ declare const _default: DefineComponent<{
     wrapEnabled: boolean;
     navigateToFileEnd: boolean;
     preventPasteOther: boolean;
-    completer: Completer | undefined;
 }>;
 export default _default;

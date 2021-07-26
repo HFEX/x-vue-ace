@@ -21,7 +21,7 @@ import { usePluginsRef } from "./pluginsRef";
 import getReadOnlyRef from "./readOnlyRef";
 import getSidRef from "./sidRef";
 import type { marker } from "./types/props";
-import { Completer, watchCompleters } from "./utils/Completers";
+import type { Completer } from "./utils/Completers";
 import getFormatfunction from "./utils/formatCode";
 import beforeParse from "./utils/prase";
 import watchAnnotations from "./watchAnnotations";
@@ -133,7 +133,7 @@ export default defineComponent({
       default: false,
     },
     enableLiveAutocompletion: {
-      type: Boolean,
+      type: [Array, Boolean] as PropType<Completer[] | boolean>,
       default: false,
     },
     navigateToFileEnd: {
@@ -151,10 +151,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    completer: {
-      type: [Object] as PropType<Completer | undefined>,
-      default: () => undefined,
-    },
+    // completer: {
+    //   type: [Object] as PropType<Completer | undefined>,
+    //   default: () => undefined,
+    // },
   },
   emits: [
     "beforeLoad",
@@ -258,7 +258,7 @@ export default defineComponent({
     );
     watchMarkers(editor, props);
     watchAnnotations(editor, props);
-    watchCompleters(editor, props)
+    // watchCompleters(editor, props);
     onMounted(() => {
       // @ts-ignore
       if (props.preventPasteOther) selectedText.value = editor.value.getSelectedText();
