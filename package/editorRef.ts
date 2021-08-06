@@ -98,7 +98,7 @@ export default function getEditorRef(
       toRef(props, "fontSize"),
       (fontSize) => {
         if (typeof fontSize === "string" && /^[0-9]*$/.test(fontSize)) {
-          editor.value.setFontSize(fontSize+"px");
+          editor.value.setFontSize(fontSize + "px");
         } else editor.value.setFontSize(fontSize as string);
       },
       { immediate: true }
@@ -229,11 +229,17 @@ export default function getEditorRef(
       watch(toRef(props, "placeholder"), () => {
         updatePlaceholder(editor.value, props.placeholder);
       });
-      watch(toRef(props, "keyboardHandler"), (newVal) => {
-        const keyboardHandler = newVal ? `ace/keyboard/${newVal}` : null;
-        // @ts-ignore
-        editor.value.setKeyboardHandler(keyboardHandler);
-      });
+      watch(
+        toRef(props, "keyboardHandler"),
+        (newVal) => {
+          if (newVal) {
+            const keyboardHandler = newVal ? `ace/keyboard/${newVal}` : null;
+            // @ts-ignore
+            editor.value.setKeyboardHandler(keyboardHandler);
+          }
+        },
+        { immediate: true }
+      );
       watch(toRef(props, "value"), (newVal) => {
         if (getValue() !== newVal) {
           silent.value = true;
