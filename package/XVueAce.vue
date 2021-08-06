@@ -33,7 +33,7 @@ export default defineComponent({
   props: {
     mode: {
       type: String,
-      default: "",
+      default: "python",
     },
     focus: {
       type: Boolean,

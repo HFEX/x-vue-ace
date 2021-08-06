@@ -5,7 +5,7 @@
 import ace from "ace-builds";
 import "ace-builds/src-noconflict/theme-chrome";
 import "ace-builds/src-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict//ext-searchbox";
+import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-python";
 
 import debounce from "lodash/debounce";
@@ -97,7 +97,9 @@ export default function getEditorRef(
     watch(
       toRef(props, "fontSize"),
       (fontSize) => {
-        editor.value.setFontSize(fontSize as string);
+        if (typeof fontSize === "string" && /^[0-9]*$/.test(fontSize)) {
+          editor.value.setFontSize(fontSize+"px");
+        } else editor.value.setFontSize(fontSize as string);
       },
       { immediate: true }
     );
