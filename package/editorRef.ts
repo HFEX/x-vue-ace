@@ -38,10 +38,7 @@ export default function getEditorRef(
   editorValue: Ref<string>,
   selectedText: Ref<string>,
   silent: Ref<boolean>,
-  emit: (
-    evt: "beforeLoad" | "change" | "focus" | "blur" | "copy" | "paste" | "input",
-    ...args: any[]
-  ) => void,
+  emit: (evt: "change" | "focus" | "blur" | "copy" | "paste" | "input", ...args: any[]) => void,
   sid: Ref<string>,
   props: Props
 ) {
@@ -69,7 +66,6 @@ export default function getEditorRef(
   }
   onMounted(() => {
     editor.value = ace.edit(el.value as HTMLElement);
-    emit("beforeLoad", ace);
     editor.value.$blockScrolling = Infinity;
     const editorProps = Object.keys(props.editorProps);
     for (let i = 0; i < editorProps.length; i += 1) {

@@ -157,7 +157,6 @@ export default defineComponent({
     // },
   },
   emits: [
-    "beforeLoad",
     "change",
     "focus",
     "input",
