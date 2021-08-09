@@ -14,12 +14,16 @@
           focus
           :markup="enableMarkup"
           :remove-mark="removeMark"
-          :font-size="fontSize"
+          :font-size="`${fontSize}pt`"
           :value="source"
           :annotations="annotations"
           :markers="markers"
+          :max-lines="30"
+          :min-lines="10"
+          :highlightActiveLine="false"
           placeholder="test"
           @change="handleEditorChange"
+          @scroll="handleFocus"
         />
       </div>
       <div class="app-wrapper-right"></div>
@@ -41,12 +45,14 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 
+//#region snippet
 import Editor from "../package/index";
 import { marker } from "../package/types/props";
 export default defineComponent({
   components: {
     Editor,
   },
+//#endregion snippet
   setup: () => {
     const source = ref(`# 输入
 num = int(input("共有多少只乌龟："))
@@ -112,11 +118,13 @@ print("赢家是 %d 号乌龟！" % turtles[0])`);
       console.log(removeMark.value);
     };
 
-    const handleEditorChange = (val: string) => {
+    const handleEditorChange = (...val: string[]) => {
       // this.source = val;
-      // console.log(val);
+      console.log(val);
     };
-
+    const handleFocus = (...val: any[]) => {
+      console.log(val);
+    }
     const getValue = () => {
       console.log(editorRef.value?.getValue()??"123123");
     };
@@ -143,6 +151,7 @@ print("赢家是 %d 号乌龟！" % turtles[0])`);
       handleEditorChange,
       getValue,
       resetValue,
+      handleFocus
     };
   },
 });
