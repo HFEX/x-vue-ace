@@ -187,9 +187,9 @@ export default function getEditorRef(
         },
         { immediate: true }
       );
-      editor.value.on("focus", (...args) => emit("focus", ...args, editor.value));
-      editor.value.on("blur", (...args) => emit("blur", ...args, editor.value));
-      editor.value.on("copy", (...args) => emit("copy", ...args, editor.value));
+      editor.value.on("focus", (...args) => emit("focus", ...args));
+      editor.value.on("blur", (...args) => emit("blur", ...args));
+      editor.value.on("copy", (...args) => emit("copy", ...args));
       editor.value.on("paste", (event) => {
         const reg = /\n小猴编程（(\d+)）/g;
         let { text } = event;
@@ -214,7 +214,7 @@ export default function getEditorRef(
         editor.value.on("change", handleChange);
       }
       editor.value.on("input", (...args) => {
-        emit("input", ...args, editor.value);
+        emit("input", ...args);
         if (props.placeholder) updatePlaceholder(editor.value, props.placeholder);
       });
 
