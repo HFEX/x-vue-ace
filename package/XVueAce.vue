@@ -218,6 +218,7 @@ export default defineComponent({
         // xiaohou-blank or xiaohou-lock
         plugins.parseLock();
         plugins.parseBlank();
+        editor.value.setValue(editorValue.value, props.cursorStart);
       } else if (props.removeMark) {
         // 过滤掉所有的 xiaohou 标签
         removeMarkup();

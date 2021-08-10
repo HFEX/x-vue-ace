@@ -270,7 +270,6 @@ export default function getEditorRef(
           clearPlugins();
           editorValue.value = getEditorValue();
           parseMarkup();
-          editor.value.setValue(editorValue.value, props.cursorStart);
           setTimeout(() => {
             formatCode();
           });
