@@ -260,8 +260,7 @@ export default defineComponent({
       editor.value.getSession().selection.on("changeSelection", (event: unknown) => {
         const value = editor.value.getSelection();
         if (props.preventPasteOther) {
-          // @ts-ignore
-          selectedText.value = editor.value.getSelectedText() || selectedText;
+          selectedText.value = editor.value.getSelectedText() || selectedText.value;
         }
 
         emit("selection-change", value, event);
