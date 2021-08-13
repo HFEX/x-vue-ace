@@ -21,7 +21,7 @@ declare namespace editorRef {
  * @param props 组件props
  * @returns
  */
-export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: "beforeLoad" | "change" | "focus" | "blur" | "copy" | "paste" | "input", ...args: any[]) => void, sid: Ref<string>, props: Props): {
+export default function getEditorRef(el: Ref<HTMLElement | undefined>, editorValue: Ref<string>, selectedText: Ref<string>, silent: Ref<boolean>, emit: (evt: "change" | "focus" | "blur" | "copy" | "paste" | "input", ...args: any[]) => void, sid: Ref<string>, props: Props): {
     editor: {
         value: ace.Ace.Editor;
     };
