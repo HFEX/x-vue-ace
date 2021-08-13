@@ -22,8 +22,6 @@
           :min-lines="10"
           :highlightActiveLine="false"
           placeholder="test"
-          @change="handleEditorChange"
-          @scroll="handleFocus"
         />
       </div>
       <div class="app-wrapper-right"></div>
@@ -54,7 +52,8 @@ export default defineComponent({
   },
 //#endregion snippet
   setup: () => {
-    const source = ref(`# 输入
+    const source = ref(`<xiaohou-lock>123</xiaohou-lock>
+# 输入
 num = int(input("共有多少只乌龟："))
 # 第一次数1只
 step =  <xiaohou-blank></xiaohou-blank>
@@ -70,7 +69,10 @@ for i in range(num):
       turtles.pop(<xiaohou-blank></xiaohou-blank>)
       # 每次数的数量是上一次的2倍
       step*=2
-print("赢家是 %d 号乌龟！" % turtles[0])`);
+print("赢家是 %d 号乌龟！" % turtles[0])
+
+<xiaohou-hide>123</xiaohou-hide>
+`);
 
     const annotations = reactive([
       {

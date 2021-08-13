@@ -172,12 +172,7 @@ export default defineComponent({
     const silent = ref(false);
     const selectedText = ref("");
     const { sid, genSid } = getSidRef();
-    // computed: {
-    //   copyrightText() {
-    //     return `\n小猴编程（${this.sid}）`;
-    //   },
-    // },
-    // 初始化编辑器
+
     const refEditor = ref<HTMLElement | undefined>(undefined);
     const { editorValue, getValueFunction, currValue, isVaryCurrValue } = getEditorValueRef(props);
     const { editor, getEditorValue, watchEditorValue } = getEditorRef(

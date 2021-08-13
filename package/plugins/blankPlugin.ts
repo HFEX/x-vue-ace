@@ -4,13 +4,19 @@ import { Ref, ref } from "vue";
 import { produceAnchors } from "../utils/Anchors";
 const Range: typeof ace.Range = ace.require("ace/range").Range;
 
-interface params {
+type params = {
   editor: { value: ace.Ace.Editor };
   editorValue: Ref<string>;
   plugins: Ref<Array<string>>;
   isReadOnly: Ref<boolean>;
   showLock: () => void;
 }
+
+/**
+ * 初始化代码挖空功能
+ * @param {number} 参数
+ * @return {BlankPlugin}  {BlankPlugin}
+ */
 export function useBlankPlugin({
   editor,
   editorValue,

@@ -37,7 +37,7 @@ export type Props = Readonly<{
   preventPasteOther: boolean;
   // completer?: Completer;
 }>;
-
+//#region markerType
 export interface marker {
   startRow: number;
   startCol: number;
@@ -47,3 +47,4 @@ export interface marker {
   type: "fullLine" | "screenLine" | "text" | AceAjax.Ace.MarkerRenderer;
   inFront?: boolean;
 }
+//#endregion markerType

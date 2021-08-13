@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {ref,reactive} from 'vue'
 import XesEditor from '../../package/XVueAce.vue'
 import "ace-builds/src-noconflict/theme-idle_fingers";
 import "ace-builds/src-noconflict/mode-css";
@@ -16,8 +16,37 @@ const isReadonly = ref(false)
 const tabSize = ref(4)
 const isShowPrintMargin = ref(false)
 const isWrapEnabled = ref(false)
-</script>
+const enableMarkup = ref(false)
+const markupText = ref(`<xiaohou-hide>123</xiaohou-hide>
+<xiaohou-blank></xiaohou-blank>
+<xiaohou-lock>lock can't edit</xiaohou-lock>
+`)
+const annotations = reactive([
+  {
+    row: 0,
+    column: 2,
+    type: "error",
+    text: "Some error.",
+  },
+]);
 
+const markers = reactive([
+  {
+    startRow: 0,
+    startCol: 0,
+    endRow: 0,
+    endCol: 5,
+    className: "error-marker",
+    type: "text",
+  },
+]);
+</script>
+<style>
+.error-marker {
+  position: absolute;
+  background-color: red;
+}
+</style>
 # 开始
 ## 介绍
 
@@ -265,6 +294,45 @@ placeholder
 <XesEditor theme="chrome" :style="EditorStyle" value="print(123)" fontSize="20pt" preventPasteOther/>
 
 <XesEditor theme="chrome" :style="EditorStyle" placeholder="阻止粘贴" fontSize="20pt"/>
+
+### markup
+- Type: `Boolean`
+- default: `true`
+
+是否开启代码挖空,与代码隐藏以及代码锁定。
+开启后会隐藏`<xiaohou-blank></xiaohou-blank>`中的内容，如果有`<xiaohou-blank></xiaohou-blank>`,会阻止在标签外的输入行为,如果不存在代码挖空，`<xiaohou-lock></xiaohou-lock>`内的内容无法编辑。<input type="checkbox" v-model="enableMarkup">
+
+<XesEditor theme="chrome" mode="text" style="height:130px" :value="markupText" fontSize="20pt" :markup="enableMarkup"/>
+
+### annotations
+- Type: `Annotation[]`
+- default: `[]`
+
+```ts
+  export interface Annotation {
+    row?: number;
+    column?: number;
+    text: string;
+    type: 'error'|'warning'|'info';
+  }
+```
+一个注释机制，能够在行号出显示提示。
+
+<XesEditor theme="chrome" mode="text" :style="EditorStyle" value="print(123)" fontSize="20pt" :annotations="annotations"/>
+
+### markers
+- Type: `marker[]`
+- default: []
+
+<<< ./package/types/props.ts#markerType
+另一种报错机制,需要注意的是，这里需要自己配置颜色样式
+```css
+.error-marker {
+  position: absolute;
+  background-color: red;
+}
+```
+<XesEditor theme="chrome" mode="text" :style="EditorStyle" value="print(123)" fontSize="20pt" :markers="markers"/>
 
 ## 事件
 ### change
