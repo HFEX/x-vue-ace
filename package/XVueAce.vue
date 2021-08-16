@@ -173,7 +173,7 @@ export default defineComponent({
     const selectedText = ref("");
     const { sid, genSid } = getSidRef();
 
-    const refEditor = ref<HTMLElement | undefined>(undefined);
+    const refEditor = ref<HTMLElement>();
     const { editorValue, getValueFunction, currValue, isVaryCurrValue } = getEditorValueRef(props);
     const { editor, getEditorValue, watchEditorValue } = getEditorRef(
       refEditor,

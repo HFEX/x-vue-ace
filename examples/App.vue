@@ -20,7 +20,6 @@
           :markers="markers"
           :max-lines="30"
           :min-lines="10"
-          :highlightActiveLine="false"
           placeholder="test"
         />
       </div>
@@ -50,7 +49,7 @@ export default defineComponent({
   components: {
     Editor,
   },
-//#endregion snippet
+  //#endregion snippet
   setup: () => {
     const source = ref(`<xiaohou-lock>123</xiaohou-lock>
 # 输入
@@ -76,22 +75,15 @@ print("赢家是 %d 号乌龟！" % turtles[0])
 
     const annotations = reactive([
       {
-        row: 0,
-        column: 2,
+        row: 6,
+        text: "代码未完成，请检查是否有未完成的循环，逻辑或函数",
         type: "error",
-        text: "Some error.",
+        column: 0,
       },
     ]);
     const fontSize = ref(20);
     const markers = reactive<marker[]>([
-      {
-        startRow: 0,
-        startCol: 0,
-        endRow: 0,
-        endCol: 5,
-        className: "error-marker",
-        type: "text",
-      },
+      { startRow: 6, startCol: 0, endRow: 6, endCol: 999, className: "error-marker", type: "text" },
     ]);
     const blockText = ref("");
     const pos = ref("1,3,5");
@@ -126,9 +118,9 @@ print("赢家是 %d 号乌龟！" % turtles[0])
     };
     const handleFocus = (...val: any[]) => {
       console.log(val);
-    }
+    };
     const getValue = () => {
-      console.log(editorRef.value?.getValue()??"123123");
+      console.log(editorRef.value?.getValue() ?? "123123");
     };
 
     const resetValue = () => {
@@ -153,7 +145,7 @@ print("赢家是 %d 号乌龟！" % turtles[0])
       handleEditorChange,
       getValue,
       resetValue,
-      handleFocus
+      handleFocus,
     };
   },
 });

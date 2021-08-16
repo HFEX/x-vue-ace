@@ -162,6 +162,38 @@ declare const _default: DefineComponent<{
     resize: DebouncedFunc<() => void>;
     genSid: () => void;
 }, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ("copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options")[], "copy" | "input" | "blur" | "change" | "focus" | "scroll" | "paste" | "selection-change" | "cursor-change" | "handle-options", VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<{
+    mode?: unknown;
+    focus?: unknown;
+    theme?: unknown;
+    width?: unknown;
+    height?: unknown;
+    fontSize?: unknown;
+    showGutter?: unknown;
+    value?: unknown;
+    minLines?: unknown;
+    maxLines?: unknown;
+    readOnly?: unknown;
+    markup?: unknown;
+    removeMark?: unknown;
+    highlightActiveLine?: unknown;
+    tabSize?: unknown;
+    showPrintMargin?: unknown;
+    cursorStart?: unknown;
+    debounceChangePeriod?: unknown;
+    editorProps?: unknown;
+    setOptions?: unknown;
+    scrollMargin?: unknown;
+    annotations?: unknown;
+    markers?: unknown;
+    keyboardHandler?: unknown;
+    wrapEnabled?: unknown;
+    enableBasicAutocompletion?: unknown;
+    enableLiveAutocompletion?: unknown;
+    navigateToFileEnd?: unknown;
+    commands?: unknown;
+    placeholder?: unknown;
+    preventPasteOther?: unknown;
+} & {
     focus: boolean;
     tabSize: number;
     mode: string;
@@ -194,7 +226,18 @@ declare const _default: DefineComponent<{
     annotations?: AceAjax.Ace.Annotation[] | undefined;
     markers?: marker[] | undefined;
     commands?: unknown[] | undefined;
-}>, {
+}> & {
+    onCopy?: ((...args: any[]) => any) | undefined;
+    onPaste?: ((...args: any[]) => any) | undefined;
+    onFocus?: ((...args: any[]) => any) | undefined;
+    onBlur?: ((...args: any[]) => any) | undefined;
+    onChange?: ((...args: any[]) => any) | undefined;
+    onInput?: ((...args: any[]) => any) | undefined;
+    onScroll?: ((...args: any[]) => any) | undefined;
+    "onSelection-change"?: ((...args: any[]) => any) | undefined;
+    "onCursor-change"?: ((...args: any[]) => any) | undefined;
+    "onHandle-options"?: ((...args: any[]) => any) | undefined;
+}, {
     focus: boolean;
     tabSize: number;
     mode: string;
