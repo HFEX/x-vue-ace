@@ -2661,8 +2661,8 @@ eslint-plugin-prettier@^3.3.1:
 
 eslint-plugin-simple-import-sort@^7.0.0:
   version "7.0.0"
-  resolved "https://registry.npm.taobao.org/eslint-plugin-simple-import-sort/download/eslint-plugin-simple-import-sort-7.0.0.tgz#a1dad262f46d2184a90095a60c66fef74727f0f8"
-  integrity sha1-odrSYvRtIYSpAJWmDGb+90cn8Pg=
+  resolved "https://registry.npmjs.org/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-7.0.0.tgz#a1dad262f46d2184a90095a60c66fef74727f0f8"
+  integrity sha512-U3vEDB5zhYPNfxT5TYR7u01dboFZp+HNpnGhkDB2g/2E4wZ/g1Q9Ton8UwCLfRV9yAKyYqDh62oHOamvkFxsvw==
 
 eslint-plugin-vue@^7.16.0:
   version "7.16.0"

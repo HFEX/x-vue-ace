@@ -5,8 +5,7 @@ module.exports = {
   },
   extends: [
     "plugin:vue/vue3-recommended",
-    "eslint:recommended",
-    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/recommended",
     "@vue/typescript/recommended",
     "@vue/prettier",
     "@vue/prettier/@typescript-eslint",
@@ -14,6 +13,11 @@ module.exports = {
   parserOptions: {
     parser: "@typescript-eslint/parser",
     ecmaVersion: 2020,
+    sourceType: "module", // Allows for the use of imports
+    ecmaFeatures: {
+      // Allows for the parsing of JSX
+      jsx: true,
+    },
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
@@ -26,5 +30,5 @@ module.exports = {
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
   },
-  plugins: ["simple-import-sort"],
+  plugins: ["simple-import-sort", "@typescript-eslint"],
 };
