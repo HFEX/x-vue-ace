@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 // import postcss from 'rollup-plugin-postcss'
 import eslintPlugin from "vite-plugin-eslint";
+import inspect from "vite-plugin-inspect";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
         allowSyntheticDefaultImports: true,
       },
     }),
+    inspect(),
     eslintPlugin({
       fix: true,
     }),

@@ -4,11 +4,11 @@ module.exports = {
   themeConfig: {
     repo: 'HFEX/x-vue-ace',
     nav: [
-      { text: 'Guide', link: '/', activeMatch: '^/$|^/guide/' },
+      { text: 'Guide', link: '/guide/', activeMatch: '^/$|^/guide/' },
       {
-        text: 'Config Reference',
-        link: '/config/basics',
-        activeMatch: '^/config/'
+        text: 'API',
+        link: '/api/',
+        activeMatch: '^/api/'
       },
       {
         text: 'Release Notes',

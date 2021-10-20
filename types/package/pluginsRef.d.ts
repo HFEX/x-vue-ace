@@ -32,7 +32,7 @@ export declare function usePluginsRef({ editor, editorValue, isReadOnly }: param
     affectPreserved: () => void;
     protectPreservedBoundary: (evt: KeyboardEvent) => void;
     protectInternal: () => void;
-    plugins: Ref<("hide" | "blank" | "lock")[]>;
+    plugins: Ref<("lock" | "blank" | "hide")[]>;
     clearPlugins: () => void;
 };
 export interface Plugins extends LockPlugin, HideCodePlugin, BlankPlugin {
